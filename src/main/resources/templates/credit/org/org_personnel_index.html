@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+    <tt:constant enumcode="sex-type,identification-type,political-affiliation-type,nation-type," />
+    <section class="content-header">
+        <h1>人员管理</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" name="name" th:value="${query?.name}" placeholder="请输入查询的姓名" />
+                        </div>
+                        <div class="col-md-10">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('form')[0].reset()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+        <div class="box box-solid" style="margin-top:20px">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+                <div id="toolbar">
+                    <button class="btn btn-default" onclick="add()" type="button" title="新增"><i class="glyphicon glyphicon-plus"></i>添加人员</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/credit/footer" />
+    <script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "姓名", field: "name" },
+                    { title: "出生日期", field: "birthday", formatter: "date" },
+                    { title: "证件类型", field: "identificationType", enumcode: "identification-type" },
+                    { title: "证件号码", field: "identificationNo", formatter: "identification" },
+                    { title: "民族", field: "nation", enumcode: "nation-type" },
+                    { title: "性别", field: "sex", enumcode: "sex-type" },
+                    { title: "加入党派时间", field: "joinPartyTime", formatter: "datetime" },
+                    { title: "手机号码", field: "cellphone" },
+                    { title: "政治面貌", field: "politicalAffiliation", enumcode: "political-affiliation-type" },
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                        }
+                    }
+                ]
+            ],
+            url: '/credit/org/personnel/find/page',
+            exportUrl: '/credit/org/personnel/export',
+            searchbar: '#searchbar',
+            showColumns: true,
+            showExport: true,
+            pagination: true,
+            clickToSelect: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+    function add() {
+        window.location = '/credit/org/personnel/add';
+    }
+
+    function detail(row) {
+        window.location = '/credit/org/personnel/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function remove(row) {
+        if (row) {
+            layer.confirm('确定删除吗?', function() {
+                $.getAjax('/credit/org/personnel/delete?id=' + row.id, function() {
+                    $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+
+    function getSelectRow(notShowError) {
+        var rows = table.getSelections();
+        var row = rows.length > 0 ? rows[0] : null;
+        if (!notShowError && !row) {
+            $.errorMessage("请选中一条业务数据");
+        }
+        return row;
+    }
+    </script>
+</body>
+
+</html>
