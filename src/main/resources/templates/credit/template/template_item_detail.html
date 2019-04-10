@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+    <tt:constant enumcode="boolean,"/>
+    <section class="content-header">
+        <h1>项目管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/credit/template/item/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/credit/template/item/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <div th:include="/credit/footer" />
+    <script type="text/javascript">
+
+    var options = {
+        id: "item_model",
+        name: "新增项目",
+        url: "/credit/template/item/save",
+        columns: [
+            { title: "项目名称", name: "itemName", required: "required", inputType: "TEXTAREA" },
+            { title: "项目适用对象", name: "itemTargetType", required: "required", inputType: "SELECT", enum: "item-target-type" }
+        ]
+    }
+
+    var selectionColumns = [
+        { title: "选项名称", name: "selectionName", inputType: "TEXT" },
+        { title: "选项诚信等级", name: "selectionGrade", enum: "selection-grade-type", required: "required", inputType: "SELECT" }
+    ];
+
+
+    $(function() {
+    
+        $.getAjax("/credit/template/item/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+            $.initComponment($(".content"));
+        });
+    });
+    </script>
+</body>
+
+</html>
