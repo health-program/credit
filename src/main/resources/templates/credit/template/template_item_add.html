@@ -8,36 +8,61 @@
     <section class="content-header">
         <h1>项目管理</h1>
         <ol class="breadcrumb">
-            <li><a href="/credit/template/item/index"><i class="fa fa-table"></i>项目列表</a></li>
-            <li class="active">新增项目</li>
+            <li><a href="/credit/template/item/index"><i class="fa fa-list-alt"></i>项目列表</a></li>
+            <li class="active">项目详情</li>
         </ol>
     </section>
     <section class="content">
-        <div class="box box-widget">
-            <div id="item_model_container">
-                <div class="box-header no-border">
-                    <h3 class="box-title">项目</h3>
-                    <div class="box-tools pull-right">
-                    </div>
-                </div>
-                <div id="item_model_edit" class="box-body">
-                    <form id="item_model_form" method="post" class="form-horizontal edit-body">
-                        <div class="form-group">
-                            <label for="itemName" class="col-sm-3 control-label"><i class="required-label fa fa-asterisk"></i>项目名称：</label>
-                            <div class="col-sm-8">
-                                <textarea name="itemName" rows="5" placeholder="请输入项目名称" class="form-control" required="required"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="itemTargetType" class="col-sm-3 control-label"><i class="required-label fa fa-asterisk"></i>项目适用对象：</label>
-                            <div class="col-sm-3">
-                                <select name="itemTargetType" class="form-control tonto-select-constant" required="required" enumcode="item-target-type">
-                                </select>
-                            </div>
-                        </div>
-                    </form>
+        <div class="box box-widget" id="item_model_container">
+            <div class="box-header no-border">
+                <h3 class="box-title">项目</h3>
+                <div class="box-tools pull-right">
+                    <a class="btn tonto-model-tool-view-btn" id="item_model_edit_btn" href="javascript:void(0)"><i class="fa fa-edit"></i>编辑</a>
                 </div>
             </div>
+            <div id="item_model_view" class="box-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="itemName" class="col-sm-3 control-label">项目名称：</label>
+                        <div class="col-sm-8">
+                            <pre name="itemName" style="min-height:150px" class="form-control-static description"></pre>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemTargetType" class="col-sm-3 control-label">项目适用对象：</label>
+                        <div class="col-sm-3">
+                            <p name="itemTargetType" class="form-control-static description"></p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="item_model_edit" class="box-body" style="display: none">
+                <form id="item_model_form" action="/credit/template/item/save" method="post" class="form-horizontal edit-body">
+                    <div class="form-group">
+                        <label for="itemName" class="col-sm-3 control-label"><i class="required-label fa fa-asterisk"></i>项目名称：</label>
+                        <div class="col-sm-8">
+                            <textarea name="itemName" rows="5" placeholder="请输入项目名称" class="form-control" required="required"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemTargetType" class="col-sm-3 control-label"><i class="required-label fa fa-asterisk"></i>项目适用对象：</label>
+                        <div class="col-sm-3">
+                            <select name="itemTargetType" class="form-control tonto-select-constant" required="required" enumcode="item-target-type">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 col-sm-offset-3">
+                            <button type="button" id="item_model_form_submit_btn" class="btn btn-primary btn-block">保存</button>
+                        </div>
+                        <div class="col-sm-2 col-sm-offset-1">
+                            <button type="button" id="item_model_form_cancel_btn" class="btn btn-default btn-block">取消</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="box box-widget">
             <div class="box-header no-border">
                 <h3 class="box-title">选项<span style="color:#aaa">（只有一个结果选项的时候不需要编辑选项内容，只需要选择诚信等级）</span></h3>
                 <div class="box-tools pull-right">
@@ -62,8 +87,7 @@
     <script type="text/javascript">
     var options = {
         id: "item_model",
-        name: "新增项目",
-        url: "/credit/template/item/save",
+        server: false,
         columns: [
             { title: "项目名称", name: "itemName", required: "required", inputType: "TEXTAREA" },
             { title: "项目适用对象", name: "itemTargetType", required: "required", inputType: "SELECT", enum: "item-target-type" }
@@ -79,7 +103,7 @@
         selectionComs = [],
         itemModel;
 
-    function addSelection() {
+    function addSelection(view, data) {
         var id = "selection_" + currentIndex;
         var html = generateHtml({
             id: id,
@@ -104,20 +128,22 @@
             boxStyle: '-webkit-box-shadow: none;box-shadow: none;border-radius: 0;border-bottom: 1px solid #f4f4f4;',
             columns: selectionColumns
         });
-
         var selectionContainer = $('<div id="' + id + '_container"></div>');
         $("#selection_item_div").append(selectionContainer);
         selectionContainer.html(html);
         $.initComponment($("#" + id + "_container"));
 
         var selectionModel = new tonto.Model(id, selectionColumns, {
-            submitClick: function(model) {
-                var d = model.getFormData();
-                model.setData(d);
-                model.toView();
-            }
+            server: false
         });
-        selectionModel.toEdit();
+
+        if (!view) {
+            selectionModel.toEdit();
+        }
+
+        if (data) {
+            selectionModel.setData(data);
+        }
 
         var com = {
             model: selectionModel,
@@ -148,7 +174,12 @@
     }
 
     function save(confirm) {
-        var data = itemModel.getFormData();
+        var data = itemModel.data;
+        if (!data) {
+            $.errorMessage("请输入并保存项目内容！");
+            return;
+        }
+
         if (selectionComs.length > 0) {
             var isOne = selectionComs.length == 1;
             data.selections = [];
@@ -174,10 +205,9 @@
                 data.selections.push(d);
             }
 
-            $.postJsonAjax("/credit/template/item/save", data, function(respoonse) {
+            $.postJsonAjax("/credit/template/item/save", data, function(result) {
                 $.successAlert("保存成功", function() {
-                    console.log(respoonse);
-                    
+                    window.location = '/credit/template/item/index';
                 });
             }, $("#submitBtn"));
 
@@ -188,8 +218,9 @@
 
     $(function() {
         itemModel = new tonto.Model("item_model", options.columns, {
-            pattern: "edit"
+            server: false
         });
+        itemModel.toEdit();
     });
     </script>
 </body>

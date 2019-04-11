@@ -21,7 +21,7 @@ public class TemplateItemSelection extends BaseModel {
 	private String selectionName;
 
 	// 选项标号（ABCDE）
-	private String selectionGrade;
+	private Integer selectionGrade;
 
 	public String getId() {
 		return id;
@@ -47,11 +47,11 @@ public class TemplateItemSelection extends BaseModel {
 		this.selectionName = selectionName;
 	}
 
-	public String getSelectionGrade() {
+	public Integer getSelectionGrade() {
 		return selectionGrade;
 	}
 
-	public void setSelectionGrade(String selectionGrade) {
+	public void setSelectionGrade(Integer selectionGrade) {
 		this.selectionGrade = selectionGrade;
 	}
 

@@ -41,6 +41,8 @@
     $(function() {       
         var html = generateEditHtml(options);
         $(".content").html(html);
+        $.initComponment($(".content"));
+
         var model = new tonto.Model("model", options.columns, {
             pattern:"edit",
             successCallback:function(){
@@ -50,7 +52,6 @@
             }
         });
         model.setData(null);
-        $.initComponment($(".content"));
     });
     </script>
 </body>
