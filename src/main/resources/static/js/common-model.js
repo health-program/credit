@@ -4,58 +4,98 @@
 //
 // -----------------------------------------
 
-function generateHtml(options) {
+function generateToolBar(toolBtn) {
+    var html = "";
+    if (toolBtn) {
+        if (!$.isArray(toolBtn)) {
+            toolBtn = [toolBtn];
+        }
+
+        toolBtn.sort(function(a, b) {
+            return (a.order > b.order) ? 1 : -1;
+        });
+
+        toolBtn.forEach(function(b) {
+            var a = b.showIn == 'view' ? ' tonto-model-tool-view-btn' : (b.showIn == 'edit' ? ' tonto-model-tool-edit-btn' : '');
+            if (b.name) {
+                html += '<a class="btn' + a + '" id="' + b.id + '" href="javascript:void(0)">' + (b.icon ? '<i class="' + b.icon + '"></i>' : '') + b.name + '</a>\n';
+            } else {
+                html += '<button id="' + b.id + '" type="button" class="btn btn-box-tool' + a + '"><i class="' + b.icon + '"></i></button>'
+            }
+        });
+    }
+    return html
+}
+
+function generateBox(options, content) {
     var id = options.id,
         name = options.name,
         columns = options.columns,
-        icon = options.icon || 'fa fa-edit';
+        icon = options.icon || (name ? 'fa fa-edit' : null),
+        editable = options.editable !== false,
+        borderClass = options.boxHeaderClass || 'box-header with-border',
+        boxStyle = options.boxStyle,
+        boxHeaderStyle = options.boxHeaderStyle,
+        boxClass = options.boxClass || 'box box-widget',
+        toolBtn = options.toolBtn || [];
 
-    var html =
-        '<div class="box box-solid">\n' +
-        '<div class="box-header with-border">\n' +
-        '    <i class="' + icon + '"></i>\n' +
-        '    <h3 class="box-title">' + name + '</h3>\n' +
-        '    <div class="box-tools pull-right">\n' +
-        '        <a class="btn" id="' + id + '_edit_btn" href="javascript:void(0)"><i class="fa fa-edit"></i>编辑</a>\n' +
-        '    </div>\n' +
-        '</div>\n';
+    var html = '<div id="' + id + '_container" class="' + boxClass + '" ' + (boxStyle ? 'style="' + boxStyle + '"' : '') + '>\n';
 
-    html += generateViewFormHtml(options);
-    html += generateEditFormHtml(options, true);
+    if (options.hearderBox !== false) {
 
+        if (editable) {
+            if (toolBtn.length > 0 && !toolBtn[0].name) {
+                toolBtn.push({
+                    id: id + '_edit_btn',
+                    icon: 'fa fa-edit',
+                    showIn: 'view',
+                    order: -1
+                });
+            } else {
+                toolBtn.push({
+                    id: id + '_edit_btn',
+                    icon: 'fa fa-edit',
+                    showIn: 'view',
+                    name: '编辑',
+                    order: -1
+                });
+            }
+        }
+
+        html += '<div class="' + borderClass + '" ' + (boxHeaderStyle ? 'style="' + boxHeaderStyle + '"' : '') + '>\n' +
+            (icon ? '<i class="' + icon + '"></i>\n' : '') +
+            (name ? '<h3 class="box-title">' + name + '</h3>\n' : '<h3 class="box-title"> </h3>') +
+            '    <div class="box-tools pull-right">\n';
+        html += generateToolBar(toolBtn);
+        html += '    </div>\n' +
+            '</div>\n';
+    }
+
+    html += content;
     html += '</div>\n';
 
     return html;
 }
 
+function generateHtml(options) {
+    return generateBox(options, generateViewFormHtml(options) + generateEditFormHtml(options, true));
+}
+
 function generateEditHtml(options) {
-    var id = options.id,
-        name = options.name,
-        columns = options.columns,
-        icon = options.icon || 'fa fa-edit';
-
-    var html =
-        '<div class="box box-solid">\n' +
-        '<div class="box-header with-border">\n' +
-        '    <i class="' + icon + '"></i>\n' +
-        '    <h3 class="box-title">' + name + '</h3>\n' +
-        '    <div class="box-tools pull-right">\n' +
-        '    </div>\n' +
-        '</div>\n';
-
-    html += generateEditFormHtml(options);
-    html += '</div>';
-    return html;
+    options.icon = options.icon || (options.name ? 'fa fa-edit' : null);
+    options.editable = options.editable === false ? false : true;
+    return generateBox(options, generateEditFormHtml(options));
 }
 
 function generateEditFormHtml(options, hide) {
-
     var id = options.id,
-        columns = options.columns;
+        columns = options.columns,
+        bodyClass = options.editBodyClass || 'box-body',
+        formClass = options.editFormClass;
 
     var html =
-        '<div id="' + id + '_edit" class="box-body" ' + (hide == true ? 'style="display: none"' : '') + '>\n' +
-        '   <form id="' + id + '_form" action="' + options.url + '" method="post" class="form-horizontal edit-body">\n';
+        '<div id="' + id + '_edit" class="' + bodyClass + '" ' + (hide == true ? 'style="display: none"' : '') + '>\n' +
+        '   <form id="' + id + '_form" action="' + options.url + '" method="post" class="form-horizontal' + (formClass === false ? '' : (formClass ? ' ' + formClass : ' edit-body')) + '">\n';
 
     var defaultConfig = {
             maxColspan: 2,
@@ -111,51 +151,67 @@ function generateEditFormHtml(options, hide) {
         currentColspan = 0;
     }
 
-    html +=
-        '   <div class="form-group">\n' +
-        '       <div class="col-sm-2 col-sm-offset-3">\n' +
-        '           <button type="' + (options.server === false ? 'button' : 'submit') + '" id="' + id + '_form_submit_btn" class="btn btn-primary btn-block">保存</button>\n' +
-        '       </div>\n';
+    options.formButtonBar = options.formButtonBar || [];
+    if (options.submitBtn !== false) {
+        options.formButtonBar.push({
+            id: id + '_form_submit_btn',
+            type: options.server === false ? 'button' : 'submit',
+            name: options.submitBtnName || '保存',
+            class: options.submitBtnClass || 'btn btn-primary btn-block',
+            order: -1
+        });
+    }
 
-    if (hide == true) {
-        html +=
-            '       <div class="col-sm-2 col-sm-offset-1">\n' +
-            '       <button type="button" id="' + id + '_form_cancel_btn" class="btn btn-default btn-block">取消</button>\n' +
-            '       </div>\n';
+    if (options.cancelBtn !== false) {
+        options.formButtonBar.push({
+            id: id + '_form_cancel_btn',
+            type: 'button',
+            name: options.cancelBtnName || '取消',
+            class: options.cancelBtnClass || 'btn btn-default btn-block',
+            order: 9999
+        });
+    }
+
+    options.formButtonBar.sort(function(a, b) {
+        return (a.order > b.order) ? 1 : -1;
+    });
+
+    if (options.formButtonBar.length > 0) {
+        var formButtonBarClass = options.formButtonBarClass === false ? null : (options.formButtonBarClass || 'form-button-bar');
+        html += '<div class="form-group' + (formButtonBarClass ? ' ' + formButtonBarClass : '') + '">\n';
+        var firstBtn = true,
+            btnWidth = options.formButtonBar.length > 2 ? 'col-sm-1' : 'col-sm-2';
+        options.formButtonBar.forEach(function(a) {
+            html += firstBtn ? '<div class="' + btnWidth + ' col-sm-offset-3">\n' : '<div class="' + btnWidth + ' col-sm-offset-1">\n';
+            html += '<button type="' + a.type + '" id="' + a.id + '" class="' + a.class + '">' + a.name + '</button>\n';
+            html += '</div>\n';
+
+            firstBtn = false;
+        });
+
+        html += '</div>\n';
     }
 
     html +=
-        '   </div>\n' +
         '</form>\n' +
         '</div>\n';
     return html;
 }
 
 function generateViewHtml(options) {
-    var id = options.id,
-        name = options.name,
-        columns = options.columns,
-        icon = options.icon || 'fa fa-list';
-
-    var html =
-        '<div class="box box-solid">\n' +
-        '<div class="box-header with-border">\n' +
-        '    <i class="' + icon + '"></i>\n' +
-        '    <h3 class="box-title">' + name + '</h3>\n' +
-        '    <div class="box-tools pull-right">\n' +
-        '    </div>\n' +
-        '</div>\n';
-
-    html += generateViewFormHtml(options);
-    html += '</div>';
-    return html;
+    options.icon = options.icon || (name ? 'fa fa-list' : null);
+    options.editable = options.editable === true ? true : false;
+    return generateBox(options, generateViewFormHtml(options));
 }
 
 function generateViewFormHtml(options) {
     var id = options.id,
-        columns = options.columns;
+        columns = options.columns,
+        bodyClass = options.viewBodyClass || 'box-body';
+
+
     var html =
-        '<div id="' + id + '_view" class="box-body">\n' +
+        '<div id="' + id + '_view" class="' + bodyClass + '">\n' +
         '    <form class="form-horizontal">\n';
 
     var defaultConfig = {
@@ -217,12 +273,16 @@ function generateViewFormHtml(options) {
     return html;
 }
 
-
 var _Model = function(name, column, options) {
     var that = this;
     that.name = name;
+    that.container = options.container || $("#" + name + "_container");
+
+    if (that.container.length == 0) {
+        that.container = $("body");
+    }
+
     that.editBtn = $("#" + name + "_edit_btn");
-    that.addBtn = $("#" + name + "_add_btn");
     that.status = "view";
     that.viewBody = $("#" + name + "_view");
     that.editBody = $("#" + name + "_edit");
@@ -232,10 +292,6 @@ var _Model = function(name, column, options) {
 
     that.editBtn.click(function() {
         that.toEdit();
-    });
-
-    that.addBtn.click(function() {
-        that.toAdd();
     });
 
     that.formCancelBtn.click(function() {
@@ -271,6 +327,14 @@ var _Model = function(name, column, options) {
     if (typeof that.config.submitClick === 'function') {
         that.formSubmitBtn.click(function() {
             that.config.submitClick(that);
+        });
+    } else if (options.server === false) {
+        that.formSubmitBtn.click(function() {
+            if (that.formBody.valid()) {
+                var d = that.getFormData();
+                that.setData(d);
+                that.toView();
+            }
         });
     }
 
@@ -431,18 +495,10 @@ _Model.prototype.fillEditBody = function() {
     }
 }
 
-_Model.prototype.toAdd = function() {
-    var that = this;
-    that.data = null;
-    that.addBtn.hide();
-    that.viewBody.hide();
-    that.editBody.show();
-    that.fillEditBody();
-}
-
 _Model.prototype.toEdit = function() {
     var that = this;
-    that.editBtn.hide();
+    that.container.find(".tonto-model-tool-view-btn").hide();
+    that.container.find(".tonto-model-tool-edit-btn").show();
     that.viewBody.hide();
     that.editBody.show();
     that.fillEditBody();
@@ -450,10 +506,20 @@ _Model.prototype.toEdit = function() {
 
 _Model.prototype.toView = function() {
     var that = this;
-    that.editBtn.show();
-    that.addBtn.show();
+    that.container.find(".tonto-model-tool-view-btn").show();
+    that.container.find(".tonto-model-tool-edit-btn").hide();
     that.viewBody.show();
     that.editBody.hide();
+}
+
+_Model.prototype.isView = function() {
+    var that = this;
+    return that.viewBody.length > 0 ? that.viewBody.is(':visible') : false;
+}
+
+_Model.prototype.isEdit = function() {
+    var that = this;
+    return that.editBody.length > 0 ? that.editBody.is(':visible') : false;
 }
 
 _Model.prototype.isInDependencyValues = function(val, vals) {
@@ -530,6 +596,20 @@ _Model.prototype.checkEditDependency = function() {
             targetCol.fieldBuilder.hideEdit(targetCol, that);
         }
     }
+}
+
+_Model.prototype.getFormData = function() {
+    // TODO 附件等处理
+    var jsonData = this.formBody.serializeArray();
+    var d = {};
+    jsonData.forEach(function(item) {
+        if (d[item.name]) {
+            d[item.name] = d[item.name] + "," + item.value;
+        } else {
+            d[item.name] = item.value;
+        }
+    });
+    return d;
 }
 
 var _FieldBuilderContainer = {};
@@ -1170,7 +1250,7 @@ var _selectFieldBuilder = new _FieldBuilder("SELECT", {
             html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
             column.title + '：</label>\n';
         html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
-        html += '<select name="' + column.name + '" ' + (column.placeholder ? 'placeholder="' + column.placeholder + '"' : '') + ' class="form-control tonto-select-constant ' + (multiple ? 'tonto-multiple-select' : '') + '" ' + (multiple ? 'multiple="multiple"' : '') + ' ' + +(required ? 'required="required"' : '') + ' enumcode="' + column.enum + '">\n';
+        html += '<select name="' + column.name + '" ' + (column.placeholder ? 'placeholder="' + column.placeholder + '"' : '') + ' class="form-control tonto-select-constant' + (multiple ? ' tonto-multiple-select" multiple="multiple"' : '"') + (required ? ' required="required"' : '') + ' enumcode="' + column.enum + '">\n';
         if (column.nullable !== false && !required && !multiple) {
             html += '<option value="">请选择</option>\n';
         }
@@ -1337,7 +1417,7 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
             html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
             column.title + '：</label>\n';
         html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
-        html += '<select name="' + column.name + '" ' + (column.placeholder ? 'placeholder="' + column.placeholder + '"' : '') + ' class="form-control" ' + (multiple ? 'multiple="multiple"' : '') + ' ' + (required ? 'required="required"' : '') + '>\n';
+        html += '<select name="' + column.name + '"' + (column.placeholder ? ' placeholder="' + column.placeholder + '"' : '') + ' class="form-control"' + (multiple ? ' multiple="multiple"' : '') + (required ? ' required="required"' : '') + '>\n';
         if (column.nullable !== false && !required && !multiple) {
             html += '<option value="">请选择</option>\n';
         }
@@ -1616,6 +1696,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             maxFileCount: column.maxFileCount || 4,
             allowedFileExtensions: column.allowedFileExtensions || ["jpeg", "jpg", "png", "gif"],
             overwriteInitial: false,
+            dropZoneEnabled: false, // 禁止拖拽
             ajaxDelete: false, // 扩展定义配置，不进行后台删除操作
             initialPreview: initialPreview,
             initialPreviewAsData: true, // allows you to set a raw markup
@@ -1967,6 +2048,231 @@ var _tagsinputFieldBuilder = new _FieldBuilder("TAGSINPUT", {
     }
 });
 
+// 子模块域构建器
+var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
+    initHandler: function(column, model) {
+        column.isFirstEdit = true;
+    },
+    getEditValue: function(column, model) {
+        // 获取域EDIT页面值
+        if (typeof column.getEditValue === 'function') {
+            return column.getEditValue(column, model);
+        }
+
+        if (column.contentMap) {
+            var datas = [];
+            for (var o in column.contentMap) {
+                datas.push(column.contentMap[o].data);
+            }
+            return datas;
+        }
+        return null;
+    },
+    fillView: function(column, data, model) {
+        // VIEW页面填充值时候调用
+        if (typeof column.fillView === 'function') {
+            return column.fillView(column, data, model);
+        }
+
+        var that = this,
+            div = model.viewBody.find("[name='" + column.name + "']"),
+            ul = $('<ul class="products-list product-list-in-box"></ul>');
+
+        div.empty();
+        div.append(ul);
+        var subData = data ? data[column.name] : null;
+        if (subData) {
+            subData.forEach(function(d) {
+                that.fillSubView(column, d, model, ul);
+            });
+        }
+    },
+    fillSubView: function(column, data, model, contentContainer) {
+        var itemHtml, that = this;
+        if (typeof column.createSubDataHtml === 'function') {
+            itemHtml = column.createSubDataHtml();
+        } else {
+            itemHtml = '';
+            var subTitleViewHtmml;
+            if (typeof column.subTitleViewHtmml === 'function') {
+                subTitleViewHtmml = column.subTitleViewHtmml(data);
+            } else {
+                subTitleViewHtmml += "<h3 style='display: inline-block;font-size: 18px;margin: 0;line-height: 1;'>" + data[column.subViewField] + "</h3>";
+            }
+
+            itemHtml += subTitleViewHtmml;
+        }
+
+        contentContainer.append(itemHtml);
+    },
+    fillSubEdit: function(column, data, model, id) {
+        var contentContainer = column.contentContainer,
+            itemHtml, that = this;
+        if (typeof column.createSubDataHtml === 'function') {
+            itemHtml = column.createSubDataHtml();
+
+        } else {
+            itemHtml = '<div class="box-tools pull-right">' +
+                '<a class="btn" id="' + column.name + '_sub_edit_btn" href="javascript:void(0)"><i class="fa fa-edit"></i>编辑</a>\n' +
+                '<a class="btn" id="' + column.name + '_sub_remove_btn" href="javascript:void(0)"><i class="fa fa-remove"></i>删除</a>\n' +
+                '</div>';
+            var subTitleViewHtmml;
+            if (typeof column.subTitleViewHtmml === 'function') {
+                subTitleViewHtmml = column.subTitleViewHtmml(data);
+            } else {
+                subTitleViewHtmml += "<h3 style='display: inline-block;font-size: 18px;margin: 0;line-height: 1;'>" + data[column.subViewField] + "</h3>";
+            }
+
+            itemHtml += subTitleViewHtmml;
+        }
+
+        var div, com;
+        if (!id) {
+            id = column.name + "_content_" + new Date().getTime();
+            div = $('<li class="item"></li>');
+            com = {
+                id: id,
+                div: div,
+                data: data
+            };
+            column.contentMap[id] = com;
+            contentContainer.append(div);
+            div.html(itemHtml);
+        } else {
+            com = column.contentMap[id];
+            div = com.div;
+            com.data = data;
+            div.html(itemHtml);
+        }
+
+        div.find('#' + column.name + '_sub_edit_btn').click(function() {
+            that.openSubEditor(column, com, model);
+        });
+
+        div.find('#' + column.name + '_sub_remove_btn').click(function() {
+            layer.confirm('确定删除吗?', function(layerIndex) {
+                delete column.contentMap[id];
+                div.remove();
+                layer.close(layerIndex);
+            });
+        });
+    },
+    fillEdit: function(column, data, model) {
+        // EDIT页面填充值时候调用
+        if (typeof column.fillEdit === 'function') {
+            return column.fillEdit(column, data, model);
+        }
+        var that = this,
+            div = model.editBody.find("[name='" + column.name + "']");
+        if (!column.hasEdited) {
+            var contentContainer = $('<ul class="products-list product-list-in-box"></ul>'),
+                addSubModelBtn = column.addSubModelBtn ? column.addSubModelBtn : $('<div class="dotted-line-btn"><a href="javascript:void(0)" ><i class="glyphicon glyphicon-plus"></i>' + (column.addSubModelBtnTitle ? column.addSubModelBtnTitle : '添加选项') + '</a></div>');
+            div.append(contentContainer);
+            div.append(addSubModelBtn);
+            column.contentContainer = contentContainer;
+            column.contentMap = {};
+
+            var subData = data ? data[column.name] : null;
+            if (subData) {
+                subData.forEach(function(d) {
+                    that.fillSubEdit(column, d, model, null);
+                });
+            }
+
+            addSubModelBtn.click(function() {
+                that.openSubEditor(column, null, model);
+            });
+
+            column.hasEdited = true;
+        }
+    },
+    openSubEditor: function(column, com, model) {
+        var that = this;
+        var subOp = column.subModelOptions;
+        subOp.id = subOp.id || column.name + "_" + new Date().getTime();
+
+        var defaultSubOp = {
+            cancelBtn: false,
+            server: false,
+            editFormClass: false,
+            maxColspan: 1,
+            firstLabelSize: 3,
+            inputSize: 8,
+            labelSize: 3
+        }
+
+        var subOp = $.extend(defaultSubOp, subOp);
+        var html = generateEditFormHtml(subOp, false);
+        html = "<div style='padding:50px'>" + html + "</div>";
+        var layerOption = subOp.layerOption || {};
+        layerOption = $.extend({
+                success: function(layero, index) {
+                    $.initComponment($(layero));
+                    var subModel = new tonto.Model(subOp.id, subOp.columns, {
+                        server: false,
+                        pattern: "edit",
+                        submitClick: function() {
+                            if (subModel.formBody.valid()) {
+                                var d = subModel.getFormData();
+                                if (typeof column.beforeAddHandler === 'function') {
+                                    if (column.beforeAddHandler(d, subModel, index) === false) {
+                                        return;
+                                    }
+                                }
+
+                                that.fillSubEdit(column, d, model, com ? com.id : null);
+                                layer.close(index);
+                            }
+                        }
+                    });
+
+                    if (com) {
+                        subModel.setData(com.data);
+                    }
+                }
+            },
+            layerOption);
+        var index = $.openPageLayer(html, layerOption);
+    },
+    generateViewFormColspan: function(column, options) {
+        if (typeof column.generateViewFormColspan === 'function') {
+            return column.generateViewFormColspan(column, options);
+        }
+        return column.colspan || options.maxColspan;
+    },
+    generateViewFormHtml: function(column, isFirst, options) {
+        if (typeof column.generateViewFormHtml === 'function') {
+            return column.generateViewFormHtml(column, isFirst, options);
+        }
+        var colspan = column.colspan || options.maxColspan;
+        var html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + column.title + '：</label>\n';
+        html += '<div name="' + column.name + '" class="col-sm-' + ((options.maxColspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '"></div>\n';
+        return {
+            colspan: colspan,
+            html: html
+        };
+    },
+    generateEditFormColspan: function(column, options) {
+        if (typeof column.generateEditFormColspan === 'function') {
+            return column.generateEditFormColspan(column, options);
+        }
+        return column.colspan || options.maxColspan;
+    },
+    generateEditFormHtml: function(column, isFirst, options) {
+        if (typeof column.generateEditFormHtml === 'function') {
+            return column.generateEditFormHtml(column, isFirst, options);
+        }
+        var colspan = column.colspan || options.maxColspan,
+            required = column.required === 'required',
+            html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
+            column.title + '：</label>\n';
+        html += '<div name="' + column.name + '" class="col-sm-' + ((options.maxColspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '"></div>\n';
+        return {
+            colspan: colspan,
+            html: html
+        };
+    }
+});
 
 if (!window.toton) window.toton = {};
 window.tonto.Model = _Model;

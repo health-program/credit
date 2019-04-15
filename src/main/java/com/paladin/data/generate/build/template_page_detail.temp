@@ -31,10 +31,11 @@
     
         $.getAjax(${getDataUrl}, function(data) {
             var html = generateHtml(options);
-            $(".content").html(html);
+            $(".content").html(html);、
+            $.initComponment($(".content"));
+           
             var model = new tonto.Model("model", options.columns);
             model.setData(data);
-            $.initComponment($(".content"));
         });
     });
     </script>

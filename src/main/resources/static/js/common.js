@@ -236,6 +236,29 @@
     // --------------------------------------
 
     $.extend({
+        validErrorHandler: function(response) {
+            // $.errorMessage(data.message || "数据验证异常");
+            var errorHtml, error = response.result;
+            if (!response.message && $.isArray(error)) {
+                var errorHtml = "<ul>数据验证失败："
+                error.forEach(function(item) {
+                    var el = item[1];
+                    var errorMsg = item[2];
+
+                    // 存在可能对不上input输入框，加上存在前端验证保证大部分情况正确，所以这里才有用户体验稍差的方式
+                    // form.find("#" + el + ",[name='" + el + "']").each(function() {
+                    //     layer.tips(errorMsg, $(this), { time: 2000, tips: [3, 'red'] });
+                    // });
+
+                    errorHtml += "<li>" + errorMsg + "</li>";
+                });
+                errorHtml += "</ul>"
+            } else {
+                errorHtml = response.message || error || "数据验证异常";
+            }
+
+            $.errorAlert(errorHtml);
+        },
         ajaxUnLoginHandler: function(callback) {
             // ajax请求返回未登录状态处理
             // 暂时跳转主页面到登录页面，有时间可以做弹出登录窗口登录，成功后继续执行ajax请求处理
@@ -260,7 +283,7 @@
             } else if (status.FAIL === resStatus) {
                 $.errorMessage(response.message || "操作失败");
             } else if (status.FAIL_VALID === resStatus) {
-                $.errorMessage(response.message || "验证不成功，操作失败");
+                $.validErrorHandler(response);
             } else {
                 return true;
             }
@@ -312,7 +335,7 @@
                 } else if (status.FAIL === resStatus) {
                     $.errorMessage(response.message || "操作失败");
                 } else if (status.FAIL_VALID === resStatus) {
-                    $.errorMessage(response.message || "验证不成功，操作失败");
+                    $.validErrorHandler(response);
                 } else {
                     if (callback && typeof callback === 'function') {
                         callback(response.result);
@@ -1099,19 +1122,7 @@ function _initTable() {
                             }
                         } else if (col.formatter == 'identification') {
                             col.formatter = function(value, row, index) {
-                                if (value) {
-                                    var l = value.length;
-                                    if (l > 7) {
-                                        var s = value.substr(0, 3);
-                                        var a = value.length - 7;
-                                        for (; a > 0; a--) s += "*";
-                                        s += value.substr(value.length - 4, 4);
-                                        return s;
-                                    } else {
-                                        return value;
-                                    }
-                                }
-                                return "";
+                                return hideIdentification(value);
                             }
                         }
                     }
@@ -1917,27 +1928,7 @@ function _initForm(container) {
                     } else if (status.FAIL === resStatus) {
                         $.errorMessage(data.message || "操作失败");
                     } else if (status.FAIL_VALID === resStatus) {
-                        // $.errorMessage(data.message || "数据验证异常");
-                        var errorHtml, error = data.result;
-                        if (!data.message && $.isArray(error)) {
-                            var errorHtml = "<ul>数据验证失败："
-                            error.forEach(function(item) {
-                                var el = item[1];
-                                var errorMsg = item[2];
-
-                                // 存在可能对不上input输入框，加上存在前端验证保证大部分情况正确，所以这里才有用户体验稍差的方式
-                                // form.find("#" + el + ",[name='" + el + "']").each(function() {
-                                //     layer.tips(errorMsg, $(this), { time: 2000, tips: [3, 'red'] });
-                                // });
-
-                                errorHtml += "<li>" + errorMsg + "</li>";
-                            });
-                            errorHtml += "</ul>"
-                        } else {
-                            errorHtml = data.message || error || "数据验证异常";
-                        }
-
-                        $.errorAlert(errorHtml);
+                        $.validErrorHandler(data);
                     } else if (status.SUCCESS === resStatus) {
                         var handler = formConfig.successCallback || form[0].submitSuccessHandler || form.data("submitSuccessHandler");
                         if (handler) {
@@ -2126,4 +2117,20 @@ function getSeconds(date) {
         second = "0" + second;
     }
     return second;
+}
+
+function hideIdentification(value) {
+    if (value) {
+        var l = value.length;
+        if (l > 7) {
+            var s = value.substr(0, 3);
+            var a = value.length - 7;
+            for (; a > 0; a--) s += "*";
+            s += value.substr(value.length - 4, 4);
+            return s;
+        } else {
+            return value;
+        }
+    }
+    return "";
 }
