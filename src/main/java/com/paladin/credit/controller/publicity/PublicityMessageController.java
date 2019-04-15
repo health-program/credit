@@ -106,7 +106,6 @@ public class PublicityMessageController extends ControllerSupport {
         return CommonResponse.getResponse(publicityMessageService.removeByPrimaryKey(id));
     }
 
-
     
     @PostMapping(value = "/export")
 	@ResponseBody

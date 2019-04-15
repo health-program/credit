@@ -17,14 +17,8 @@ public class PublicityMessageVO {
 	// 标题
 	private String title;
 
-	// 
-	private String thumbnail;
-
 	// 副标题
 	private String subtitle;
-
-	// 简介
-	private String summary;
 
 	// 内容
 	private String content;
@@ -39,38 +33,15 @@ public class PublicityMessageVO {
 	private String publishTarget;
 
 	// 
-	private String label;
-
-	// 
 	private String attachments;
 
 	// 审核人
 	private String examineUserId;
 
-	// 创建时间
-	private Date createTime;
-
-	// 创建人
-	private String createUserId;
-
-	// 操作时间
-	private Date updateTime;
-
-	// 操作人
-	private String updateUserId;
-
-
 	// 获取附件文件
 	public List<SysAttachment> getAttachmentFiles() {
 		if (attachments != null && attachments.length() != 0) {
 			return AttachmentContainer.getAttachments(attachments.split(","));
-		}
-		return null;
-	}
-
-	public SysAttachment getThumbnailUrl() {
-		if (thumbnail != null && thumbnail.length() != 0) {
-			return AttachmentContainer.getAttachment(thumbnail);
 		}
 		return null;
 	}
@@ -99,28 +70,12 @@ public class PublicityMessageVO {
 		this.title = title;
 	}
 
-	public String getThumbnail() {
-		return thumbnail;
-	}
-
-	public void setThumbnail(String thumbnail) {
-		this.thumbnail = thumbnail;
-	}
-
 	public String getSubtitle() {
 		return subtitle;
 	}
 
 	public void setSubtitle(String subtitle) {
 		this.subtitle = subtitle;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
 	}
 
 	public String getContent() {
@@ -155,14 +110,6 @@ public class PublicityMessageVO {
 		this.publishTarget = publishTarget;
 	}
 
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
 	public String getAttachments() {
 		return attachments;
 	}
@@ -177,38 +124,6 @@ public class PublicityMessageVO {
 
 	public void setExamineUserId(String examineUserId) {
 		this.examineUserId = examineUserId;
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public String getCreateUserId() {
-		return createUserId;
-	}
-
-	public void setCreateUserId(String createUserId) {
-		this.createUserId = createUserId;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getUpdateUserId() {
-		return updateUserId;
-	}
-
-	public void setUpdateUserId(String updateUserId) {
-		this.updateUserId = updateUserId;
 	}
 
 }

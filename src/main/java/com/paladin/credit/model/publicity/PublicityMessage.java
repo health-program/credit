@@ -26,14 +26,8 @@ public class PublicityMessage extends UnDeleteBaseModel {
 	// 标题
 	private String title;
 
-
-	private String thumbnail;
-
 	// 副标题
 	private String subtitle;
-
-	// 简介
-	private String summary;
 
 	// 内容
 	@IgnoreInMultipleResult
@@ -47,9 +41,6 @@ public class PublicityMessage extends UnDeleteBaseModel {
 
 	// 发布对象
 	private String publishTarget;
-
-	// 
-	private String label;
 
 	// 
 	private String attachments;
@@ -81,28 +72,12 @@ public class PublicityMessage extends UnDeleteBaseModel {
 		this.title = title;
 	}
 
-	public String getThumbnail() {
-		return thumbnail;
-	}
-
-	public void setThumbnail(String thumbnail) {
-		this.thumbnail = thumbnail;
-	}
-
 	public String getSubtitle() {
 		return subtitle;
 	}
 
 	public void setSubtitle(String subtitle) {
 		this.subtitle = subtitle;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
 	}
 
 	public String getContent() {
@@ -135,14 +110,6 @@ public class PublicityMessage extends UnDeleteBaseModel {
 
 	public void setPublishTarget(String publishTarget) {
 		this.publishTarget = publishTarget;
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
 	}
 
 	public String getAttachments() {

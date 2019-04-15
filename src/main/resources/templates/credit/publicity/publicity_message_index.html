@@ -4,42 +4,30 @@
 <head th:include="/credit/header" />
 
 <body>
-<tt:constant enumcode="publicity-message-status,publicity-message-type" />
+    <tt:constant enumcode="publicity-message-status,publicity-message-type" />
     <section class="content-header">
-        <h1>信息发布</h1>
+        <h1>公告发布</h1>
     </section>
     <section class="content">
         <div class="box box-solid">
             <div class="box-body">
                 <form id="searchbar" class="form-horizontal form-search">
                     <div class="form-group">
-                        <label for="title" class="col-md-1 control-label" style="padding-right: 0px" >公告标题：</label>
-                        <div class="col-md-2" style="padding-left: 0px">
-                            <input name="title" class="form-control"   placeholder="请输入公告标题" th:value="${query?.title}" />
+                        <div class="col-md-2">
+                            <input name="title" class="form-control" placeholder="请输入公告标题" th:value="${query?.title}" />
                         </div>
-                        <label for="status" class="col-md-1 control-label" style="padding-left: 0px;padding-right: 0px;width: 60px">状态：</label>
-                        <div class="col-md-2 no-padding">
-                            <select name="status" class="form-control tonto-select-constant"  th:attr="selectedvalue=${query?.status}" enumcode="publicity-message-status">
-                                <option value="">请选择</option>
+                        <div class="col-md-2">
+                            <select name="status" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.status}" enumcode="publicity-message-status">
+                                <option value="">请选择消息类型</option>
                             </select>
                         </div>
-                        <label for="startTime" class="col-md-1 control-label" style="padding-right: 0px;padding-left: 0px">开始时间：</label>
-                        <div class="col-md-2 no-padding">
-                            <input type="text" name="startTime" placeholder="请输入发布开始时间" class="form-control tonto-datepicker-date" autocomplete="off" th:value="${query?.startTime}" />
-                        </div>
-                        <label for="endTime" class="col-md-1 control-label" style="padding-right: 0px">结束时间：</label>
-                        <div class="col-md-2 no-padding">
-                            <input type="text" name="endTime" placeholder="请输入发布结束时间" class="form-control tonto-datepicker-date" autocomplete="off" th:value="${query?.endTime}" />
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
                         </div>
                     </div>
-                	<div class="form-group">
-	                    <div class="col-md-12">
-		                    <div class="pull-right">
-		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
-		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
-		                    </div>
-		                </div>
-	                </div>
                     <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
                     <input type="text" style="display:none">
                 </form>
@@ -52,7 +40,7 @@
                 <table id="dataGrid"></table>
                 <div id="toolbar">
                     <div class="btn-group">
-                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>添加公告</a>
                     </div>
                 </div>
             </div>
@@ -70,21 +58,19 @@
             idField: "id",
             columns: [
                 [
-                    {title: "公告标题", field: "title"},
-                   /* {title: "接受范围", field: "publishTarget"},*/
-                    {title: "信息类型描述", field: "type",enumcode:"publicity-message-type"},
-                    {title: "状态", field: "status", enumcode: "publicity-message-status"},
-                    {title: "发布时期", field: "publishTime", formatter: "date"},
-                    {title: "创建日期", field: "createTime", formatter: "date"},
+                    { title: "公告标题", field: "title" },
+                    { title: "信息类型", field: "type", enumcode: "publicity-message-type" },
+                    { title: "状态", field: "status", enumcode: "publicity-message-status" },
+                    { title: "发布时期", field: "publishTime", formatter: "date" },
                     {
                         title: "操作",
                         align: "center",
                         width: "200px",
                         events: {
-                            'click .detail': function (e, value, row, index) {
+                            'click .detail': function(e, value, row, index) {
                                 detail(row);
                             },
-                            'click .remove': function (e, value, row, index) {
+                            'click .remove': function(e, value, row, index) {
                                 remove(row);
                             }
                         },

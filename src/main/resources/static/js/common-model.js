@@ -356,11 +356,11 @@ var _Model = function(name, column, options) {
                     }
                 }
 
-                that.columns.forEach(function(column) {
-                    if (column.fieldBuilder.formDataHandler(column, formData, that) === false) {
+                for (var k = 0; k < that.columns.length; k++) {
+                    if (that.columns[k].fieldBuilder.formDataHandler(that.columns[k], formData, that) === false) {
                         return false;
                     }
-                });
+                }
 
                 var beforeSubmit = that.config.beforeSubmit;
                 if (beforeSubmit && typeof beforeSubmit === 'function') {
@@ -674,8 +674,8 @@ var _FieldBuilder = function(name, interfaces) {
 
             var p = model.viewBody.find("[name='" + column.name + "']");
             if (!p || p.length == 0) return;
-            var d = p.parent(),
-                f = d.parent();
+            var d = p.is("div") ? p : p.parent();
+            var f = d.parent();
             d.hide();
             d.prev().hide();
             if (f.children(":visible").length == 0) {
@@ -697,8 +697,7 @@ var _FieldBuilder = function(name, interfaces) {
             }
 
             var p = model.viewBody.find("[name='" + column.name + "']");
-            if (!p || p.length == 0) return;
-            var d = p.parent();
+            var d = p.is("div") ? p : p.parent();
             d.show();
             d.prev().show();
             d.parent().show();
@@ -737,8 +736,8 @@ var _FieldBuilder = function(name, interfaces) {
 
             var p = model.editBody.find("[name='" + column.name + "']");
             if (!p || p.length == 0) return;
-            var d = p.parent(),
-                f = d.parent();
+            var d = p.is("div") ? p : p.parent();
+            var f = d.parent();
             d.hide();
             d.prev().hide();
             if (f.children(":visible").length == 0) {
@@ -760,7 +759,7 @@ var _FieldBuilder = function(name, interfaces) {
 
             var p = model.editBody.find("[name='" + column.name + "']");
             if (!p || p.length == 0) return;
-            var d = p.parent();
+            var d = p.is("div") ? p : p.parent();
             d.show();
             d.prev().show();
             d.parent().show();
@@ -2061,9 +2060,6 @@ var _tagsinputFieldBuilder = new _FieldBuilder("TAGSINPUT", {
 
 // 子模块域构建器
 var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
-    initHandler: function(column, model) {
-        column.isFirstEdit = true;
-    },
     getEditValue: function(column, model) {
         // 获取域EDIT页面值
         if (typeof column.getEditValue === 'function') {
@@ -2302,6 +2298,105 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
 
         var colCount = column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
         html += '<div name="' + column.name + '" class="col-sm-' + colCount + '"></div>\n';
+        return {
+            colspan: colspan,
+            html: html
+        };
+    }
+});
+
+// 子模块域构建器
+var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
+    initHandler: function(column, model) {
+        if (model.config.pattern != 'view') {
+            var that = this;
+            column.editor = UE.getEditor(model.name + '_' + column.name + '_editor');
+            column.editor.ready(function() {
+                that.fillEdit(column, model.data, model);
+                column.editorReady = true;
+            })
+        }
+
+        if (model.config.pattern != 'edit') {
+            $("#" + model.name + '_' + column.name + '_editor_show_btn').click(function() {
+                var content = model.data ? model.data[column.name] : '';
+                $.openPageLayer('<div style="padding:40px;padding-right:55px">' + content + '</div>');
+            });
+        }
+    },
+    getEditValue: function(column, model) {
+        // 获取域EDIT页面值
+        if (typeof column.getEditValue === 'function') {
+            return column.getEditValue(column, model);
+        }
+        return column.editor.getContent();
+    },
+    getFormData: function(data, column) {
+        data[column.name] = column.editor.getContent();
+    },
+    formDataHandler: function(column, formData, model) {
+        // 提交表单数据调用
+        if (typeof column.formDataHandler === 'function') {
+            return column.formDataHandler(column, formData, model);
+        }
+
+        var content = column.editor.getContent();
+
+        if (!content && column.required === 'required') {
+            $.errorMessage(column.title + "不能为空");
+            return false;
+        }
+
+        formData.push({
+            name: column.name,
+            value: content,
+            type: "text",
+            required: false
+        });
+    },
+    fillView: function(column, data, model) {
+        // VIEW页面填充值时候调用
+        if (typeof column.fillView === 'function') {
+            return column.fillView(column, data, model);
+        }
+    },
+    fillEdit: function(column, data, model) {
+        // EDIT页面填充值时候调用
+        if (typeof column.fillEdit === 'function') {
+            return column.fillEdit(column, data, model);
+        }
+
+        if (column.editorReady === true) {
+            var content = data ? data[column.name] : '';
+            column.editor.setContent(content);
+        }
+    },
+    generateViewFormHtml: function(column, isFirst, options) {
+        if (typeof column.generateViewFormHtml === 'function') {
+            return column.generateViewFormHtml(column, isFirst, options);
+        }
+        var colspan = column.colspan || options.maxColspan;
+        var html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + column.title + '：</label>\n';
+
+        var colCount = column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
+        html += '<div name="' + column.name + '" class="col-sm-' + colCount + '"><label class="control-label"><a href="javascript:void(0)" id="' + options.id + '_' + column.name + '_editor_show_btn">查看富文本</a></label></div>\n';
+        return {
+            colspan: colspan,
+            html: html
+        };
+    },
+    generateEditFormHtml: function(column, isFirst, options) {
+        if (typeof column.generateEditFormHtml === 'function') {
+            return column.generateEditFormHtml(column, isFirst, options);
+        }
+        var colspan = column.colspan || options.maxColspan,
+            required = column.required === 'required',
+            html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
+            column.title + '：</label>\n';
+
+        var colCount = column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
+        var height = column.height || "500px";
+        html += '<div name="' + column.name + '" class="col-sm-' + colCount + '"><script type="text/plain" id="' + options.id + '_' + column.name + '_editor" style="width:100%;height:' + height + ';"></script></div>\n';
         return {
             colspan: colspan,
             html: html
