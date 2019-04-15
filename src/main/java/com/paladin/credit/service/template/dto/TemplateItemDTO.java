@@ -18,6 +18,9 @@ public class TemplateItemDTO {
 	@NotNull(message = "项目目标类型不能为空")
 	private Integer itemTargetType;
 
+	@NotNull(message = "项目是否多选不能为空")
+	private Integer isMultiple;
+	
 	// 选项
 	private List<TemplateItemSelectionDTO> selections;
 
@@ -51,6 +54,14 @@ public class TemplateItemDTO {
 
 	public void setSelections(List<TemplateItemSelectionDTO> selections) {
 		this.selections = selections;
+	}
+
+	public Integer getIsMultiple() {
+		return isMultiple;
+	}
+
+	public void setIsMultiple(Integer isMultiple) {
+		this.isMultiple = isMultiple;
 	}
 
 }

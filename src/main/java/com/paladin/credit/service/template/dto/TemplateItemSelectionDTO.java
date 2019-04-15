@@ -10,7 +10,7 @@ public class TemplateItemSelectionDTO {
 	private String selectionName;
 
 	// 选项标号（ABCDE）
-	private String selectionGrade;
+	private Integer selectionGrade;
 
 	public String getId() {
 		return id;
@@ -28,11 +28,11 @@ public class TemplateItemSelectionDTO {
 		this.selectionName = selectionName;
 	}
 
-	public String getSelectionGrade() {
+	public Integer getSelectionGrade() {
 		return selectionGrade;
 	}
 
-	public void setSelectionGrade(String selectionGrade) {
+	public void setSelectionGrade(Integer selectionGrade) {
 		this.selectionGrade = selectionGrade;
 	}
 

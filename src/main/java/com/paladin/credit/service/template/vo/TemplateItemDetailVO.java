@@ -14,6 +14,8 @@ public class TemplateItemDetailVO {
 
 	// 项目适用对象
 	private Integer itemTargetType;
+	
+	private Integer isMultiple;
 
 	// 选项
 	private List<TemplateItemSelection> selections;
@@ -48,6 +50,14 @@ public class TemplateItemDetailVO {
 
 	public void setSelections(List<TemplateItemSelection> selections) {
 		this.selections = selections;
+	}
+
+	public Integer getIsMultiple() {
+		return isMultiple;
+	}
+
+	public void setIsMultiple(Integer isMultiple) {
+		this.isMultiple = isMultiple;
 	}
 
 }

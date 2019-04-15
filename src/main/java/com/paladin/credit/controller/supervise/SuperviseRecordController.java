@@ -1,10 +1,11 @@
-package com.paladin.credit.controller.template;
+package com.paladin.credit.controller.supervise;
 
-import com.paladin.credit.controller.template.dto.TemplateItemExportCondition;
-import com.paladin.credit.model.template.TemplateItem;
-import com.paladin.credit.service.template.TemplateItemService;
-import com.paladin.credit.service.template.dto.TemplateItemQuery;
-import com.paladin.credit.service.template.dto.TemplateItemDTO;
+import com.paladin.credit.controller.supervise.dto.SuperviseRecordExportCondition;
+import com.paladin.credit.model.supervise.SuperviseRecord;
+import com.paladin.credit.service.supervise.SuperviseRecordService;
+import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
+import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
+import com.paladin.credit.service.supervise.vo.SuperviseRecordVO;
 
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
@@ -31,65 +32,67 @@ import java.io.IOException;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/credit/template/item")
-public class TemplateItemController extends ControllerSupport {
+@RequestMapping("/credit/supervise/record")
+public class SuperviseRecordController extends ControllerSupport {
 
     @Autowired
-    private TemplateItemService templateItemService;
+    private SuperviseRecordService superviseRecordService;
 
     @GetMapping("/index")
-    @QueryInputMethod(queryClass = TemplateItemQuery.class)
+    @QueryInputMethod(queryClass = SuperviseRecordQuery.class)
     public String index() {
-        return "/credit/template/template_item_index";
+        return "/credit/supervise/supervise_record_index";
     }
 
     @RequestMapping(value = "/find/page", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
-    @QueryOutputMethod(queryClass = TemplateItemQuery.class, paramIndex = 0)
-    public Object findPage(TemplateItemQuery query) {
-        return CommonResponse.getSuccessResponse(templateItemService.searchPage(query));
+    @QueryOutputMethod(queryClass = SuperviseRecordQuery.class, paramIndex = 0)
+    public Object findPage(SuperviseRecordQuery query) {
+        return CommonResponse.getSuccessResponse(superviseRecordService.searchPage(query));
     }
     
     @GetMapping("/get")
     @ResponseBody
     public Object getDetail(@RequestParam String id, Model model) {   	
-        return CommonResponse.getSuccessResponse(templateItemService.getItem(id));
+        return CommonResponse.getSuccessResponse(beanCopy(superviseRecordService.get(id), new SuperviseRecordVO()));
     }
     
     @GetMapping("/add")
     public String addInput() {
-        return "/credit/template/template_item_add";
+        return "/credit/supervise/supervise_record_add";
     }
 
     @GetMapping("/detail")
     public String detailInput(@RequestParam String id, Model model) {
     	model.addAttribute("id", id);
-        return "/credit/template/template_item_detail";
+        return "/credit/supervise/supervise_record_detail";
     }
     
     @PostMapping("/save")
 	@ResponseBody
-    public Object save(@Valid @RequestBody TemplateItemDTO templateItemDTO, BindingResult bindingResult) {
+    public Object save(@Valid SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
+        SuperviseRecord model = beanCopy(superviseRecordDTO, new SuperviseRecord());
 		String id = UUIDUtil.createUUID();
-		templateItemDTO.setId(id);
-		if (templateItemService.saveItem(templateItemDTO)) {
-			return CommonResponse.getSuccessResponse(templateItemService.getItem(id));
+		model.setId(id);
+		if (superviseRecordService.save(model) > 0) {
+			return CommonResponse.getSuccessResponse(beanCopy(superviseRecordService.get(id), new SuperviseRecordVO()));
 		}
 		return CommonResponse.getFailResponse();
 	}
 
     @PostMapping("/update")
 	@ResponseBody
-    public Object update(@Valid @RequestBody TemplateItemDTO templateItemDTO, BindingResult bindingResult) {
+    public Object update(@Valid SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
-		String id = templateItemDTO.getId();
-		if (templateItemService.updateItem(templateItemDTO)) {
-			return CommonResponse.getSuccessResponse(templateItemService.getItem(id));
+		String id = superviseRecordDTO.getId();
+		SuperviseRecord model = beanCopy(superviseRecordDTO, superviseRecordService.get(id));
+		if (superviseRecordService.update(model) > 0) {
+			return CommonResponse.getSuccessResponse(beanCopy(superviseRecordService.get(id), new SuperviseRecordVO()));
 		}
 		return CommonResponse.getFailResponse();
 	}
@@ -97,31 +100,24 @@ public class TemplateItemController extends ControllerSupport {
     @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public Object delete(@RequestParam String id) {
-        return CommonResponse.getResponse(templateItemService.removeItem(id));
+        return CommonResponse.getResponse(superviseRecordService.removeByPrimaryKey(id));
     }
-    
-    @GetMapping("/write")
-    public String write(@RequestParam String id, Model model) {
-    	model.addAttribute("id", id);
-        return "/credit/template/template_item_write";
-    }
-    
     
     @PostMapping(value = "/export")
 	@ResponseBody
-	public Object export(@RequestBody TemplateItemExportCondition condition) {
+	public Object export(@RequestBody SuperviseRecordExportCondition condition) {
 		if (condition == null) {
 			return CommonResponse.getFailResponse("导出失败：请求参数异常");
 		}
 		condition.sortCellIndex();
-		TemplateItemQuery query = condition.getQuery();
+		SuperviseRecordQuery query = condition.getQuery();
 		try {
 			if (query != null) {
 				if (condition.isExportAll()) {
-					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, templateItemService.searchAll(query), TemplateItem.class));
+					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, superviseRecordService.searchAll(query), SuperviseRecord.class));
 				} else if (condition.isExportPage()) {
 					return CommonResponse.getSuccessResponse("success",
-							ExportUtil.export(condition, templateItemService.searchPage(query).getData(), TemplateItem.class));
+							ExportUtil.export(condition, superviseRecordService.searchPage(query).getData(), SuperviseRecord.class));
 				}
 			}
 			return CommonResponse.getFailResponse("导出数据失败：请求参数错误");

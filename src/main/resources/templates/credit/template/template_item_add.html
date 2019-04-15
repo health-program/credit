@@ -4,7 +4,7 @@
 <head th:include="/credit/header" />
 
 <body>
-    <tt:constant enumcode="item-target-type,selection-grade-type" />
+    <tt:constant enumcode="item-target-type,selection-grade-type,boolean-type" />
     <section class="content-header">
         <h1>项目管理</h1>
         <ol class="breadcrumb">
@@ -33,6 +33,10 @@
                         <div class="col-sm-3">
                             <p name="itemTargetType" class="form-control-static description"></p>
                         </div>
+                        <label for="isMultiple" class="col-sm-2 control-label">是否多选：</label>
+                        <div class="col-sm-3">
+                            <p name="isMultiple" class="form-control-static description"></p>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -46,12 +50,17 @@
                     </div>
                     <div class="form-group">
                         <label for="itemTargetType" class="col-sm-3 control-label"><i class="required-label fa fa-asterisk"></i>项目适用对象：</label>
-                        <div class="col-sm-3">
-                            <select name="itemTargetType" class="form-control tonto-select-constant" required="required" enumcode="item-target-type">
-                            </select>
+                        <div class="col-sm-8">
+                            <div name="itemTargetType" class="tonto-radio-constant" required="required" enumcode="item-target-type"></div>
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="isMultiple" class="col-sm-3 control-label"><i class="required-label fa fa-asterisk"></i>是否多选：</label>
+                        <div class="col-sm-3">
+                            <div name="isMultiple" class="tonto-radio-constant" required="required" enumcode="boolean-type"></div>
+                        </div>
+                    </div>
+                    <div class="form-group form-button-bar">
                         <div class="col-sm-2 col-sm-offset-3">
                             <button type="button" id="item_model_form_submit_btn" class="btn btn-primary btn-block">保存</button>
                         </div>
@@ -90,7 +99,8 @@
         server: false,
         columns: [
             { title: "项目名称", name: "itemName", required: "required", inputType: "TEXTAREA" },
-            { title: "项目适用对象", name: "itemTargetType", required: "required", inputType: "SELECT", enum: "item-target-type" }
+            { title: "项目适用对象", name: "itemTargetType", required: "required", inputType: "RADIO", enum: "item-target-type", colspan: 2 },
+            { title: "是否多选", name: "isMultiple", required: "required", inputType: "RADIO", enum: "boolean-type" }
         ]
     }
 

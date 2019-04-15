@@ -23,6 +23,7 @@
         id: "model",
         name: "新增机构",
         url:"/credit/org/agency/save",
+        cancelBtn: false,
         columns: [
         	 { title: "机构名称", name: "name", required: "required", inputType: "TEXT" },
              { title: "机构类型", name: "agencyType", enum: "agency-type", inputType: "SELECT" },
@@ -42,6 +43,8 @@
     $(function() {       
         var html = generateEditHtml(options);
         $(".content").html(html);
+        $.initComponment($(".content"));
+
         var model = new tonto.Model("model", options.columns, {
             pattern:"edit",
             successCallback:function(){
@@ -51,7 +54,6 @@
             }
         });
         model.setData(null);
-        $.initComponment($(".content"));
     });
     </script>
 </body>

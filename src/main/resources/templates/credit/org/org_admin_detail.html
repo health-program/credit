@@ -36,10 +36,11 @@
     
         $.getAjax("/credit/org/admin/get?id="+$("#id").val(), function(data) {
             var html = generateHtml(options);
+            $.initComponment($(".content"));
+
             $(".content").html(html);
             var model = new tonto.Model("model", options.columns);
             model.setData(data);
-            $.initComponment($(".content"));
         });
     });
     </script>

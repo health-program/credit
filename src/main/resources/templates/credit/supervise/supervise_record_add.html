@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+    <tt:constant enumcode="selection-grade-type,item-target-type,"/>
+    <section class="content-header">
+        <h1>检查记录</h1>
+        <ol class="breadcrumb">
+            <li><a href="/credit/supervise/record/index"><i class="fa fa-table"></i>列表</a></li>
+            <li class="active">新增</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/credit/supervise/record/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <div th:include="/credit/footer" />
+    <script type="text/javascript">
+    var options = {
+        id: "model",
+        name: "新增",
+        cancelBtn: false,
+        url:"/credit/supervise/record/save",
+        columns: [
+				{ title: "目标ID", name: "targetId", required: "required", inputType: "TEXT" },
+				{ title: "目标类型", name: "targetType", enum: "item-target-type", required: "required", inputType: "SELECT" },
+				{ title: "机构ID", name: "agencyId", required: "required", inputType: "TEXT" },
+				{ title: "人员ID", name: "personnelId", required: "required", inputType: "TEXT" },
+				{ title: "人员姓名", name: "personnelName", required: "required", inputType: "TEXT" },
+				{ title: "人员性别", name: "personnelSex", required: "required", inputType: "TEXT" },
+				{ title: "人员身份证", name: "personnelIdentification", required: "required", inputType: "TEXT" },
+				{ title: "人员地址", name: "personnelAddress", inputType: "TEXT" },
+				{ title: "监察项目", name: "item", required: "required", inputType: "TEXT" },
+				{ title: "监察结果名称", name: "resultName", required: "required", inputType: "TEXT" },
+				{ title: "监察结果等级", name: "resultGrade", enum: "selection-grade-type", required: "required", inputType: "SELECT" },
+				{ title: "说明", name: "explain", required: "required", inputType: "TEXT" },
+				{ title: "附件", name: "explainAttachment", fileName: "explainAttachmentFile", maxFileCount: 5, required: "required", inputType: "ATTACHMENT" }
+				]
+    }
+
+    $(function() {       
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+       	$.initComponment($(".content"));
+        
+        var model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            successCallback:function(){
+                $.successAlert("保存成功",function(){
+                    window.location = "/credit/supervise/record/index";
+                });
+            }
+        });
+        model.setData(null);
+    });
+    </script>
+</body>
+
+</html>

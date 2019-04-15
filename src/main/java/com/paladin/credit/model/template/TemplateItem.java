@@ -15,6 +15,9 @@ public class TemplateItem extends BaseModel {
 	// 项目名称
 	private String itemName;
 
+	// 是否多选
+	private Integer isMultiple;
+	
 	// 项目适用对象
 	private Integer itemTargetType;
 
@@ -40,5 +43,13 @@ public class TemplateItem extends BaseModel {
 
 	public void setItemTargetType(Integer itemTargetType) {
 		this.itemTargetType = itemTargetType;
+	}
+
+	public Integer getIsMultiple() {
+		return isMultiple;
+	}
+
+	public void setIsMultiple(Integer isMultiple) {
+		this.isMultiple = isMultiple;
 	}
 }

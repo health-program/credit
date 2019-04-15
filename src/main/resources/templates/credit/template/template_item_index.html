@@ -70,12 +70,15 @@
                             },
                             'click .remove': function(e, value, row, index) {
                                 remove(row);
+                            },
+                            'click .write': function(e, value, row, index) {
+                                write(row);
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
                             return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="write btn btn-xs btn-success" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>录入</button>' +
                                 '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
-
                         }
                     }
                 ]
@@ -97,6 +100,10 @@
 
     function detail(row) {
         window.location = '/credit/template/item/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function write(row) {
+        window.location = '/credit/template/item/write' + (row ? ('?id=' + row.id) : '');
     }
 
     function remove(row) {
