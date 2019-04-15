@@ -31,9 +31,9 @@ function generateBox(options, content) {
     var id = options.id,
         name = options.name,
         columns = options.columns,
-        icon = options.icon || (name ? 'fa fa-edit' : null),
+        icon = options.icon,
         editable = options.editable !== false,
-        borderClass = options.boxHeaderClass || 'box-header with-border',
+        borderClass = options.boxHeaderClass || 'box-header no-border',
         boxStyle = options.boxStyle,
         boxHeaderStyle = options.boxHeaderStyle,
         boxClass = options.boxClass || 'box box-widget',
@@ -82,7 +82,6 @@ function generateHtml(options) {
 }
 
 function generateEditHtml(options) {
-    options.icon = options.icon || (options.name ? 'fa fa-edit' : null);
     options.editable = options.editable === false ? false : true;
     return generateBox(options, generateEditFormHtml(options));
 }
@@ -95,7 +94,7 @@ function generateEditFormHtml(options, hide) {
 
     var html =
         '<div id="' + id + '_edit" class="' + bodyClass + '" ' + (hide == true ? 'style="display: none"' : '') + '>\n' +
-        '   <form id="' + id + '_form" action="' + options.url + '" method="post" class="form-horizontal' + (formClass === false ? '' : (formClass ? ' ' + formClass : ' edit-body')) + '">\n';
+        '   <form id="' + id + '_form" action="' + options.url + '" method="post" class="form-horizontal' + (formClass ? ' ' + formClass : '') + '">\n';
 
     var defaultConfig = {
             maxColspan: 2,
@@ -199,7 +198,6 @@ function generateEditFormHtml(options, hide) {
 }
 
 function generateViewHtml(options) {
-    options.icon = options.icon || (name ? 'fa fa-list' : null);
     options.editable = options.editable === true ? true : false;
     return generateBox(options, generateViewFormHtml(options));
 }
@@ -408,10 +406,6 @@ var _Model = function(name, column, options) {
             cache[depend.dependColumn] = 1;
         }
 
-        if (that.config.pattern == 'view') {
-            that.editBtn.hide();
-        }
-
         // 初始化接口
         that.columns.forEach(function(column) {
             var fun = column.fieldBuilder.initHandler;
@@ -419,6 +413,10 @@ var _Model = function(name, column, options) {
                 column.fieldBuilder.initHandler(column, that);
             }
         });
+
+        if (that.config.pattern == 'view') {
+            that.editBtn.hide();
+        }
     }
 }
 
@@ -609,6 +607,11 @@ _Model.prototype.getFormData = function() {
             d[item.name] = item.value;
         }
     });
+
+    this.columns.forEach(function(column) {
+        column.fieldBuilder.getFormData(d, column);
+    });
+
     return d;
 }
 
@@ -635,6 +638,9 @@ var _FieldBuilder = function(name, interfaces) {
             if (typeof column.formDataHandler === 'function') {
                 return column.formDataHandler(column, formData, model);
             }
+        },
+        getFormData: function(data, column) {
+
         },
         dependTrigger: function(column, model) {
             // 依赖域变化注册，监听依赖域变更
@@ -1716,7 +1722,8 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
         }
         var colspan = column.colspan || options.maxColspan;
         var html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + column.title + '：</label>\n';
-        html += '<div name="' + column.name + '" class="col-sm-' + ((options.maxColspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '"></div>\n';
+        var colCount = column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
+        html += '<div name="' + column.name + '" class="col-sm-' + colCount + '"></div>\n';
         return {
             colspan: colspan,
             html: html
@@ -1735,7 +1742,8 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
         var colspan = column.colspan || options.maxColspan,
             required = column.required === 'required';
         var html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') + column.title + '：</label>\n';
-        html += '<div name="' + column.name + '" class="col-sm-' + ((options.maxColspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
+        var colCount = column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
+        html += '<div name="' + column.name + '" class="col-sm-' + colCount + '">\n';
         html += '<input type="file" name="' + column.fileName + '" ' + (column.maxFileCount === 1 ? '' : 'multiple') + '>\n';
         html += '</div>\n';
         return {
@@ -1831,7 +1839,8 @@ var _radioFieldBuilder = new _FieldBuilder("RADIO", {
         var colspan = column.colspan || 1,
             required = column.required === 'required',
             html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') + column.title + '：</label>\n';
-        html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
+        var colCount = column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
+        html += '<div class="col-sm-' + colCount + '">\n';
         html += '<div name="' + column.name + '" class="tonto-radio-constant" ' + (required ? 'required="required"' : '') + ' enumcode="' + column.enum + '"></div>\n';
         html += '</div>\n';
         return {
@@ -1953,7 +1962,8 @@ var _checkBoxFieldBuilder = new _FieldBuilder("CHECKBOX", {
             required = column.required === 'required',
             html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
             column.title + '：</label>\n';
-        html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
+        var colCount = column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
+        html += '<div class="col-sm-' + colCount + '">\n';
         html += '<div name="' + column.name + '" class="tonto-checkbox-constant" ' + (required ? 'required="required"' : '') + ' enumcode="' + column.enum + '"></div>\n';
         html += '</div>\n';
         return {
@@ -2038,7 +2048,8 @@ var _tagsinputFieldBuilder = new _FieldBuilder("TAGSINPUT", {
             required = column.required === 'required',
             html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
             column.title + '：</label>\n';
-        html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
+        var colCount = column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
+        html += '<div class="col-sm-' + colCount + '">\n';
         html += '<input name="' + column.name + '" type="text" class="form-control" data-role="tagsinput" placeholder="输入内容后回车" ' + (required ? 'required="required"' : '') + '/>\n';
         html += '</div>\n';
         return {
@@ -2067,6 +2078,15 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
             return datas;
         }
         return null;
+    },
+    getFormData: function(data, column) {
+        var datas = [];
+        if (column.contentMap) {
+            for (var o in column.contentMap) {
+                datas.push(column.contentMap[o].data);
+            }
+        }
+        data[column.name] = datas;
     },
     fillView: function(column, data, model) {
         // VIEW页面填充值时候调用
@@ -2112,7 +2132,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
             itemHtml = column.createSubDataHtml();
 
         } else {
-            itemHtml = '<div class="box-tools pull-right">' +
+            itemHtml = '<div class="pull-right">' +
                 '<a class="btn" id="' + column.name + '_sub_edit_btn" href="javascript:void(0)"><i class="fa fa-edit"></i>编辑</a>\n' +
                 '<a class="btn" id="' + column.name + '_sub_remove_btn" href="javascript:void(0)"><i class="fa fa-remove"></i>删除</a>\n' +
                 '</div>';
@@ -2129,7 +2149,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
         var div, com;
         if (!id) {
             id = column.name + "_content_" + new Date().getTime();
-            div = $('<li class="item"></li>');
+            div = $('<li class="item" style="background: none;"></li>');
             com = {
                 id: id,
                 div: div,
@@ -2198,7 +2218,14 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
             maxColspan: 1,
             firstLabelSize: 3,
             inputSize: 8,
-            labelSize: 3
+            labelSize: 3,
+            formButtonBar: [{
+                id: subOp.id + '_edit_cancel_btn',
+                type: 'button',
+                name: '取消',
+                class: 'btn btn-default btn-block',
+                order: 999
+            }]
         }
 
         var subOp = $.extend(defaultSubOp, subOp);
@@ -2208,6 +2235,10 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
         layerOption = $.extend({
                 success: function(layero, index) {
                     $.initComponment($(layero));
+                    $("#" + subOp.id + '_edit_cancel_btn').click(function() {
+                        layer.close(index);
+                    });
+
                     var subModel = new tonto.Model(subOp.id, subOp.columns, {
                         server: false,
                         pattern: "edit",
@@ -2246,7 +2277,9 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
         }
         var colspan = column.colspan || options.maxColspan;
         var html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + column.title + '：</label>\n';
-        html += '<div name="' + column.name + '" class="col-sm-' + ((options.maxColspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '"></div>\n';
+
+        var colCount = column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
+        html += '<div name="' + column.name + '" class="col-sm-' + colCount + '"></div>\n';
         return {
             colspan: colspan,
             html: html
@@ -2266,7 +2299,9 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
             required = column.required === 'required',
             html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
             column.title + '：</label>\n';
-        html += '<div name="' + column.name + '" class="col-sm-' + ((options.maxColspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '"></div>\n';
+
+        var colCount = column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
+        html += '<div name="' + column.name + '" class="col-sm-' + colCount + '"></div>\n';
         return {
             colspan: colspan,
             html: html

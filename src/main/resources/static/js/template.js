@@ -29,6 +29,7 @@ var personnelOutSystemColumns = [
             html += '<span class="text-muted text-center">' +
                 '<span style="border-right:2px solid #f4f4f4;padding-right:20px;margin-left:20px;">' + $.getConstantEnumValue("sex-type", data.personnelSex) + '</span>' +
                 '<span style="border-right:2px solid #f4f4f4;padding-right:20px;margin-left:20px;">' + hideIdentification(data.personnelIdentification) + '</span>' +
+                '<span style="margin-left:20px;">' + omitString(data.personnelAddress, 30) + '</span>' +
                 '</span>';
             return html;
         },
@@ -38,7 +39,7 @@ var personnelOutSystemColumns = [
             server: false,
             layerOption: {
                 height: 400,
-                width: 800
+                width: 700
             },
             columns: [
                 { title: "人员姓名", name: "personnelName", inputType: "TEXT" },
