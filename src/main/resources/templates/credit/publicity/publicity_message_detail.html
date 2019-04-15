@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+<link rel="stylesheet" href="/static/assets/ueditor/themes/default/css/ueditor.min.css" />
+<link rel="stylesheet" href="/static/assets/tagsinput/bootstrap-tagsinput.css" />
+
+<body>
+<tt:constant enumcode="publicity-message-status,publicity-message-type" />
+    <section class="content-header">
+        <h1>信息发布</h1>
+        <ol class="breadcrumb">
+            <li><a href="/credit/publicity/message/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+<section class="content">
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <i class="fa fa-edit"></i>
+            <h3 class="box-title">详情</h3>
+            <div class="box-tools pull-right">
+                <a class="btn" id="model_edit_btn" href="javascript:void(0)"><i class="fa fa-edit"></i>编辑</a>
+            </div>
+        </div>
+        <div id="model_view" class="box-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="title" class="col-sm-3 control-label">标题：</label>
+                    <div class="col-sm-3">
+                        <p name="title" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="publishTime" class="col-sm-3 control-label">发布时间：</label>
+                    <div class="col-sm-3">
+                        <p name="publishTime" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="type" class="col-sm-3 control-label">类型：</label>
+                    <div class="col-sm-3">
+                        <p name="type" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="label" class="col-sm-3 control-label">标签：</label>
+                    <div class="col-sm-3">
+                        <p id="labelP" name="label" class="form-control-static description"></p>
+                    </div>
+                </div>
+               <!-- <div class="form-group" id="attachments">
+                    <label for="thumbnail" class="col-sm-3 control-label">标题配图：</label>
+                    <div name="thumbnail" class="col-sm-8">
+                    </div>
+                </div>-->
+                <!--<div class="form-group" id="publishTargetViewGroup">
+                    <label for="publishTarget" class="col-sm-3 control-label">发送对象：<br>
+                    </label>
+                    <div class="col-sm-8">
+                        <p id="publishTargetP" class="form-control-static description"></p>
+                    </div>
+                </div>-->
+                <div class="form-group">
+                    <label for="summary" class="col-sm-3 control-label">简介：</label>
+                    <div class="col-sm-8">
+                        <p name="summary" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="content" class="col-sm-3 control-label">内容：</label>
+                    <div class="col-sm-3">
+                        <p id="contentP" class="form-control-static description">
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group" id="attachments">
+                    <label for="attachments" class="col-sm-3 control-label">附件：</label>
+                    <div name="attachments" class="col-sm-8">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="model_edit" class="box-body" style="display: none">
+            <form id="model_form" action="/credit/publicity/message/update" method="post" class="form-horizontal edit-body" enctype="multipart/form-data">
+                <input type="hidden" id="id" name="id" th:value="${id}"/>
+                <div class="form-group">
+                    <label for="title" class="col-sm-3 control-label"><i class="required-label fa fa-asterisk"></i>标题：</label>
+                    <div class="col-sm-3">
+                        <input name="title" placeholder="请输入标题" type="text" class="form-control" required="required"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="publishTime" class="col-sm-3 control-label"><i class="required-label fa fa-asterisk"></i>发布时间：</label>
+                    <div class="col-sm-3">
+                        <input name="publishTime" placeholder="请输入发布时间" type="text" autocomplete="off" class="form-control tonto-datepicker-date" required="required"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="type" class="col-sm-3 control-label"><i class="required-label fa fa-asterisk"></i>类型：</label>
+                    <div class="col-sm-3 tonto-radio-constant" name="type" enumcode="publicity-message-type">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="label" class="col-sm-3 control-label">标签：</label>
+                    <div class="col-sm-3">
+                        <input name="label" id="label" type="text" class="form-control" placeholder="输入内容后回车"/>
+                    </div>
+                </div>
+                <!--<div class="form-group">
+                    <label for="thumbnailUrl" class="col-sm-3 control-label">标题配图：</label>
+                    <div class="col-sm-5">
+                        <input type="file" name="thumbnailUrl">
+                    </div>
+                </div>-->
+                <!--<div class="form-group" id="publishTargetGroup" style="display: none">
+                    <label for="publishTarget" class="col-sm-3 control-label">发送对象：<br>
+                        <font style="color:red">（不选为全部）</font>
+                    </label>
+                    <div class="col-sm-8" id="publishTargetDiv">
+                    </div>
+                </div>-->
+                <div class="form-group">
+                    <label for="summary" class="col-sm-3 control-label">简介：</label>
+                    <div class="col-sm-5">
+                        <textarea name="summary" style="width:100%;height: 100px" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="content" class="col-sm-3 control-label"><i class="required-label fa fa-asterisk"></i>内容：</label>
+                    <div class="col-sm-8" id="contentDiv">
+                        <script type="text/plain" id="myEditor" style="width:100%;height:540px;"></script>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="attachmentFiles" class="col-sm-3 control-label">附件：</label>
+                    <div class="col-sm-8">
+                        <input type="file" name="attachmentFiles" multiple>
+                    </div>
+                </div>
+                <input type="hidden" id="statusInput" name="status" />
+                <div class="form-group">
+                    <!--<div class="col-sm-1 col-sm-offset-3">
+                        <button type="submit" class="btn btn-primary btn-block" onclick="setStatus(0)">暂存</button>
+                    </div>-->
+                    <div class="col-sm-1 col-sm-offset-5">
+                        <button type="submit" class="btn btn-success btn-block" onclick="setStatus(0)">提交</button>
+                    </div>
+                    <div class="col-sm-1 col-sm-offset-1">
+                        <button type="button" id="model_form_cancel_btn" class="btn btn-default btn-block">取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+        <a href="/credit/publicity/message/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+</section>
+    <div th:include="/credit/footer" />
+<script type="text/javascript" src="/static/assets/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/static/assets/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" src="/static/assets/tagsinput/bootstrap-tagsinput.min.js"></script>
+    <script type="text/javascript">
+        var messageData;
+
+        function fillViewHandler(model, data) {
+            $("#contentP").html('<a href="javascript:void(0);" onclick="previewContent()"><i class="glyphicon glyphicon-search" ></i>查看富文本</a>');
+            var ns = data.label,
+                c = "";
+            if (ns) {
+                ns = ns.split(",");
+                ns.forEach(function(n) {
+                    c += '<span class="label label-info" style="margin-right:10px">' + n + '</span>';
+                })
+            }
+            $("#labelP").html(c);
+            $("#publishTargetP").html(c);
+
+        }
+
+        function previewContent() {
+            if (messageData) {
+                $.openPageLayer('<div style="padding:40px;padding-right:55px">' + messageData.content + '</div>');
+            }
+        }
+
+        function fillEditHandler(model, data) {
+            editor.setContent(data.content);
+            var ns = data.label,
+                c = "";
+            if (ns) {
+                ns = ns.split(",");
+                ns.forEach(function(n) {
+                    $("#label").tagsinput("add", n);
+                })
+            }
+        }
+
+        function setStatus(stat) {
+            $("#statusInput").val(stat);
+        }
+    $(function() {
+        $("#label").tagsinput();
+        initEditor();
+    	var options = {
+	        id: "model",
+	        name: "详情",
+	        url:"/credit/publicity/message/update?id="+$("#id").val(),
+	        columns: [
+                {title: "标题", name: "title", inputType: "TEXT"},
+                {title: "简介", name: "summary", inputType: "TEXT"},
+                {title: "类型", name: "type", inputType: "RADIO", enum: "publicity-message-type"},
+                /*{
+                    title: "标题配图",
+                    name: "thumbnail",
+                    inputType: "ATTACHMENT",
+                    maxFileCount: 1,
+                    fileName: "thumbnailUrl"
+                },*/
+                {title: "发布时间", name: "publishTime", inputType: "DATE"},
+                {title: "内容", name: "content", inputType: "TEXT"},
+                {title: "标签", name: "label", inputType: "TEXT"},
+                {
+                    title: "附件",
+                    name: "attachments",
+                    inputType: "ATTACHMENT",
+                    fileName: "attachmentFiles"
+                }
+				]
+	    };
+    
+        $.getAjax("/credit/publicity/message/get?id="+$("#id").val(), function(data) {
+            var model = new tonto.Model("model", options.columns,{
+                beforeSubmit: function () {
+                    let content = editor.getContent();
+                    if (!content) {
+                        $.errorMessage("请输入内容");
+                        return false;
+                    }
+                },
+                extraParam: function () {
+                    var result = {};
+                    let content = editor.getContent();
+                    if (content) {
+                        result.content = content;
+                    }
+                    return result;
+                },
+                successCallback: function(data) {
+                    $.successMessage("修改成功");
+                    model.setData(data);
+                    messageData = data;
+                    model.toView();
+                },
+                fillEditHandler: fillEditHandler,
+                fillViewHandler: fillViewHandler
+            });
+            model.setData(data);
+            messageData = data;
+        });
+    });
+        var editor;
+
+        function initEditor() {
+            editor = UE.getEditor('myEditor');
+           /* messageInput = $('<textarea name="content" class="no-validate" style="width:100%;height: 300px;display:none" disabled="disabled"></textarea>');
+            $("#contentDiv").append(messageInput);*/
+        }
+    </script>
+</body>
+
+</html>
