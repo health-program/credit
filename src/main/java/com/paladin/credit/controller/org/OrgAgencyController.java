@@ -1,36 +1,27 @@
 package com.paladin.credit.controller.org;
 
+import com.paladin.common.core.export.ExportUtil;
 import com.paladin.credit.controller.org.dto.OrgAgencyExportCondition;
 import com.paladin.credit.core.CreditAgencyContainer;
 import com.paladin.credit.model.org.OrgAgency;
 import com.paladin.credit.service.org.OrgAgencyService;
-import com.paladin.credit.service.org.dto.OrgAgencyQuery;
 import com.paladin.credit.service.org.dto.OrgAgencyDTO;
+import com.paladin.credit.service.org.dto.OrgAgencyQuery;
 import com.paladin.credit.service.org.vo.OrgAgencyVO;
-
-import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
-import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.framework.utils.uuid.UUIDUtil;
-
+import com.paladin.framework.web.response.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/credit/org/agency")
@@ -66,8 +57,13 @@ public class OrgAgencyController extends ControllerSupport {
 	}
 
 	@GetMapping("/detail")
-	public String detailInput(@RequestParam String id, Model model) {
+	public String detailInput(@RequestParam String id, @RequestParam(required = false) Boolean isTemplatePage, Model model) {
 		model.addAttribute("id", id);
+		if (isTemplatePage) {
+			model.addAttribute("callBackUrl", "/credit/template/item/agency/index");
+		} else {
+			model.addAttribute("callBackUrl", "/credit/org/agency/index");
+		}
 		return "/credit/org/org_agency_detail";
 	}
 

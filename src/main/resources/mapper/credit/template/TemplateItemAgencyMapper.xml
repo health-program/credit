@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.credit.mapper.template.TemplateItemAgencyMapper">
+
+    <select id="searchAgencyTemplatesByQuery" resultType="com.paladin.credit.service.template.vo.TemplateItemAgencyVO">
+        SELECT
+        a.id,
+        o.id AS agencyId,
+        o.name AS agencyName,
+        t.id AS itemId,
+        t.item_name AS itemName,
+        t.item_target_type AS itemTargetType
+        FROM
+        org_agency AS o
+        LEFT JOIN template_item_agency AS a ON o.id = a.agency_id
+        LEFT JOIN template_item AS t ON a.item_id = t.id
+        WHERE
+        o.is_delete = 0
+        <if test="query.agencyId != null">
+            AND o.id = #{query.agencyId}
+        </if>
+        <if test="query.itemName != null and query.itemName != ''">
+            AND t.item_name = #{query.itemName}
+        </if>
+        <if test="query.itemTargetType != null">
+            AND t.item_target_type = #{query.itemTargetType}
+        </if>
+    </select>
+    <select id="searchNoConfigTemplatesByQuery"
+            resultType="com.paladin.credit.service.template.vo.TemplateItemAgencyVO">
+        SELECT
+        i.id AS itemId,
+        i.item_name AS itemName,
+        i.item_target_type AS itemTargetType
+        FROM
+        template_item AS i
+        LEFT JOIN ( SELECT item_id, agency_id FROM template_item_agency WHERE 1 =1
+        <if test="query.agencyId != null">
+            AND template_item_agency.agency_id = #{query.agencyId}
+        </if>
+        ) a ON i.id = a.item_id
+        WHERE
+        a.item_id IS NULL
+        <if test="query.itemName != null and query.itemName != ''">
+            AND i.item_name = #{query.itemName}
+        </if>
+        <if test="query.itemTargetType != null">
+            AND i.item_target_type = #{query.itemTargetType}
+        </if>
+    </select>
+</mapper>

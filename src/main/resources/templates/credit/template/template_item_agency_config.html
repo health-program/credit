@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="item-target-type" />
+<section class="content-header">
+    <h1 th:text="|机构模板管理-${agencyName}|"></h1>
+    <ol class="breadcrumb">
+        <li><a href="/credit/template/item/agency/index"><i class="fa fa-list-alt"></i>机构列表</a></li>
+        <li ><a th:href="@{/credit/template/item/agency/configuration/index(id=${agencyId},agencyName=${agencyName})}"><i class="fa fa-list-alt"></i>已配置模板</a></li>
+        <li class="active">项目配置</li>
+    </ol>
+</section>
+<section class="content">
+    <input type="hidden" id="agencyName"  th:value="${agencyName}">
+    <div class="box box-solid">
+        <div class="box-body">
+            <form id="searchbar" class="form-horizontal form-search">
+                <input type="hidden" id="agencyId" name="agencyId" th:value="${agencyId}">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="itemName" th:value="${query?.itemName}" placeholder="请输入查询的项目名称" />
+                    </div>
+                    <div class="col-sm-2">
+                        <select name="itemTargetType" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.itemTargetType}" enumcode="item-target-type">
+                            <option value="">请选择项目目标类型</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+            <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+            <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+        </div>
+    </div>
+    <div class="box box-solid" style="margin-top:20px">
+        <div id="result" class="box-body">
+            <table id="dataGrid"></table>
+            <div id="toolbar">
+                <div class="btn-group">
+                    <a onclick="add()" class="btn btn-default"><i class="fa fa-cogs"></i>&nbsp;批量配置项目</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/credit/footer" />
+<script type="text/javascript">
+    var table,agencyId,agencyName;
+    $(function() {
+        agencyId = $("#agencyId").val();
+        agencyName = $("#agencyName").val();
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {checkbox:true},
+                    { title: "项目名称", field: "itemName" },
+                    { title: "项目适用对象", field: "itemTargetType", enumcode: "item-target-type" },
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "150px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                           /* 'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            },*/
+                            'click .config': function(e, value, row, index) {
+                                config(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="config btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-cog"></i>配置</button>';
+                        }
+                    }
+                ]
+            ],
+            url: '/credit/template/item/agency/configuration/find',
+            searchbar: '#searchbar',
+            /*exportUrl: '/credit/template/item/export',
+            showExport: true,*/
+            //clickToSelect:true,
+            showColumns: true,
+            pagination: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+    function add() {
+        let itemIds = getSelectedItemIds();
+        layer.confirm('确定批量配置'+itemIds.length+'个模板吗?',{ icon : 3}, function() {
+            $.postAjax('/credit/template/item/agency/configs',{"agencyId":agencyId,"itemId":itemIds},function () {
+                $.successMessage("模板配置成功");
+                window.location = '/credit/template/item/agency/configuration/index?id='+agencyId+'&agencyName='+agencyName;
+            })
+        });
+    }
+
+    function detail(row) {
+        $.openUrlLayerOrLocate('/credit/template/item/agency/detail',{
+            data:{itemId: row.itemId},
+            width:1000,
+            height:490
+        });
+    }
+
+    function config(row) {
+        if (row) {
+            layer.confirm('确定配置该模板吗?',{ icon : 3}, function() {
+                $.getAjax('/credit/template/item/agency/config?itemId=' + row.itemId +'&agencyId=' +agencyId, function() {
+                    $.successMessage("模板配置成功");
+                    window.location = '/credit/template/item/agency/configuration/index?id='+agencyId+'&agencyName='+agencyName;
+                });
+            });
+        }
+    }
+
+   /* function remove(row) {
+        if (row) {
+            layer.confirm('确定删除吗?', function() {
+                $.getAjax('/credit/template/item/delete?id=' + row.id, function() {
+                    $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
+        }
+    }*/
+
+    function getSelectedItemIds() {
+        let rows = table.getSelections();
+        let ids = [];
+        if (rows && rows.length > 0) {
+            $.each(rows, function (index, row) {
+                ids.push(row.itemId)
+            })
+        } else {
+            $.errorMessage("请选择至少一个模板进行配置");
+            return;
+        }
+        return ids;
+    }
+</script>
+</body>
+
+</html>
