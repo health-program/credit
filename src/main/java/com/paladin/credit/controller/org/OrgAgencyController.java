@@ -61,6 +61,7 @@ public class OrgAgencyController extends ControllerSupport {
 		model.addAttribute("id", id);
 		if (isTemplatePage) {
 			model.addAttribute("callBackUrl", "/credit/template/item/agency/index");
+			model.addAttribute("isTemplatePage", 1);
 		} else {
 			model.addAttribute("callBackUrl", "/credit/org/agency/index");
 		}
