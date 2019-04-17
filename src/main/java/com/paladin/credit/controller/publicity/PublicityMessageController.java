@@ -93,6 +93,7 @@ public class PublicityMessageController extends ControllerSupport {
 		if (attachments != null && attachments.size() > 4) {
 			return CommonResponse.getErrorResponse("附件数量不能超过4张");
 		}
+		model.setStatus(PublicityMessage.STATUS_TEMP);
 		model.setAttachments(sysAttachmentService.splicingAttachmentId(attachments));
 		if (publicityMessageService.update(model) > 0) {
 			return CommonResponse.getSuccessResponse(beanCopy(publicityMessageService.get(id), new PublicityMessageVO()));
