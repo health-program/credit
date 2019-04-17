@@ -78,6 +78,7 @@ public class PublicityMessageController extends ControllerSupport {
 		}
         PublicityMessage model = beanCopy(publicityMessageDTO, new PublicityMessage());
 		model.setAttachments(sysAttachmentService.splicingAttachmentId(attachments));
+		model.setStatus(PublicityMessage.STATUS_TEMP);
 		return CommonResponse.getResponse(publicityMessageService.save(model));
 	}
 
