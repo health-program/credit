@@ -8,19 +8,19 @@
     <section class="content-header">
         <h1>机构管理</h1>
         <ol class="breadcrumb">
-            <li><a href="/credit/org/agency/index"><i class="fa fa-list-alt"></i>机构列表</a></li>
+            <li><a th:href="${callBackUrl}"><i class="fa fa-list-alt"></i>机构列表</a></li>
             <li class="active">机构详情</li>
         </ol>
     </section>
     <section class="content">
     </section>
     <div class="col-sm-2 col-sm-offset-5 btn-back">
-        <a href="/credit/org/agency/index" class="btn btn-primary btn-block">返回</a>
+        <a th:href="${callBackUrl}" class="btn btn-primary btn-block">返回</a>
     </div>
     <input type="hidden" id="id" th:value="${id}" />
+    <input type="hidden" id="isTemplatePage" th:value="${isTemplatePage}" />
     <div th:include="/credit/footer" />
     <script type="text/javascript">
-    $(function() {
         var options = {
             id: "model",
             name: "机构详情",
@@ -39,14 +39,18 @@
                 { title: "法人或负责人证件", name: "chargePersonId", inputType: "TEXT" },
                 { title: "人事信息", name: "personnelInformation", inputType: "TEXTAREA" }
             ]
+        };
+        var html;
+    $(function() {
+        if ($("#isTemplatePage").val()) {
+            html = generateViewHtml(options);
+        } else {
+            html = generateHtml(options);
         }
-
+        $(".content").html(html);
+        $.initComponment($(".content"));
         $.getAjax("/credit/org/agency/get?id=" + $("#id").val(), function(data) {
-            var html = generateHtml(options);
-            $(".content").html(html);
-            $.initComponment($(".content"));
-
-            var model = new tonto.Model("model", options.columns);
+            var model = new tonto.Model("model", options.columns,options);
             model.setData(data);
         });
     });

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="item-target-type,selection-grade-type,boolean-type" />
+<input th:value="${itemId}" id="id" type="hidden" />
+<section class="content" style="padding-top: 30px">
+</section>
+<!--<div class="col-sm-2 col-sm-offset-5 btn-back">
+    <a href="/credit/template/item/index" class="btn btn-primary btn-block">返回</a>
+</div>-->
+<div th:include="/credit/footer" />
+<script type="text/javascript">
+    var options = {
+        id: "item_model",
+        //name: "模板详情",
+        server: false,
+        editFormClass: false,
+        columns: [
+            { title: "项目名称", name: "itemName", required: "required", inputType: "TEXTAREA" },
+            { title: "项目适用对象", name: "itemTargetType", required: "required", inputType: "RADIO", enum: "item-target-type", colspan: 2 },
+            { title: "是否多选", name: "isMultiple", required: "required", inputType: "RADIO", enum: "boolean-type", colspan: 2 },
+            {
+                title: "项目选项",
+                name: "selections",
+                required: "required",
+                inputType: "SUB-MODEL",
+                subViewField: "personnelName",
+                addSubModelBtnTitle: '添加选项',
+                colCount: 5,
+                subTitleViewHtmml: function(data) {
+                    var a = $.getConstantEnumValue("selection-grade-type", data.selectionGrade);
+                    var html = '<span class="product-description" style="line-height:34px">' + (data.selectionName ? omitString(data.selectionName, 20) + '（' + a + ')' : a) + '</span>';
+                    return html;
+                },
+                subModelOptions: {
+                    headBorder: false,
+                    hearderBox: false,
+                    server: false,
+                    layerOption: {
+                        height: 400,
+                        width: 700
+                    },
+                    columns: [
+                        { title: "选项名称", name: "selectionName", inputType: "TEXT" },
+                        { title: "选项诚信等级", name: "selectionGrade", enum: "selection-grade-type", required: "required", inputType: "SELECT" }
+                    ]
+                }
+            },
+        ]
+    }
+
+    var itemModel;
+
+    $(function() {
+        var html = generateViewHtml(options);
+        $(".content").html(html);
+        $.initComponment($(".content"));
+        itemId = $("#id").val();
+        $.getAjax("/credit/template/item/get?id=" + itemId, function(data) {
+            itemModel = new tonto.Model("item_model", options.columns, {
+                server: false,
+            });
+            itemModel.setData(data);
+        });
+    });
+</script>
+</body>
+
+</html>

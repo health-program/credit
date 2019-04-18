@@ -27,7 +27,7 @@
     var options = {
         id: "model",
         name: "公告详情",
-        url: "/credit/publicity/message/update",
+        url: "/credit/publicity/message/update?id="+$("#id").val(),
         columns: [
             { title: "标题", name: "title", inputType: "TEXT", colspan: 2, required: "required" },
             { title: "类型", name: "type", inputType: "RADIO", enum: "publicity-message-type", required: "required" },

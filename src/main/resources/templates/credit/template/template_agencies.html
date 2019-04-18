@@ -6,7 +6,7 @@
 <body>
     <tt:constant enumcode="agency-type," />
     <section class="content-header">
-        <h1>机构管理</h1>
+        <h1>机构模板管理</h1>
     </section>
     <section class="content">
         <div class="box box-solid">
@@ -37,9 +37,9 @@
             <div id="result" class="box-body">
                 <table id="dataGrid"></table>
                 <div id="toolbar">
-                    <div class="btn-group">
+                    <!--<div class="btn-group">
                         <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>添加机构</a>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>
@@ -75,13 +75,13 @@
                             'click .detail': function(e, value, row, index) {
                                 detail(row);
                             },
-                            'click .remove': function(e, value, row, index) {
-                                remove(row);
+                            'click .edit': function(e, value, row, index) {
+                                edit(row);
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
                             return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
-                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                                '<button class="edit btn btn-xs btn-success"><i class="fa fa-wrench"></i>模板配置</button>';
 
                         }
                     }
@@ -89,8 +89,8 @@
             ],
             url: '/credit/org/agency/find/page',
             searchbar: '#searchbar',
-            exportUrl: '/credit/org/agency/export',
-            showExport: true,
+            //exportUrl: '/credit/org/agency/export',
+            //showExport: true,
             showColumns: true,
             pagination: true,
             toolbar: "#toolbar",
@@ -98,23 +98,12 @@
         });
     }
 
-    function add() {
-        window.location = '/credit/org/agency/add';
-    }
-
     function detail(row) {
-        window.location = '/credit/org/agency/detail?isTemplatePage=false' + (row ? ('&id=' + row.id) : '');
+        window.location = '/credit/org/agency/detail?isTemplatePage=true' + (row ? ('&id=' + row.id) : '');
     }
 
-    function remove(row) {
-        if (row) {
-            layer.confirm('确定删除吗?', function() {
-                $.getAjax('/credit/org/agency/delete?id=' + row.id, function() {
-                    $.successMessage("删除成功");
-                    table.refresh();
-                });
-            });
-        }
+    function edit(row) {
+        window.location = '/credit/template/item/agency/configuration/index' + (row ? ('?id=' + row.id +'&agencyName='+row.name) : '');
     }
     </script>
 </body>
