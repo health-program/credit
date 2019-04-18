@@ -118,7 +118,12 @@ function generateEditFormHtml(options, hide) {
                 html += '<div class="form-group">\n';
             }
 
-            result = fieldBuilder.generateEditFormHtml(column, currentColspan == 0 ? true : false, options);
+            if (column.editable === false) {
+                result = fieldBuilder.generateViewFormHtml(column, currentColspan == 0 ? true : false, options);
+            } else {
+                result = fieldBuilder.generateEditFormHtml(column, currentColspan == 0 ? true : false, options);
+            }
+
             html += result.html;
 
             if (result.colspan == 0) {
@@ -274,6 +279,7 @@ function generateViewFormHtml(options) {
 var _Model = function(name, column, options) {
     var that = this;
     that.name = name;
+    options = options || {};
     that.container = options.container || $("#" + name + "_container");
 
     if (that.container.length == 0) {
@@ -599,7 +605,8 @@ _Model.prototype.checkEditDependency = function() {
 _Model.prototype.getFormData = function() {
     // TODO 附件等处理
     var jsonData = this.formBody.serializeArray();
-    var d = {};
+    var d = {},
+        that = this;
     jsonData.forEach(function(item) {
         if (d[item.name]) {
             d[item.name] = d[item.name] + "," + item.value;
@@ -608,8 +615,8 @@ _Model.prototype.getFormData = function() {
         }
     });
 
-    this.columns.forEach(function(column) {
-        column.fieldBuilder.getFormData(d, column);
+    that.columns.forEach(function(column) {
+        column.fieldBuilder.getFormData(d, column, that);
     });
 
     return d;
@@ -639,8 +646,15 @@ var _FieldBuilder = function(name, interfaces) {
                 return column.formDataHandler(column, formData, model);
             }
         },
-        getFormData: function(data, column) {
+        getFormData: function(data, column, model) {
+            if (typeof column.getFormData === 'function') {
+                return column.getFormData(data, column, model);
+            }
 
+            delete data[column.name];
+            if (column.editDisplay !== "hide") {
+                return data[column.name] = this.getEditValue(column, model);
+            }
         },
         dependTrigger: function(column, model) {
             // 依赖域变化注册，监听依赖域变更
@@ -1214,7 +1228,7 @@ var _selectFieldBuilder = new _FieldBuilder("SELECT", {
 
 
         if (isP) {
-            var v = this.getDataName(column, v);
+            var v = this.getDataName(column, ov);
 
             if (v || v === 0) {
                 input.removeClass("text-muted");
@@ -1451,6 +1465,35 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
         data[filename] = $.parseAttachmentData(data[filename]);
         if (v) {
             data[column.name] = v.split(column.separator || ",");
+        }
+    },
+    getFormData: function(data, column, model) {
+        if (typeof column.getFormData === 'function') {
+            return column.getFormData(data, column, model);
+        }
+
+        if (column.editDisplay !== "hide") {
+            // 有附件时，需要替换某些参数
+            var previews = column.inputAttachment.fileinput('getPreview');
+            var attachments = "";
+            if (previews && previews.config && previews.config.length > 0) {
+                previews.config.forEach(function(p) {
+                    attachments += p.key + ",";
+                });
+            }
+
+            data[column.name] = attachments;
+
+            // 动态加入未上传的文件数据
+            var files = column.inputAttachment.fileinput('getFileStack');
+            if (files) {
+                var fileArr = [];
+
+                files.forEach(function(file) {
+                    fileArr.push(file);
+                });
+                data[column.fileName] = fileArr;
+            }
         }
     },
     formDataHandler: function(column, formData, model) {
@@ -1869,7 +1912,11 @@ var _checkBoxFieldBuilder = new _FieldBuilder("CHECKBOX", {
             return column.getEditValue(column, model);
         }
 
-        return model.editBody.find("input[name='" + column.name + "']:checked").val();
+        var vals = [];
+        model.editBody.find("input[name='" + column.name + "']:checked").each(function() {
+            vals.push($(this).val());
+        });
+        return vals.join();
     },
     dependTrigger: function(column, model) {
         // 依赖域变化注册，监听依赖域变更
@@ -1992,7 +2039,7 @@ var _tagsinputFieldBuilder = new _FieldBuilder("TAGSINPUT", {
             return column.getEditValue(column, model);
         }
 
-        return model.editBody.find("input[name='" + column.name + "']").tagsinput("items")
+        return model.editBody.find("input[name='" + column.name + "']").tagsinput("items");
     },
     fillView: function(column, data, model) {
         // VIEW页面填充值时候调用
@@ -2330,9 +2377,6 @@ var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
             return column.getEditValue(column, model);
         }
         return column.editor.getContent();
-    },
-    getFormData: function(data, column) {
-        data[column.name] = column.editor.getContent();
     },
     formDataHandler: function(column, formData, model) {
         // 提交表单数据调用

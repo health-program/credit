@@ -53,7 +53,7 @@ var personnelOutSystemColumns = [
     { title: "文件照片上传", name: "explainAttachment", inputType: "ATTACHMENT", fileName: "explainAttachmentFiles", maxFileCount: 5, allowedFileExtensions: allowedFileExtensions }
 ]
 
-function createItemEditor(data) {
+function createItemEditor(data, el, callback) {
     var columns = data.itemTargetType == 1 ? agencyInSystemColumns : (data.itemTargetType == 2 ? personnelInSystemColumns : personnelOutSystemColumns);
     var html = generateHtml({
         id: "model",
@@ -66,11 +66,18 @@ function createItemEditor(data) {
         columns: columns,
         editFormClass: false
     });
-    $(".content").html(html);
-    $.initComponment($(".content"));
+    $(el).html(html);
+    $.initComponment($(el));
     var model = new tonto.Model("model", columns, {
         pattern: "edit",
-        server: false
+        server: false,
+        submitClick: function() {
+            var param = model.getFormData();
+
+            if (typeof callback === 'function') {
+                callback(param);
+            }
+        }
     });
     model.setData(data);
 
@@ -88,13 +95,18 @@ var _templateItemFieldBuilder = new _FieldBuilder("TEMPLATE-ITEM", {
 
         //return model.editBody.find("input[name='" + column.name + "']").tagsinput("items")
     },
+    getFormData: function(data, column, model) {
+        var vals = [];
+        model.editBody.find("input[name='" + column.name + "']:checked").each(function() {
+            vals.push($(this).val());
+        });
+        data[column.name] = vals;
+    },
     fillView: function(column, data, model) {
         // VIEW页面填充值时候调用
         if (typeof column.fillView === 'function') {
             return column.fillView(column, data, model);
         }
-
-
     },
     fillEdit: function(column, data, model) {
         // EDIT页面填充值时候调用

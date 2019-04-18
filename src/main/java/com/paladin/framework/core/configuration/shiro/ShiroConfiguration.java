@@ -31,9 +31,11 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -265,13 +267,14 @@ public class ShiroConfiguration {
 		shiroFilterFactoryBean.setUnauthorizedUrl(shiroProperties.getUnauthorizedUrl());
 
 		// 增加自定义过滤
-		//Map<String, Filter> filters = new HashMap<>();
-		//filters.put("authc", new AjaxFormAuthenticationFilter(shiroProperties));
-
-		//shiroFilterFactoryBean.setFilters(filters);
+		Map<String, Filter> filters = new HashMap<>();
+		filters.put("authc", new AjaxFormAuthenticationFilter(shiroProperties));
+		filters.put("logout", new AjaxLogoutFilter());
+		
+		shiroFilterFactoryBean.setFilters(filters);
 		// 拦截器.
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-
+		
 		// 配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
 		/**
 		 * anon（匿名） org.apache.shiro.web.filter.authc.AnonymousFilter authc（身份验证）
