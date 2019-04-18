@@ -17,24 +17,13 @@
     $(function() {
         var itemId = $("#id").val();
         $.getAjax("/credit/template/item/get?id=" + itemId, function(data) {
-            createItemEditor(data, ".content", function(data) {
-                console.log(data);
-
-                // var files = data.explainAttachmentFiles;
-                // if (files && files.length > 0) {
-                //     $.ajaxFileUpload({
-                //         url: '/common/upload/files', //用于文件上传的服务器端请求地址
-                //         type: 'post',
-                //         secureuri: false, //是否需要安全协议，一般设置为false
-                //         fileElementId: $("input[name='explainAttachmentFiles']").attr("id"), //文件上传域的ID
-                //         dataType: 'json', //返回值类型 一般设置为json
-                //         success: function(d) //服务器成功响应处理函数
-                //         {
-                //             //由于ajaxFileUpload把原来的file元素替换成新的file元素，所以之前绑定的change事件就失效了，需要重新绑定一下
-                //             console.log(d)
-                //         }
-                //     });
-                // }
+            createItemEditor(data, ".content", function(data, formSubmitBtn) {
+                var files = data.explainAttachmentFiles;
+                if (files) {
+                    ajaxUploadFile(files, function(att) {
+                        console.log(att);
+                    }, formSubmitBtn);
+                }
             });
         });
     });

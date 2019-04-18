@@ -75,7 +75,7 @@ function createItemEditor(data, el, callback) {
             var param = model.getFormData();
 
             if (typeof callback === 'function') {
-                callback(param);
+                callback(param, model.formSubmitBtn);
             }
         }
     });
