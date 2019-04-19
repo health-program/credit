@@ -10,6 +10,7 @@ import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.common.QueryType;
 import com.paladin.framework.core.ServiceSupport;
+import com.paladin.framework.utils.uuid.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,16 +32,17 @@ public class TemplateItemAgencyService extends ServiceSupport<TemplateItemAgency
     TemplateItemAgency templateItemAgency = new TemplateItemAgency();
     templateItemAgency.setAgencyId(agencyId);
     templateItemAgency.setItemId(itemId);
+    templateItemAgency.setId(UUIDUtil.createUUID());
     return save(templateItemAgency);
   }
 
     public int templateConfigByIds(String agencyId, List<String> itemIds) {
         int i = 0;
-        TemplateItemAgency templateItemAgency;
+        TemplateItemAgency templateItemAgency=  new TemplateItemAgency();
         for (String itemId : itemIds) {
-            templateItemAgency =  new TemplateItemAgency();
             templateItemAgency.setAgencyId(agencyId);
             templateItemAgency.setItemId(itemId);
+            templateItemAgency.setId(UUIDUtil.createUUID());
             i = save(templateItemAgency);
         }
         return i;
@@ -50,6 +52,7 @@ public class TemplateItemAgencyService extends ServiceSupport<TemplateItemAgency
      * 功能描述: <检查机构是否配置过该模板>
      * @param agencyId
      * @param itemId
+     *
      * @return  boolean
      */
   public boolean checkAgencyTemplateConfiged(String agencyId, String itemId) {
@@ -67,4 +70,10 @@ public class TemplateItemAgencyService extends ServiceSupport<TemplateItemAgency
         templateItemAgencyMapper.searchNoConfigTemplatesByQuery(query);
         return new PageResult<>(page);
   }
+
+      public PageResult<TemplateItemAgencyVO> searchTemplatesByQuery(TemplateItemAgencyQuery query) {
+        Page<TemplateItemAgencyVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+        templateItemAgencyMapper.searchTemplatesByQuery(query);
+        return new PageResult<>(page);
+      }
 }

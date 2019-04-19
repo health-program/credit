@@ -26,21 +26,6 @@ public class TemplateItemAgencyController extends ControllerSupport {
     @Autowired
     private TemplateItemAgencyService templateItemAgencyService;
 
-
-
-   /* @GetMapping("/index")
-    @QueryInputMethod(queryClass = TemplateItemAgencyQuery.class)
-    public String index() {
-        return "/credit/template/template_item_agency_index";
-    }
-
-    @RequestMapping(value = "/find/page", method = { RequestMethod.GET, RequestMethod.POST })
-    @ResponseBody
-    @QueryOutputMethod(queryClass = TemplateItemAgencyQuery.class, paramIndex = 0)
-    public Object findPage(TemplateItemAgencyQuery query) {
-        return CommonResponse.getSuccessResponse(templateItemAgencyService.searchPage(query));
-    }*/
-
 	@GetMapping("/index")
 	@QueryInputMethod(queryClass = OrgAgencyQuery.class)
 	public String index() {

@@ -2,7 +2,6 @@ package com.paladin.credit.model.template;
 
 import com.paladin.framework.common.BaseModel;
 
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 public class TemplateItemAgency extends BaseModel {
@@ -12,7 +11,6 @@ public class TemplateItemAgency extends BaseModel {
 
 
 	@Id
-	@GeneratedValue(generator = "UUID")
 	private String id;
 
 	// 项目ID
