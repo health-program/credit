@@ -4,6 +4,32 @@
 //
 // -----------------------------------------
 
+function _generateAttribute(obj) {
+    if (!obj) return;
+    var s = [];
+    for (var o in obj) {
+        var v = obj[o];
+        if (v !== undefined && v !== null) {
+            s.push(o + '="' + v + '"');
+        }
+    }
+    return s.length > 0 ? s.join(" ") : "";
+}
+
+function _generateTagAttribute(tag, obj) {
+    var s = [];
+    if (obj) {
+        for (var o in obj) {
+            var v = obj[o];
+            if (v !== undefined && v !== null) {
+                s.push(o + '="' + v + '"');
+            }
+        }
+    }
+    s = s.length > 0 ? s.join(" ") : "";
+    return "<" + tag + " " + s + "></" + tag + ">";
+}
+
 function generateToolBar(toolBtn) {
     var html = "";
     if (toolBtn) {
@@ -623,6 +649,9 @@ _Model.prototype.getFormData = function() {
 }
 
 var _FieldBuilderContainer = {};
+
+
+
 var _FieldBuilder = function(name, interfaces) {
     var that = this;
     that.name = name;
@@ -833,6 +862,7 @@ var _FieldBuilder = function(name, interfaces) {
             }
             return column.colspan || 1;
         },
+
         generateEditFormHtml: function(column, isFirst, options) {
             if (typeof column.generateEditFormHtml === 'function') {
                 return column.generateEditFormHtml(column, isFirst, options);
@@ -841,7 +871,7 @@ var _FieldBuilder = function(name, interfaces) {
                 required = column.required === 'required',
                 html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') + column.title + '：</label>\n';
             html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
-            html += '<input name="' + column.name + '" placeholder="请输入' + column.title + '" type="text" class="form-control" ' + (required ? 'required="required"' : '') + '/>\n';
+            html += '<input name="' + column.name + '" placeholder="请输入' + column.title + '" type="text" class="form-control" ' + (required ? 'required="required"' : '') + ' ' + _generateAttribute(column.attr) + '/>\n';
             html += '</div>\n';
             return {
                 colspan: colspan,
@@ -935,7 +965,7 @@ var _numberFieldBuilder = new _FieldBuilder("NUMBER", {
         html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
         if (column.unit || column.unitIcon) {
             html += '<div class="input-group">';
-            html += '<input name="' + column.name + '" class="form-control" ' + (required ? 'required="required"' : '') + ' type="number"></input>\n';
+            html += '<input name="' + column.name + '" class="form-control" ' + (required ? 'required="required"' : '') + ' type="number" ' + _generateAttribute(column.attr) + '></input>\n';
             if (column.unitIcon) {
                 html += '<div class="input-group-addon">';
                 html += '       <i class="' + column.unitIcon + '"></i>';
@@ -992,7 +1022,7 @@ var _textAreaFieldBuilder = new _FieldBuilder("TEXTAREA", {
             required = column.required === 'required';
         html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') + column.title + '：</label>\n';
         html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
-        html += '<textarea name="' + column.name + '" rows="' + (column.rows || 5) + '" placeholder="请输入' + column.title + '" class="form-control" ' + (required ? 'required="required"' : '') + '></textarea>\n';
+        html += '<textarea name="' + column.name + '" rows="' + (column.rows || 5) + '" placeholder="请输入' + column.title + '" class="form-control" ' + (required ? 'required="required"' : '') + ' ' + _generateAttribute(column.attr) + '></textarea>\n';
         html += '</div>\n';
         return {
             colspan: colspan,
@@ -1071,7 +1101,7 @@ var _dateFieldBuilder = new _FieldBuilder("DATE", {
             required = column.required === 'required',
             html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') + column.title + '：</label>\n';
         html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
-        html += '<input name="' + column.name + '" autocomplete="off" placeholder="请输入' + column.title + '" type="text" class="form-control tonto-datepicker-date" ' + (required ? 'required="required"' : '') + '/>\n';
+        html += '<input name="' + column.name + '" autocomplete="off" placeholder="请输入' + column.title + '" type="text" class="form-control tonto-datepicker-date" ' + (required ? 'required="required"' : '') + ' ' + _generateAttribute(column.attr) + '/>\n';
         html += '</div>\n';
         return {
             colspan: colspan,
@@ -1151,7 +1181,8 @@ var _timeFieldBuilder = new _FieldBuilder("TIME", {
             html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
             column.title + '：</label>\n';
         html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
-        html += '<input name="' + column.name + '" autocomplete="off" placeholder="请输入' + column.title + '" type="text" class="form-control tonto-datepicker-datetime" ' + (required ? 'required="required"' : '') + '/>\n';
+        html += '<input name="' + column.name + '" autocomplete="off" placeholder="请输入' + column.title +
+            '" type="text" class="form-control tonto-datepicker-datetime" ' + (required ? 'required="required"' : '') + ' ' + _generateAttribute(column.attr) + '/>\n';
         html += '</div>\n';
         return {
             colspan: colspan,
@@ -1269,7 +1300,8 @@ var _selectFieldBuilder = new _FieldBuilder("SELECT", {
             html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
             column.title + '：</label>\n';
         html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
-        html += '<select name="' + column.name + '" ' + (column.placeholder ? 'placeholder="' + column.placeholder + '"' : '') + ' class="form-control tonto-select-constant' + (multiple ? ' tonto-multiple-select" multiple="multiple"' : '"') + (required ? ' required="required"' : '') + ' enumcode="' + column.enum + '">\n';
+        html += '<select name="' + column.name + '" ' + (column.placeholder ? 'placeholder="' + column.placeholder + '"' : '') +
+            ' class="form-control tonto-select-constant' + (multiple ? ' tonto-multiple-select" multiple="multiple"' : '"') + (required ? ' required="required"' : '') + ' enumcode="' + column.enum + '" ' + _generateAttribute(column.attr) + '>\n';
         if (column.nullable !== false && !required && !multiple) {
             html += '<option value="">请选择</option>\n';
         }
@@ -1313,7 +1345,7 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
             input.select2({
                 placeholder: input.attr("placeholder") || "请选择", //未选择时显示文本
                 maximumSelectionSize: column.maxSelectionSize || null, //显示最大选项数目
-                multiple: true,
+                multiple: column.multiple !== false,
                 width: '100%',
                 allowClear: true
             });
@@ -1436,7 +1468,8 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
             html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
             column.title + '：</label>\n';
         html += '<div class="col-sm-' + ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '">\n';
-        html += '<select name="' + column.name + '"' + (column.placeholder ? ' placeholder="' + column.placeholder + '"' : '') + ' class="form-control"' + (multiple ? ' multiple="multiple"' : '') + (required ? ' required="required"' : '') + '>\n';
+        html += '<select name="' + column.name + '"' + (column.placeholder ? ' placeholder="' + column.placeholder + '"' : '') +
+            ' class="form-control"' + (multiple ? ' multiple="multiple"' : '') + (required ? ' required="required"' : '') + ' ' + _generateAttribute(column.attr) + '>\n';
         if (column.nullable !== false && !required && !multiple) {
             html += '<option value="">请选择</option>\n';
         }
@@ -2096,7 +2129,8 @@ var _tagsinputFieldBuilder = new _FieldBuilder("TAGSINPUT", {
             column.title + '：</label>\n';
         var colCount = column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
         html += '<div class="col-sm-' + colCount + '">\n';
-        html += '<input name="' + column.name + '" type="text" class="form-control" data-role="tagsinput" placeholder="输入内容后回车" ' + (required ? 'required="required"' : '') + '/>\n';
+        html += '<input name="' + column.name + '" type="text" class="form-control" data-role="tagsinput" placeholder="输入内容后回车" ' +
+            (required ? 'required="required"' : '') + ' ' + _generateAttribute(column.attr) + '/>\n';
         html += '</div>\n';
         return {
             colspan: colspan,

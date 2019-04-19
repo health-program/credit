@@ -1,3 +1,6 @@
+// 需要修改
+var $global_project = "demo";
+
 (function($) {
 
     // --------------------------------------
@@ -262,9 +265,8 @@
         ajaxUnLoginHandler: function(callback) {
             // ajax请求返回未登录状态处理
             // 暂时跳转主页面到登录页面，有时间可以做弹出登录窗口登录，成功后继续执行ajax请求处理
-
             $.failAlert("请先登录", function() {
-                top.location.href = "/hf/login";
+                top.location.href = $global_project + "/login";
             })
         },
         ajaxResponseCheck: function(response) {
@@ -556,11 +558,11 @@
         }
     });
 
+    _initValidator();
 
     $.extend({
         initComponment: function(container) {
-            _initEnumConstant(container);
-            _initValidator(container);
+            _initEnumConstant(container);            
             _initTable(container);
             _initForm(container);
             _initAttachment(container);
@@ -577,10 +579,15 @@
 })(jQuery);
 
 
-function _initCommon() {
+function _initCommon(container) {
+
+    container = $(container);
+    if (container.length == 0) {
+        container = $("body");
+    }
 
     // 关键词搜索框添加绑定回车函数
-    $('.tonto-btn-search').each(function() {
+    container.find('.tonto-btn-search').each(function() {
         var btn = $(this);
         $("body").bind('keypress', function(event) {
             if (event.keyCode == "13") {
@@ -589,7 +596,7 @@ function _initCommon() {
         });
     });
 
-    $('.tonto-select').each(function() {
+    container.find('.tonto-select').each(function() {
         var that = $(this);
         var selected = that.attr("selectedvalue");
         if (selected) {
@@ -597,7 +604,7 @@ function _initCommon() {
         }
     });
 
-    $('.tonto-datepicker-date').each(function() {
+    container.find('.tonto-datepicker-date').each(function() {
         $.beautifyInput(this, "fa fa-calendar", false);
         laydate.render({
             elem: this,
@@ -609,7 +616,7 @@ function _initCommon() {
         });
     });
 
-    $('.tonto-datepicker-year').each(function() {
+    container.find('.tonto-datepicker-year').each(function() {
         $.beautifyInput(this, "fa fa-calendar", false);
         laydate.render({
             elem: this,
@@ -621,7 +628,7 @@ function _initCommon() {
         });
     });
 
-    $('.tonto-datepicker-datetime').each(function() {
+    container.find('.tonto-datepicker-datetime').each(function() {
         $.beautifyInput(this, "fa fa-calendar", false);
         laydate.render({
             elem: this,
@@ -633,7 +640,7 @@ function _initCommon() {
         });
     });
 
-    $('.tonto-datepicker-time').each(function() {
+    container.find('.tonto-datepicker-time').each(function() {
         $.beautifyInput(this, "fa fa-clock-o", false);
         laydate.render({
             elem: this,
@@ -645,25 +652,25 @@ function _initCommon() {
         });
     });
 
-    $('input').iCheck({
+    container.find('input').iCheck({
         checkboxClass: 'icheckbox_square-blue', // 注意square和blue的对应关系
         radioClass: 'iradio_square-blue'
         //increaseArea: '10%' // optional
     });
 
     // 必须在icheck后面，否则需要更改源代码适用icheck
-    $('.tonto-multiple-select').each(function() {
+    container.find('.tonto-multiple-select').each(function() {
         $(this).select2({
             placeholder: $(this).attr("placeholder") || "请选择", //未选择时显示文本
             maximumSelectionSize: $(this).attr("max-selection-size") || null, //显示最大选项数目
-            multiple: true,
+            multiple: true ,
             width: '100%',
             allowClear: true
         });
     });
 
     // 搜索按钮回车
-    $('.tonto-btn-search').each(function() {
+    container.find('.tonto-btn-search').each(function() {
         var a = $(this);
         $(document).keyup(function(event) {
             if (event.keyCode == 13) {
@@ -1426,10 +1433,15 @@ function _initTable() {
                     return;
                 }
 
+                if (column.exportable === false) {
+                    return;
+                }
+
                 exportColumns.push({
+                    auto: true,
                     field: column.field,
                     name: column.title || column.field,
-                    checked: column.visible ? ' checked="checked"' : '',
+                    checked: column.visible,
                     column: column
                 });
             });
@@ -1439,7 +1451,7 @@ function _initTable() {
             }
 
             $.each(exportColumns, function(i, column) {
-                columnHtml += '<label class="control-label radio-label"><input type="checkbox" ' + column.checked + ' name="dataColumn" value="' + column.field + '">&nbsp;&nbsp;' + column.name + '&nbsp;&nbsp;</label>'
+                columnHtml += '<label class="control-label radio-label"><input type="checkbox" ' + (column.checked ? ' checked="checked"' : '') + ' name="dataColumn" value="' + column.field + '">&nbsp;&nbsp;' + column.name + '&nbsp;&nbsp;</label>'
             });
 
             var exportHtml = '<div style="padding:30px;padding-top:20px">' +
@@ -1506,9 +1518,7 @@ function _initTable() {
                             }
 
                             if (c) {
-                                if (c.change === false) {
-                                    param.columns.push(c);
-                                } else {
+                                if (c.auto === true) {
                                     var f = c.column.formatType,
                                         q = {
                                             field: c.field,
@@ -1521,7 +1531,6 @@ function _initTable() {
 
                                     q.enumType = c.column.enumcode ? c.column.enumcode : null;
 
-
                                     if (!c.column.exportColumnWidth) {
                                         // 粗略计算width
                                         q.width = firstTd.find("td:eq('" + c.column.fieldIndex + "')").width();
@@ -1532,7 +1541,13 @@ function _initTable() {
                                         q.width = c.column.exportColumnWidth;
                                     }
 
+                                    if (c.column.exportOption) {
+                                        q = $.extend(q, c.column.exportOption);
+                                    }
+
                                     param.columns.push(q);
+                                } else {
+                                    param.columns.push(c);
                                 }
                             }
                         });
