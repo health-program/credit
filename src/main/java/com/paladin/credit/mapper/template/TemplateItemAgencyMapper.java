@@ -13,4 +13,6 @@ public interface TemplateItemAgencyMapper extends CustomMapper<TemplateItemAgenc
     List<TemplateItemAgencyVO> searchAgencyTemplatesByQuery(@Param("query") TemplateItemAgencyQuery query);
 
     List<TemplateItemAgencyVO> searchNoConfigTemplatesByQuery(@Param("query") TemplateItemAgencyQuery query);
+
+    List<TemplateItemAgencyVO> searchTemplatesByQuery(@Param("query") TemplateItemAgencyQuery query);
 }

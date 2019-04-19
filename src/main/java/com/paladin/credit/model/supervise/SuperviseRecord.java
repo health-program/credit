@@ -1,11 +1,11 @@
 package com.paladin.credit.model.supervise;
 
 import com.paladin.framework.common.BaseModel;
+
 import javax.persistence.Id;
 
 public class SuperviseRecord extends BaseModel {
 
-	// 
 	@Id
 	private String id;
 
@@ -40,7 +40,7 @@ public class SuperviseRecord extends BaseModel {
 	private Integer resultGrade;
 
 	// 监察结果名称
-	private String explain;
+	private String explainText;
 
 	// 监察结果名称
 	private String explainAttachment;
@@ -133,12 +133,12 @@ public class SuperviseRecord extends BaseModel {
 		this.resultGrade = resultGrade;
 	}
 
-	public String getExplain() {
-		return explain;
+	public String getExplainText() {
+		return explainText;
 	}
 
-	public void setExplain(String explain) {
-		this.explain = explain;
+	public void setExplainText(String explainText) {
+		this.explainText = explainText;
 	}
 
 	public String getExplainAttachment() {

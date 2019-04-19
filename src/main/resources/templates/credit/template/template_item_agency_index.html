@@ -66,7 +66,7 @@
             idField: "id",
             columns: [
                 [
-					{ title: "项目名称", field: "itemName" , formatter:function (value, row, index) { return value ? value : "无"}},
+					{ title: "项目名称", field: "itemName" , formatter:function (value, row, index) { return value ? value : "未配置过项目"}},
 					{ title: "项目适用对象", field: "itemTargetType", enumcode: "item-target-type"  },
                     {
                         title: "操作",
@@ -87,6 +87,8 @@
                             if (row.itemName) {
                                 return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
                                     '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                            } else {
+                                return ''
                             }
                         }
                     }

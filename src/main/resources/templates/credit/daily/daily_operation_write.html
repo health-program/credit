@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="item-target-type,selection-grade-type,sex-type" />
+<input th:value="${itemId}" id="itemId" type="hidden" />
+<input type="hidden" id="url" th:value="${url}">
+<section class="content-header">
+    <h1 th:text="|日常操作功能管理-${name}|"></h1>
+    <ol class="breadcrumb">
+        <li><a th:href="${url}"><i class="fa fa-list-alt"></i>项目列表</a></li>
+        <li class="active">录入</li>
+    </ol>
+</section>
+<section class="content">
+</section>
+<div class="col-sm-2 col-sm-offset-5 btn-back">
+    <a th:href="${url}" class="btn btn-primary btn-block">返回</a>
+</div>
+<div th:include="/credit/footer" />
+<script type="text/javascript" src="/static/js/template.js"></script>
+<script type="text/javascript">
+    $(function() {
+        var itemId = $("#itemId").val();
+        var url =$("#url").val();
+        $.getAjax("/credit/template/item/get?id=" + itemId, function(data) {
+            createItemEditor(data, ".content", function(data, formSubmitBtn) {
+                data["itemId"] = itemId;
+                var files = data.explainAttachmentFiles;
+                if (files && files.length > 0) {
+                    ajaxUploadFile(files, function (att) {
+                        let attachment = data.explainAttachment;
+                        att.forEach(function (a) {
+                            attachment += a.id + ',';
+                        });
+                        data.explainAttachment = attachment;
+                        $.postJsonAjax('/credit/supervise/record/save',data,function () {
+                            $.successAlert("录入成功",function () {
+                                window.location = url
+                            })
+                        })
+                    }, formSubmitBtn);
+                } else {
+                    $.postJsonAjax('/credit/supervise/record/save',data,function () {
+                        $.successAlert("录入成功",function () {
+                            window.location = url
+                        })
+                    })
+                }
+            });
+        });
+    });
+</script>
+</body>
+
+</html>

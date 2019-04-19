@@ -7,6 +7,10 @@ import javax.persistence.Id;
 
 public class TemplateItem extends BaseModel {
 
+	public static final int  ITEM_TARGET_TYPE_AGENCY = 1;
+	public static final int  ITEM_TARGET_TYPE_PERSONNEL = 2;
+	public static final int  ITEM_TARGET_TYPE_RELATED_PERSONNEL= 3;
+
 	// 
 	@Id
 	@GeneratedValue(generator = "UUID")

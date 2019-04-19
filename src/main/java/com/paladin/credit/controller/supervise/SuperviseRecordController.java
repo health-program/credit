@@ -1,35 +1,25 @@
 package com.paladin.credit.controller.supervise;
 
+import com.paladin.common.core.export.ExportUtil;
 import com.paladin.credit.controller.supervise.dto.SuperviseRecordExportCondition;
 import com.paladin.credit.model.supervise.SuperviseRecord;
 import com.paladin.credit.service.supervise.SuperviseRecordService;
-import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
+import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordVO;
-
-import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.web.response.CommonResponse;
-import com.paladin.framework.utils.uuid.UUIDUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/credit/supervise/record")
@@ -70,20 +60,14 @@ public class SuperviseRecordController extends ControllerSupport {
     
     @PostMapping("/save")
 	@ResponseBody
-    public Object save(@Valid SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
+    public Object save(@Valid @RequestBody SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
-        SuperviseRecord model = beanCopy(superviseRecordDTO, new SuperviseRecord());
-		String id = UUIDUtil.createUUID();
-		model.setId(id);
-		if (superviseRecordService.save(model) > 0) {
-			return CommonResponse.getSuccessResponse(beanCopy(superviseRecordService.get(id), new SuperviseRecordVO()));
-		}
-		return CommonResponse.getFailResponse();
+		return CommonResponse.getResponse(superviseRecordService.saveRecords(superviseRecordDTO));
 	}
 
-    @PostMapping("/update")
+  /*  @PostMapping("/update")
 	@ResponseBody
     public Object update(@Valid SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
@@ -95,7 +79,7 @@ public class SuperviseRecordController extends ControllerSupport {
 			return CommonResponse.getSuccessResponse(beanCopy(superviseRecordService.get(id), new SuperviseRecordVO()));
 		}
 		return CommonResponse.getFailResponse();
-	}
+	}*/
 
     @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody

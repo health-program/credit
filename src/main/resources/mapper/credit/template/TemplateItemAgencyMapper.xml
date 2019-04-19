@@ -48,4 +48,25 @@
             AND i.item_target_type = #{query.itemTargetType}
         </if>
     </select>
+    <select id="searchTemplatesByQuery"
+            resultType="com.paladin.credit.service.template.vo.TemplateItemAgencyVO">
+        SELECT
+        template_item_agency.id,
+        template_item.id AS itemId,
+        template_item.item_name AS itemName,
+        template_item_agency.agency_id AS agencyId
+        FROM
+        template_item_agency
+        LEFT JOIN template_item ON template_item_agency.item_id = template_item.id
+        WHERE 1 = 1
+        <if test="query.agencyId != null">
+            AND template_item_agency.agency_id = #{query.agencyId}
+        </if>
+        <if test="query.itemTargetType != null">
+            AND template_item.item_target_type = #{query.itemTargetType}
+        </if>
+        <if test="query.itemName != null and query.itemName != ''">
+            AND template_item.item_name = #{query.itemName}
+        </if>
+    </select>
 </mapper>
