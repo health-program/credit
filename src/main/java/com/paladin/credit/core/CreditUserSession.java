@@ -32,16 +32,19 @@ public class CreditUserSession extends UserSession implements AuthorizationInfo 
 		return (CreditUserSession) SecurityUtils.getSubject().getPrincipal();
 	}
 
-	/** 默认最低级别 */
+	/** 个人级别 */
 	public static int ROLE_LEVEL_PERSONAL = 1;
 	/** 机构级别 */
 	public static int ROLE_LEVEL_AGENCY = 2;
+	/** 监管级别 */
+	public static int ROLE_LEVEL_SUPERVISE = 5;
 	/** 管理级别 */
 	public static int ROLE_LEVEL_ADMIN = 9;
 
 	protected List<String> roleIds;
 	protected int roleLevel;
 	protected String[] agencyIds;
+	protected String[] superviseScopes;
 	protected boolean isSystemAdmin = false;
 
 	/**
@@ -71,6 +74,14 @@ public class CreditUserSession extends UserSession implements AuthorizationInfo 
 		return agencyIds;
 	}
 
+	/**
+	 * 获取监察范围
+	 * @return
+	 */
+	public String[] getSuperviseScopes() {
+		return superviseScopes;
+	}
+	
 	/**
 	 * 菜单资源
 	 * 
@@ -138,5 +149,6 @@ public class CreditUserSession extends UserSession implements AuthorizationInfo 
 		map.put("account", getAccount());
 		return map;
 	}
+
 
 }

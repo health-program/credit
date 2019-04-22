@@ -1,12 +1,11 @@
 package com.paladin.credit.controller.org;
 
-import com.paladin.credit.controller.org.dto.OrgAdminExportCondition;
-import com.paladin.credit.core.CreditAgencyContainer;
-import com.paladin.credit.model.org.OrgAdmin;
-import com.paladin.credit.service.org.OrgAdminService;
-import com.paladin.credit.service.org.dto.OrgAdminQuery;
-import com.paladin.credit.service.org.dto.OrgAdminDTO;
-import com.paladin.credit.service.org.vo.OrgAdminVO;
+import com.paladin.credit.controller.org.dto.OrgSuperviserExportCondition;
+import com.paladin.credit.model.org.OrgSuperviser;
+import com.paladin.credit.service.org.OrgSuperviserService;
+import com.paladin.credit.service.org.dto.OrgSuperviserQuery;
+import com.paladin.credit.service.org.dto.OrgSuperviserDTO;
+import com.paladin.credit.service.org.vo.OrgSuperviserVO;
 
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.common.core.permission.PermissionContainer;
@@ -33,71 +32,70 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/credit/org/admin")
-public class OrgAdminController extends ControllerSupport {
+@RequestMapping("/credit/org/superviser")
+public class OrgSuperviserController extends ControllerSupport {
 
 	@Autowired
-	private OrgAdminService orgAdminService;
+	private OrgSuperviserService orgSuperviserService;
 
 	@GetMapping("/index")
-	@QueryInputMethod(queryClass = OrgAdminQuery.class)
+	@QueryInputMethod(queryClass = OrgSuperviserQuery.class)
 	public String index() {
-		return "/credit/org/org_admin_index";
+		return "/credit/org/org_superviser_index";
 	}
 
 	@RequestMapping(value = "/find/page", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	@QueryOutputMethod(queryClass = OrgAdminQuery.class, paramIndex = 0)
-	public Object findPage(OrgAdminQuery query) {
-		return CommonResponse.getSuccessResponse(orgAdminService.searchPage(query).convert(OrgAdminVO.class));
+	@QueryOutputMethod(queryClass = OrgSuperviserQuery.class, paramIndex = 0)
+	public Object findPage(OrgSuperviserQuery query) {
+		return CommonResponse.getSuccessResponse(orgSuperviserService.searchPage(query).convert(OrgSuperviserVO.class));
 	}
 
 	@GetMapping("/get")
 	@ResponseBody
 	public Object getDetail(@RequestParam String id, Model model) {
-		return CommonResponse.getSuccessResponse(beanCopy(orgAdminService.get(id), new OrgAdminVO()));
+		return CommonResponse.getSuccessResponse(beanCopy(orgSuperviserService.get(id), new OrgSuperviserVO()));
 	}
 
 	@GetMapping("/add")
 	public String addInput() {
-		return "/credit/org/org_admin_add";
+		return "/credit/org/org_superviser_add";
 	}
 
 	@GetMapping("/detail")
 	public String detailInput(@RequestParam String id, Model model) {
 		model.addAttribute("id", id);
-		return "/credit/org/org_admin_detail";
+		return "/credit/org/org_superviser_detail";
 	}
 
 	@PostMapping("/save")
 	@ResponseBody
-	public Object save(@Valid OrgAdminDTO orgAdminDTO, BindingResult bindingResult) {
+	public Object save(@Valid OrgSuperviserDTO orgSuperviserDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
 		String id = UUIDUtil.createUUID();
-		orgAdminDTO.setId(id);
-		if (orgAdminService.saveAdmin(orgAdminDTO)) {
-			return CommonResponse.getSuccessResponse(beanCopy(orgAdminService.get(id), new OrgAdminVO()));
+		orgSuperviserDTO.setId(id);
+		if (orgSuperviserService.saveAdmin(orgSuperviserDTO)) {
+			return CommonResponse.getSuccessResponse(beanCopy(orgSuperviserService.get(id), new OrgSuperviserVO()));
 		}
 		return CommonResponse.getFailResponse();
 	}
 
 	@PostMapping("/update")
 	@ResponseBody
-	public Object update(@Valid OrgAdminDTO orgAdminDTO, BindingResult bindingResult) {
+	public Object update(@Valid OrgSuperviserDTO orgSuperviserDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
-		String id = orgAdminDTO.getId();
-		if (orgAdminService.updateAdmin(orgAdminDTO)) {
-			return CommonResponse.getSuccessResponse(beanCopy(orgAdminService.get(id), new OrgAdminVO()));
+		String id = orgSuperviserDTO.getId();
+		if (orgSuperviserService.updateAdmin(orgSuperviserDTO)) {
+			return CommonResponse.getSuccessResponse(beanCopy(orgSuperviserService.get(id), new OrgSuperviserVO()));
 		}
 		return CommonResponse.getFailResponse();
 	}
@@ -105,38 +103,15 @@ public class OrgAdminController extends ControllerSupport {
 	@RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object delete(@RequestParam String id) {
-		return CommonResponse.getResponse(orgAdminService.removeByPrimaryKey(id));
+		return CommonResponse.getResponse(orgSuperviserService.removeByPrimaryKey(id));
 	}
 
 	private static Map<String, ValueFormator> excelValueFormatMap;
 
 	static {
 
-		excelValueFormatMap = new HashMap<>();
-		excelValueFormatMap.put(OrgAdmin.COLUMN_FIELD_MANAGE_AGENCY, new ValueFormator() {
-			@Override
-			public String format(Object obj) {
-				if (obj != null) {
-					String manageAgency = (String) obj;
-					if (manageAgency.length() > 0) {
-						List<String> names = CreditAgencyContainer.getAgencyNames(manageAgency.split(","));
-						if (names != null && names.size() > 0) {
-							StringBuilder sb = new StringBuilder();
-							for (String name : names) {
-								sb.append(name).append("，");
-							}
-
-							sb.deleteCharAt(sb.length() - 1);
-							return sb.toString();
-						}
-					}
-				}
-				return "";
-			}
-		});
-
-		
-		excelValueFormatMap.put(OrgAdmin.COLUMN_FIELD_ROLE, new ValueFormator() {
+		excelValueFormatMap = new HashMap<>();	
+		excelValueFormatMap.put(OrgSuperviser.COLUMN_FIELD_ROLE, new ValueFormator() {
 			@Override
 			public String format(Object obj) {
 				if (obj != null) {
@@ -167,20 +142,20 @@ public class OrgAdminController extends ControllerSupport {
 
 	@PostMapping(value = "/export")
 	@ResponseBody
-	public Object export(@RequestBody OrgAdminExportCondition condition) {
+	public Object export(@RequestBody OrgSuperviserExportCondition condition) {
 		if (condition == null) {
 			return CommonResponse.getFailResponse("导出失败：请求参数异常");
 		}
 		condition.setExcelValueFormat(excelValueFormatMap);
 		condition.sortCellIndex();
-		OrgAdminQuery query = condition.getQuery();
+		OrgSuperviserQuery query = condition.getQuery();
 		try {
 			if (query != null) {
 				if (condition.isExportAll()) {
-					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, orgAdminService.searchAll(query), OrgAdmin.class));
+					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, orgSuperviserService.searchAll(query), OrgSuperviser.class));
 				} else if (condition.isExportPage()) {
 					return CommonResponse.getSuccessResponse("success",
-							ExportUtil.export(condition, orgAdminService.searchPage(query).getData(), OrgAdmin.class));
+							ExportUtil.export(condition, orgSuperviserService.searchPage(query).getData(), OrgSuperviser.class));
 				}
 			}
 			return CommonResponse.getFailResponse("导出数据失败：请求参数错误");

@@ -3,6 +3,7 @@ package com.paladin.credit.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.paladin.common.core.ConstantsContainer;
 import com.paladin.credit.core.CreditAgencyContainer.Agency;
 
 public class DataPermissionUtil {
@@ -14,9 +15,10 @@ public class DataPermissionUtil {
 	 */
 	public static List<Agency> getManageAgency() {
 		CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
-		if (userSession.isAdminRoleLevel()) {
+		int roleLevel = userSession.getRoleLevel();
+		if (roleLevel > CreditUserSession.ROLE_LEVEL_AGENCY) {
 			return CreditAgencyContainer.getAgencys();
-		} else if (userSession.getRoleLevel() == CreditUserSession.ROLE_LEVEL_AGENCY) {
+		} else if (roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY) {
 			String[] agencyIds = userSession.getAgencyIds();
 			return CreditAgencyContainer.getAgencies(agencyIds);
 		} else {
@@ -32,9 +34,10 @@ public class DataPermissionUtil {
 	 */
 	public static boolean ownManageAgency(String... agencyIds) {
 		CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
-		if (userSession.isAdminRoleLevel()) {
+		int roleLevel = userSession.getRoleLevel();
+		if (roleLevel > CreditUserSession.ROLE_LEVEL_AGENCY) {
 			return true;
-		} else if (userSession.getRoleLevel() == CreditUserSession.ROLE_LEVEL_AGENCY) {
+		} else if (roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY) {
 			if (agencyIds == null || agencyIds.length == 0) {
 				return true;
 			}
@@ -56,5 +59,15 @@ public class DataPermissionUtil {
 		}
 	}
 
-	
+	private static final String TYPE_SUPERVISE_SCOPE = "supervise-scope";
+
+	/**
+	 * 判断是否有这个监察范围
+	 * @param scopeCode
+	 * @return
+	 */
+	public static boolean isSuperviseScope(String scopeCode) {
+		return ConstantsContainer.getTypeValue(TYPE_SUPERVISE_SCOPE, scopeCode) != null;
+	}
+
 }

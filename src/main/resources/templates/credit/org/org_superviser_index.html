@@ -4,7 +4,7 @@
 <head th:include="/credit/header" />
 
 <body>
-    
+    <tt:constant enumcode="supervise-scope,"/>
     <section class="content-header">
         <h1>管理员维护</h1>
     </section>
@@ -55,7 +55,7 @@
                 [                  
 					{ title: "名称", field: "name" },
 					{ title: "账号", field: "account" },
-                    { title: "管理机构", field: "manageAgencyName" },
+                    { title: "监管科室·机构", field: "superviseScope", enumcode:"supervise-scope", multiple: true },
                     {
                         title: "操作",
                         align: "center",
@@ -71,14 +71,13 @@
                         formatter: function operateFormatter(value, row, index) {
                             return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
                                 '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
-
                         }
                     }
                 ]
             ],
-            url: '/credit/org/admin/find/page',
+            url: '/credit/org/superviser/find/page',
             searchbar: '#searchbar',
-            exportUrl: '/credit/org/admin/export',
+            exportUrl: '/credit/org/superviser/export',
             showExport: true,
             showColumns: true,
             pagination: true,
@@ -88,17 +87,17 @@
     }
 
     function add() {
-        window.location = '/credit/org/admin/add';
+        window.location = '/credit/org/superviser/add';
     }
 
     function detail(row) {
-        window.location = '/credit/org/admin/detail' + (row ? ('?id=' + row.id) : '');
+        window.location = '/credit/org/superviser/detail' + (row ? ('?id=' + row.id) : '');
     }
 
     function remove(row) {
         if (row) {
             layer.confirm('确定删除吗?', function() {
-                $.getAjax('/credit/org/admin/delete?id=' + row.id, function() {
+                $.getAjax('/credit/org/superviser/delete?id=' + row.id, function() {
                     $.successMessage("删除成功");
                     table.refresh();
                 });

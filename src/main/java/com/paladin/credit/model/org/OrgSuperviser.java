@@ -1,25 +1,26 @@
-package com.paladin.credit.service.org.dto;
+package com.paladin.credit.model.org;
 
-import javax.validation.constraints.NotEmpty;
+import com.paladin.framework.common.BaseModel;
+import javax.persistence.Id;
 
-public class OrgAdminDTO {
+public class OrgSuperviser extends BaseModel {
 
-	//
+	public final static String COLUMN_FIELD_ROLE = "role";
+
+	// 
+	@Id
 	private String id;
 
 	// 名称
-	@NotEmpty(message = "名称不能为空")
 	private String name;
 
-	// 管理机构
-	private String manageAgency;
+	// 监管范围
+	private String superviseScope;
 
 	// 账号
-	@NotEmpty(message = "账号不能为空")
 	private String account;
 
 	// 角色
-	@NotEmpty(message = "角色不能为空")
 	private String role;
 
 	public String getId() {
@@ -38,14 +39,6 @@ public class OrgAdminDTO {
 		this.name = name;
 	}
 
-	public String getManageAgency() {
-		return manageAgency;
-	}
-
-	public void setManageAgency(String manageAgency) {
-		this.manageAgency = manageAgency;
-	}
-
 	public String getAccount() {
 		return account;
 	}
@@ -60,6 +53,14 @@ public class OrgAdminDTO {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public String getSuperviseScope() {
+		return superviseScope;
+	}
+
+	public void setSuperviseScope(String superviseScope) {
+		this.superviseScope = superviseScope;
 	}
 
 }

@@ -12,15 +12,16 @@ import com.paladin.common.model.syst.SysUser;
 import com.paladin.common.service.syst.SysUserService;
 import com.paladin.credit.core.CreditAgencyContainer;
 import com.paladin.credit.core.CreditUserSession;
+import com.paladin.credit.core.DataPermissionUtil;
 import com.paladin.credit.core.CreditAgencyContainer.Agency;
-import com.paladin.credit.model.org.OrgAdmin;
-import com.paladin.credit.service.org.dto.OrgAdminDTO;
+import com.paladin.credit.model.org.OrgSuperviser;
+import com.paladin.credit.service.org.dto.OrgSuperviserDTO;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 
 @Service
-public class OrgAdminService extends ServiceSupport<OrgAdmin> {
+public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 
 	@Autowired
 	private SysUserService sysUserService;
@@ -29,8 +30,8 @@ public class OrgAdminService extends ServiceSupport<OrgAdmin> {
 	private PermissionContainer permissionContainer;
 
 	@Transactional
-	public boolean saveAdmin(OrgAdminDTO orgAdminDTO) {
-		String id = orgAdminDTO.getId();
+	public boolean saveAdmin(OrgSuperviserDTO orgSuperviserDTO) {
+		String id = orgSuperviserDTO.getId();
 		if (id == null || id.length() == 0) {
 			id = UUIDUtil.createUUID();
 		}
@@ -40,36 +41,36 @@ public class OrgAdminService extends ServiceSupport<OrgAdmin> {
 			throw new BusinessException("没有权限新增机构管理账号");
 		}
 
-		String agencyIds = checkAgency(orgAdminDTO.getManageAgency());
-		String roleIds = checkRole(orgAdminDTO.getRole());
-		String account = orgAdminDTO.getAccount();
+		String scope = checkScope(orgSuperviserDTO.getSuperviseScope());
+		String roleIds = checkRole(orgSuperviserDTO.getRole());
+		String account = orgSuperviserDTO.getAccount();
 
 		if (sysUserService.validateAccount(account)) {
-			sysUserService.createUserAccount(account, id, SysUser.TYPE_AGENCY_ADMIN);
+			sysUserService.createUserAccount(account, id, SysUser.TYPE_SUPERVISE);
 		} else {
 			throw new BusinessException("账号不可用");
 		}
 
-		OrgAdmin admin = new OrgAdmin();
+		OrgSuperviser superviser = new OrgSuperviser();
 
-		admin.setId(id);
-		admin.setManageAgency(agencyIds);
-		admin.setRole(roleIds);
-		admin.setName(orgAdminDTO.getName());
-		admin.setAccount(account);
+		superviser.setId(id);
+		superviser.setSuperviseScope(scope);
+		superviser.setRole(roleIds);
+		superviser.setName(orgSuperviserDTO.getName());
+		superviser.setAccount(account);
 
-		return save(admin) > 0;
+		return save(superviser) > 0;
 	}
 
 	@Transactional
-	public boolean updateAdmin(OrgAdminDTO orgAdminDTO) {
-		String id = orgAdminDTO.getId();
+	public boolean updateAdmin(OrgSuperviserDTO orgSuperviserDTO) {
+		String id = orgSuperviserDTO.getId();
 		if (id == null || id.length() == 0) {
 			throw new BusinessException("没有需要修改的对象");
 		}
 
-		OrgAdmin admin = get(id);
-		if (admin == null) {
+		OrgSuperviser superviser = get(id);
+		if (superviser == null) {
 			throw new BusinessException("没有需要修改的对象");
 		}
 
@@ -78,10 +79,10 @@ public class OrgAdminService extends ServiceSupport<OrgAdmin> {
 			throw new BusinessException("没有权限修改机构管理账号");
 		}
 
-		String agencyIds = checkAgency(orgAdminDTO.getManageAgency());
-		String roleIds = checkRole(orgAdminDTO.getRole());
-		String account = orgAdminDTO.getAccount();
-		String originAccount = admin.getAccount();
+		String scope = checkScope(orgSuperviserDTO.getSuperviseScope());
+		String roleIds = checkRole(orgSuperviserDTO.getRole());
+		String account = orgSuperviserDTO.getAccount();
+		String originAccount = superviser.getAccount();
 
 		if (!originAccount.equals(account)) {
 			if (sysUserService.validateAccount(account)) {
@@ -91,15 +92,16 @@ public class OrgAdminService extends ServiceSupport<OrgAdmin> {
 			}
 		}
 
-		admin.setId(id);
-		admin.setManageAgency(agencyIds);
-		admin.setRole(roleIds);
-		admin.setName(orgAdminDTO.getName());
-		admin.setAccount(account);
+		superviser.setId(id);
+		superviser.setSuperviseScope(scope);
+		superviser.setRole(roleIds);
+		superviser.setName(orgSuperviserDTO.getName());
+		superviser.setAccount(account);
 
-		return update(admin) > 0;
+		return update(superviser) > 0;
 	}
 
+	@SuppressWarnings("unused")
 	private String checkAgency(String agencyIdString) {
 		if (agencyIdString == null || agencyIdString.length() == 0) {
 			throw new BusinessException("机构不能为空");
@@ -124,18 +126,39 @@ public class OrgAdminService extends ServiceSupport<OrgAdmin> {
 
 		String[] rids = roleIdString.split(",");
 		roleIdString = "";
+		int roleLevel = -1;
 		for (String rid : rids) {
 			Role role = permissionContainer.getRole(rid);
 			if (role != null) {
 				roleIdString += rid + ",";
 			}
+			roleLevel = Math.max(role.getRoleLevel(), roleLevel);
 		}
 
 		if (roleIdString.length() == 0) {
 			throw new BusinessException("角色不能为空");
 		}
 
+		if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE) {
+			throw new BusinessException("角色等级不能低于监督人员");
+		}
+
 		return roleIdString;
 	}
 
+	private String checkScope(String superviseScope) {
+		String result = "";
+		if (superviseScope != null && superviseScope.length() > 0) {
+
+			String[] scopes = superviseScope.split(",");
+
+			for (String scope : scopes) {
+				if (DataPermissionUtil.isSuperviseScope(scope)) {
+					result += scope + ",";
+				}
+			}
+		}
+
+		return result;
+	}
 }

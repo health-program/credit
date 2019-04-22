@@ -4,7 +4,7 @@ import com.paladin.framework.common.OffsetPage;
 import com.paladin.framework.common.QueryCondition;
 import com.paladin.framework.common.QueryType;
 
-public class OrgAdminQuery extends OffsetPage {
+public class OrgSuperviserQuery extends OffsetPage {
 
 	private String name;
 

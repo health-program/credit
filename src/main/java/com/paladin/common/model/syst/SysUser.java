@@ -3,7 +3,6 @@ package com.paladin.common.model.syst;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -26,21 +25,25 @@ public class SysUser extends UnDeleteBaseModel implements Serializable {
 	 * 管理员账号
 	 */
 	public final static int TYPE_SYS_ADMIN = 1;
+	
 	/**
-	 * 机构管理员账号
+	 * 监管人员账号
 	 */
-	public final static int TYPE_AGENCY_ADMIN = 2;
+	public final static int TYPE_SUPERVISE = 2;
+
+	/**
+	 * 机构用户账号
+	 */
+	public final static int TYPE_AGENCY = 3;
 
 	/**
 	 * 个人用户账号
 	 */
-	public final static int TYPE_PERSONAL = 3;
-	
+	public final static int TYPE_PERSONAL = 4;
 
 	public final static String COLUMN_FIELD_ACCOUNT = "account";
 
 	@Id
-	@Column(name = "id")
 	@GeneratedValue(generator = "UUID")
 	private String id;
 	private String account;
