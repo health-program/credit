@@ -1,5 +1,7 @@
 package com.paladin.common.core.export;
 
+import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -21,6 +23,7 @@ public class SimpleWriteColumn extends WriteColumn {
 
 	/**
 	 * 创建实例，如果不符合条件则会返回null
+	 * 
 	 * @param field
 	 * @param clazz
 	 * @param cellIndex
@@ -29,7 +32,8 @@ public class SimpleWriteColumn extends WriteColumn {
 	 * @param width
 	 * @return
 	 */
-	public static SimpleWriteColumn newInstance(String field, Class<?> clazz, int cellIndex, String name, String enumType, Integer width, String dateFormat) {
+	public static SimpleWriteColumn newInstance(String field, Class<?> clazz, int cellIndex, String name, String enumType, Integer width, String dateFormat,
+			Boolean multiple) {
 
 		if (field == null || field.length() == 0 || clazz == null) {
 			return null;
@@ -58,7 +62,8 @@ public class SimpleWriteColumn extends WriteColumn {
 		column.setName(name);
 		column.setAlignment(CellStyle.ALIGN_CENTER);
 		column.setDateFormat(dateFormat);
-		
+		column.setMultiple(multiple == null ? false : multiple);
+
 		return column;
 	}
 
@@ -76,10 +81,58 @@ public class SimpleWriteColumn extends WriteColumn {
 	}
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	public String getEnumName(Object value) {
 		if (value == null) {
 			return getDefaultEmptyValue();
 		}
-		return ConstantsContainer.getTypeValue(getEnumType(), value.toString());
+		String result = "";
+		if (isMultiple()) {
+			if (value instanceof String) {
+				String strValue = (String) value;
+
+				if (strValue.length() > 0) {
+					String[] vals = strValue.split(",");
+					for (String val : vals) {
+						String name = ConstantsContainer.getTypeValue(getEnumType(), val);
+						if (name != null && name.length() > 0) {
+							result += name + ",";
+						}
+					}
+
+					if (result.length() > 0) {
+						result = result.substring(0, result.length() - 1);
+					}
+				}
+			} else {
+				Class<?> clazz = value.getClass();
+				if (Collection.class.isAssignableFrom(clazz)) {
+
+					Collection vals = (Collection) value;
+					for (Object val : vals) {
+						String name = ConstantsContainer.getTypeValue(getEnumType(), (String) val);
+						if (name != null && name.length() > 0) {
+							result += name + ",";
+						}
+					}
+					if (result.length() > 0) {
+						result = result.substring(0, result.length() - 1);
+					}
+				} else if (clazz.isArray()) {
+					int len = Array.getLength(value);
+					for (int i = 0; i < len; i++) {
+						Object val = Array.get(value, i);
+						String name = ConstantsContainer.getTypeValue(getEnumType(), (String) val);
+						if (name != null && name.length() > 0) {
+							result += name + ",";
+						}
+					}
+				}
+			}
+		} else {
+			return ConstantsContainer.getTypeValue(getEnumType(), value.toString());
+		}
+
+		return result;
 	}
 }

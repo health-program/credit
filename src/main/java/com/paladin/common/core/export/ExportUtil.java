@@ -52,7 +52,7 @@ public class ExportUtil {
 		for (ExportColumn column : columns) {
 			String field = column.getField();
 			SimpleWriteColumn writeColumn = SimpleWriteColumn.newInstance(field, exportClass, column.getIndex(), column.getName(), column.getEnumType(),
-					column.getWidth(), column.getDateFormat());
+					column.getWidth(), column.getDateFormat(), column.getMultiple());
 
 			if (writeColumn != null) {
 				if (valueFormatMap != null) {

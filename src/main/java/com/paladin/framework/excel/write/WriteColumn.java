@@ -56,6 +56,8 @@ public abstract class WriteColumn implements WriteComponent {
 
 	// 枚举类型
 	private String enumType;
+	// 是否多个
+	private boolean multiple;
 
 	// 日期时间格式化字符串
 	private String dateFormat;
@@ -319,6 +321,14 @@ public abstract class WriteColumn implements WriteComponent {
 		StringBuilder sb = new StringBuilder();
 		sb.append("\nID：").append(id).append("\n列名：").append(name).append("\n列序号：").append(cellIndex);
 		return sb.toString();
+	}
+
+	public boolean isMultiple() {
+		return multiple;
+	}
+
+	public void setMultiple(boolean multiple) {
+		this.multiple = multiple;
 	}
 
 }

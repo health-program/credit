@@ -78,6 +78,7 @@ public class ExportCondition {
 		private Integer index;
 		private String dateFormat;
 		private String enumType;
+		private Boolean multiple;
 		private Integer width;
 
 		public String getField() {
@@ -126,6 +127,14 @@ public class ExportCondition {
 
 		public void setWidth(Integer width) {
 			this.width = width;
+		}
+
+		public Boolean getMultiple() {
+			return multiple;
+		}
+
+		public void setMultiple(Boolean multiple) {
+			this.multiple = multiple;
 		}
 
 	}

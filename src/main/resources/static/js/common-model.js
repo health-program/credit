@@ -5,7 +5,7 @@
 // -----------------------------------------
 
 function _generateAttribute(obj) {
-    if (!obj) return;
+    if (!obj) return "";
     var s = [];
     for (var o in obj) {
         var v = obj[o];
@@ -649,13 +649,15 @@ _Model.prototype.getFormData = function() {
 }
 
 var _FieldBuilderContainer = {};
-
-
-
 var _FieldBuilder = function(name, interfaces) {
     var that = this;
     that.name = name;
     var defaultInterfaces = {
+        initHandler: function(column, model) {
+            if (typeof column.initHandler === 'function') {
+                return column.initHandler(column, model);
+            }
+        },
         setDataHandler: function(column, data, model) {
             // 插入数据时候调用
             if (typeof column.setDataHandler === 'function') {
@@ -821,14 +823,14 @@ var _FieldBuilder = function(name, interfaces) {
                 isP = input.is("p");
 
             if (v || v === 0) {
-                if (isP) {
+                if (isP || column.editable === false) {
                     input.removeClass("text-muted");
                     input.text(v);
                 } else {
                     input.val(v);
                 }
             } else {
-                if (isP) {
+                if (isP || column.editable === false) {
                     input.addClass("text-muted");
                     input.text("无");
                 } else {
@@ -862,7 +864,6 @@ var _FieldBuilder = function(name, interfaces) {
             }
             return column.colspan || 1;
         },
-
         generateEditFormHtml: function(column, isFirst, options) {
             if (typeof column.generateEditFormHtml === 'function') {
                 return column.generateEditFormHtml(column, isFirst, options);

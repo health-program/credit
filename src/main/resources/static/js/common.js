@@ -559,11 +559,11 @@ var $global_project = "demo";
     });
 
     _initValidator();
+    _initTable();
 
     $.extend({
         initComponment: function(container) {
-            _initEnumConstant(container);            
-            _initTable(container);
+            _initEnumConstant(container);
             _initForm(container);
             _initAttachment(container);
             _initCommon(container);
@@ -663,7 +663,7 @@ function _initCommon(container) {
         $(this).select2({
             placeholder: $(this).attr("placeholder") || "请选择", //未选择时显示文本
             maximumSelectionSize: $(this).attr("max-selection-size") || null, //显示最大选项数目
-            multiple: true ,
+            multiple: true,
             width: '100%',
             allowClear: true
         });
@@ -1136,7 +1136,7 @@ function _initTable() {
 
                     // 枚举情况
                     if (col.enumcode && !col.formatter) {
-                        col.formatter = $.getEnumColumnFormatter(window._constant_cache, col.enumcode);
+                        col.formatter = $.getEnumColumnFormatter(window._constant_cache, col.enumcode, col.multiple === true);
                     }
 
                     if (!col.align) {
@@ -1290,16 +1290,37 @@ function _initTable() {
         /**
          * 获取常量formatter方法，用于bootstrap table column *
          */
-        getEnumColumnFormatter: function(enumTypeMap, type) {
+        getEnumColumnFormatter: function(enumTypeMap, type, multiple) {
             if (enumTypeMap && type) {
                 return function(value, row, index) {
-                    var data = enumTypeMap[type];
-                    if (data) {
-                        for (var i = 0; i < data.length; i++)
-                            if (data[i].key == value)
-                                return data[i].value;
+                    if (!value) {
+                        return "";
                     }
-                    return "";
+
+                    var arr = [],
+                        data = enumTypeMap[type];
+
+                    if (!data) {
+                        return "";
+                    }
+
+                    if (!$.isArray(value)) {
+                        if (!multiple) {
+                            value = [value];
+                        } else {
+                            value = value.split(",");
+                        }
+                    }
+
+                    value.forEach(function(v) {
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].key == v) {
+                                arr.push(data[i].value);
+                            }
+                        }
+                    });
+
+                    return arr.length > 0 ? arr.join("，") : "";
                 };
             }
         },
@@ -1522,7 +1543,8 @@ function _initTable() {
                                     var f = c.column.formatType,
                                         q = {
                                             field: c.field,
-                                            name: c.name
+                                            name: c.name,
+                                            multiple: c.column.multiple === true ? true : false
                                         };
 
                                     if (f) {
