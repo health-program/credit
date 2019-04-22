@@ -13,7 +13,20 @@
             <div class="box-body">
                 <form id="searchbar" class="form-horizontal form-search">
                     <div class="form-group">
-                        <div class="col-md-12">
+                        <div class="col-md-3">
+                            <input name="item" class="form-control" placeholder="请输入项目名称" th:value="${query?.item}" />
+                        </div>
+                        <div class="col-md-2">
+                            <select name="targetType" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.targetType}" enumcode="item-target-type">
+                                <option value="">请选择目标类型</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="resultGrade" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.resultGrade}" enumcode="selection-grade-type">
+                                <option value="">请选择监察结果等级</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
                             <div class="pull-right">
                                 <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -31,9 +44,6 @@
             <div id="result" class="box-body">
                 <table id="dataGrid"></table>
                 <div id="toolbar">
-                    <div class="btn-group">
-                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -50,18 +60,10 @@
             idField: "id",
             columns: [
                 [
-                    { title: "说明", field: "explain" },
-                    { title: "人员身份证", field: "personnelIdentification" },
+
                     { title: "监察项目", field: "item" },
                     { title: "目标类型", field: "targetType", enumcode: "item-target-type" },
-                    { title: "机构ID", field: "agencyId" },
-                    { title: "人员地址", field: "personnelAddress" },
-                    { title: "目标ID", field: "targetId" },
-                    { title: "附件", field: "explainAttachment" },
-                    { title: "人员姓名", field: "personnelName" },
-                    { title: "人员ID", field: "personnelId" },
-                    { title: "监察结果名称", field: "resultName" },
-                    { title: "人员性别", field: "personnelSex" },
+                    { title: "监察结果名称", field: "resultName",formatter:function (value, row, index) { return value ?  value : "无"} },
                     { title: "监察结果等级", field: "resultGrade", enumcode: "selection-grade-type" },
                     {
                         title: "操作",
@@ -95,10 +97,6 @@
             toolbar: "#toolbar",
             showRefresh: true
         });
-    }
-
-    function add() {
-        window.location = '/credit/supervise/record/add';
     }
 
     function detail(row) {

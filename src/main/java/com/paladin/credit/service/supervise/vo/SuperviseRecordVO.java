@@ -1,6 +1,11 @@
 package com.paladin.credit.service.supervise.vo;
 
 
+import com.paladin.common.core.AttachmentContainer;
+import com.paladin.common.model.syst.SysAttachment;
+
+import java.util.List;
+
 public class SuperviseRecordVO {
 
 	// 
@@ -41,6 +46,14 @@ public class SuperviseRecordVO {
 
 	// 监察结果名称
 	private String explainAttachment;
+
+	// 获取附件文件
+	public List<SysAttachment> getExplainAttachmentFile() {
+		if (explainAttachment != null && explainAttachment.length() != 0) {
+			return AttachmentContainer.getAttachments(explainAttachment.split(","));
+		}
+		return null;
+	}
 
 	public String getId() {
 		return id;

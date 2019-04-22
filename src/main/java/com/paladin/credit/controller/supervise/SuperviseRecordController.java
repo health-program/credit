@@ -57,17 +57,19 @@ public class SuperviseRecordController extends ControllerSupport {
     	model.addAttribute("id", id);
         return "/credit/supervise/supervise_record_detail";
     }
-    
-    @PostMapping("/save")
-	@ResponseBody
-    public Object save(@Valid @RequestBody SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return validErrorHandler(bindingResult);
-		}
-		return CommonResponse.getResponse(superviseRecordService.saveRecords(superviseRecordDTO));
-	}
 
-  /*  @PostMapping("/update")
+  @PostMapping("/save")
+  @ResponseBody
+  public Object save(
+      @Valid @RequestBody SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      return validErrorHandler(bindingResult);
+    }
+
+    return CommonResponse.getResponse(superviseRecordService.saveRecords(superviseRecordDTO));
+  }
+
+/*    @PostMapping("/update")
 	@ResponseBody
     public Object update(@Valid SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {

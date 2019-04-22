@@ -149,4 +149,6 @@ public class SuperviseRecord extends BaseModel {
 		this.explainAttachment = explainAttachment;
 	}
 
+
+
 }
