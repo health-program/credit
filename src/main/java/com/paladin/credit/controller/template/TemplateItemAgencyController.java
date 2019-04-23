@@ -39,9 +39,9 @@ public class TemplateItemAgencyController extends ControllerSupport {
     }
 
 	@GetMapping("/configuration/index")
-	public String configurationIndex(@RequestParam String id,@RequestParam String agencyName,Model model) {
-		model.addAttribute("agencyId",id);
-		model.addAttribute("agencyName",agencyName);
+	public String configurationIndex(@RequestParam Integer code,@RequestParam String name,Model model) {
+		model.addAttribute("code",code);
+		model.addAttribute("name",name);
 		return "/credit/template/template_item_agency_index";
 	}
 
@@ -53,9 +53,9 @@ public class TemplateItemAgencyController extends ControllerSupport {
     
     @GetMapping("/configuration/add/index")
 	@QueryInputMethod(queryClass = TemplateItemAgencyQuery.class)
-    public String addIndex( @RequestParam String agencyName,@RequestParam String agencyId, Model model) {
-		model.addAttribute("agencyId",agencyId);
-		model.addAttribute("agencyName",agencyName);
+    public String addIndex( @RequestParam String name,@RequestParam Integer code, Model model) {
+		model.addAttribute("code",code);
+		model.addAttribute("name",name);
         return "/credit/template/template_item_agency_config";
     }
 
@@ -69,15 +69,15 @@ public class TemplateItemAgencyController extends ControllerSupport {
 
   @GetMapping(value = "/config")
   @ResponseBody
-  public Object config(@RequestParam String agencyId, @RequestParam String itemId) {
-		return CommonResponse.getResponse(templateItemAgencyService.templateConfigById(agencyId,itemId));
+  public Object config(@RequestParam Integer code, @RequestParam String itemId) {
+		return CommonResponse.getResponse(templateItemAgencyService.templateConfigById(code,itemId));
   }
 
 
 	@PostMapping(value = "/configs")
 	@ResponseBody
-	public Object configs(@RequestParam String agencyId, @RequestParam(name = "itemId[]")List<String> itemIds) {
-		return CommonResponse.getResponse(templateItemAgencyService.templateConfigByIds(agencyId,itemIds));
+	public Object configs(@RequestParam Integer code, @RequestParam(name = "itemId[]")List<String> itemIds) {
+		return CommonResponse.getResponse(templateItemAgencyService.templateConfigByIds(code,itemIds));
 	}
 
 
@@ -86,35 +86,6 @@ public class TemplateItemAgencyController extends ControllerSupport {
     	model.addAttribute("itemId", itemId);
         return "/credit/template/template_item_agency_detail";
     }
-    
-   /* @PostMapping("/save")
-	@ResponseBody
-    public Object save(@Valid TemplateItemAgencyDTO templateItemAgencyDTO, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return validErrorHandler(bindingResult);
-		}
-        TemplateItemAgency model = beanCopy(templateItemAgencyDTO, new TemplateItemAgency());
-		String id = UUIDUtil.createUUID();
-		model.setId(id);
-		if (templateItemAgencyService.save(model) > 0) {
-			return CommonResponse.getSuccessResponse(beanCopy(templateItemAgencyService.get(id), new TemplateItemAgencyVO()));
-		}
-		return CommonResponse.getFailResponse();
-	}
-
-    @PostMapping("/update")
-	@ResponseBody
-    public Object update(@Valid TemplateItemAgencyDTO templateItemAgencyDTO, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return validErrorHandler(bindingResult);
-		}
-		String id = templateItemAgencyDTO.getId();
-		TemplateItemAgency model = beanCopy(templateItemAgencyDTO, templateItemAgencyService.get(id));
-		if (templateItemAgencyService.update(model) > 0) {
-			return CommonResponse.getSuccessResponse(beanCopy(templateItemAgencyService.get(id), new TemplateItemAgencyVO()));
-		}
-		return CommonResponse.getFailResponse();
-	}*/
 
     @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody

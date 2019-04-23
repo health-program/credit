@@ -7,17 +7,18 @@ import javax.persistence.Id;
 public class TemplateItemAgency extends BaseModel {
 
 	public static final String COLUMN_FIELD_ITEM_ID = "itemId";
-	public static final String COLUMN_FIELD_AGENCY_ID= "agencyId";
+	public static final String COLUMN_FIELD_CODE= "code";
 
 
 	@Id
 	private String id;
 
+	private Integer code;
+
+	private String agencyId;
+
 	// 项目ID
 	private String itemId;
-
-	// 机构ID
-	private String agencyId;
 
 	public String getId() {
 		return id;
@@ -25,6 +26,14 @@ public class TemplateItemAgency extends BaseModel {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public Integer getCode() {
+		return code;
+	}
+
+	public void setCode(Integer code) {
+		this.code = code;
 	}
 
 	public String getItemId() {
@@ -42,5 +51,4 @@ public class TemplateItemAgency extends BaseModel {
 	public void setAgencyId(String agencyId) {
 		this.agencyId = agencyId;
 	}
-
 }

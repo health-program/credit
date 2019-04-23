@@ -9,7 +9,7 @@
         <h1>机构模板管理</h1>
     </section>
     <section class="content">
-        <div class="box box-solid" style="margin-top:20px">
+        <div class="box box-solid" style="margin-top:10px">
             <div id="result" class="box-body">
                 <table id="dataGrid"></table>
                 <div id="toolbar">
@@ -29,34 +29,28 @@
     });
 
     function initDataGrid() {
-        table = $.createTable("#dataGrid", {
+        $("#dataGrid").bootstrapTable({
             columns: [
                 [
-                    { title: "机构名称", field: "name" },
+                    {title: "机构名称", field: "name", align: "center"},
                     {
                         title: "操作",
                         align: "center",
                         width: "100px",
                         events: {
-                            'click .edit': function(e, value, row, index) {
+                            'click .edit': function (e, value, row, index) {
                                 edit(row);
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
-                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
-                                '<button class="edit btn btn-xs btn-success"><i class="fa fa-wrench"></i>模板配置</button>';
-
+                            return '<button class="edit btn btn-xs btn-success"><i class="fa fa-wrench"></i>模板配置</button>';
                         }
                     }
                 ]
             ],
             data: data,
-            pagination: false,
-            //exportUrl: '/credit/org/agency/export',
-            //showExport: true,
-            showColumns: true,
-            sidePagination:"client"
-        });
+            pagination: false
+        })
     }
 
     function getTableDatas() {
@@ -74,12 +68,8 @@
          return data;
     }
 
-    /*function detail(row) {
-        window.location = '/credit/org/agency/detail?isTemplatePage=true' + (row ? ('&id=' + row.id) : '');
-    }*/
-
     function edit(row) {
-        window.location = '/credit/template/item/agency/configuration/index' + (row ? ('?id=' + row.id +'&agencyName='+row.name) : '');
+        window.location = '/credit/template/item/agency/configuration/index' + (row ? ('?code=' + row.code +'&name='+row.name) : '');
     }
     </script>
 </body>

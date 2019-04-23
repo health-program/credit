@@ -6,19 +6,19 @@
 <body>
 <tt:constant enumcode="item-target-type" />
 <section class="content-header">
-    <h1 th:text="|机构模板管理-${agencyName}|"></h1>
+    <h1 th:text="|机构模板管理-${name}|"></h1>
     <ol class="breadcrumb">
         <li><a href="/credit/template/item/agency/index"><i class="fa fa-list-alt"></i>机构列表</a></li>
-        <li ><a th:href="@{/credit/template/item/agency/configuration/index(id=${agencyId},agencyName=${agencyName})}"><i class="fa fa-list-alt"></i>已配置模板</a></li>
+        <li ><a th:href="@{/credit/template/item/agency/configuration/index(code=${code},name=${name})}"><i class="fa fa-list-alt"></i>已配置模板</a></li>
         <li class="active">项目配置</li>
     </ol>
 </section>
 <section class="content">
-    <input type="hidden" id="agencyName"  th:value="${agencyName}">
+    <input type="hidden" id="name"  th:value="${name}">
     <div class="box box-solid">
         <div class="box-body">
             <form id="searchbar" class="form-horizontal form-search">
-                <input type="hidden" id="agencyId" name="agencyId" th:value="${agencyId}">
+                <input type="hidden" id="code" name="code" th:value="${code}">
                 <div class="form-group">
                     <div class="col-md-2">
                         <input type="text" class="form-control" name="itemName" th:value="${query?.itemName}" placeholder="请输入查询的项目名称" />
@@ -55,10 +55,10 @@
 </section>
 <div th:include="/credit/footer" />
 <script type="text/javascript">
-    var table,agencyId,agencyName;
+    var table,code,name;
     $(function() {
-        agencyId = $("#agencyId").val();
-        agencyName = $("#agencyName").val();
+        code = $("#code").val();
+        name = $("#name").val();
         initDataGrid();
     });
 
@@ -107,9 +107,9 @@
     function add() {
         let itemIds = getSelectedItemIds();
         layer.confirm('确定批量配置'+itemIds.length+'个模板吗?',{ icon : 3}, function() {
-            $.postAjax('/credit/template/item/agency/configs',{"agencyId":agencyId,"itemId":itemIds},function () {
+            $.postAjax('/credit/template/item/agency/configs',{"code":code,"itemId":itemIds},function () {
                 $.successMessage("模板配置成功");
-                window.location = '/credit/template/item/agency/configuration/index?id='+agencyId+'&agencyName='+agencyName;
+                window.location = '/credit/template/item/agency/configuration/index?code='+code+'&name='+name;
             })
         });
     }
@@ -125,9 +125,9 @@
     function config(row) {
         if (row) {
             layer.confirm('确定配置该模板吗?',{ icon : 3}, function() {
-                $.getAjax('/credit/template/item/agency/config?itemId=' + row.itemId +'&agencyId=' +agencyId, function() {
+                $.getAjax('/credit/template/item/agency/config?itemId=' + row.itemId +'&code=' +code, function() {
                     $.successMessage("模板配置成功");
-                    window.location = '/credit/template/item/agency/configuration/index?id='+agencyId+'&agencyName='+agencyName;
+                    window.location = '/credit/template/item/agency/configuration/index?code='+code+'&name='+name;
                 });
             });
         }

@@ -49,13 +49,10 @@ public class DailyOperationController extends ControllerSupport {
     public Object findPage(TemplateItemAgencyQuery query,@PathVariable String targetType) {
         int type = Integer.parseInt(targetType);
         if (type == TemplateItem.ITEM_TARGET_TYPE_AGENCY) {
-            query.setAgencyId("d6b5eccabcd24a42ab5bd5e053daec44");
             query.setItemTargetType(type);
         }else if (type == TemplateItem.ITEM_TARGET_TYPE_PERSONNEL ){
-            query.setAgencyId("d6b5eccabcd24a42ab5bd5e053daec44");
             query.setItemTargetType(type);
         } else {
-            query.setAgencyId("d6b5eccabcd24a42ab5bd5e053daec44");
             query.setItemTargetType(type);
         }
     return CommonResponse.getSuccessResponse(

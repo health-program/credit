@@ -5,13 +5,9 @@ public class TemplateItemAgencyVO {
 
 	private String id;
 
-	// 项目ID
+	private Integer code;
+
 	private String itemId;
-
-	// 机构ID
-	private String agencyId;
-
-	private String agencyName;
 
 	private String agencyItemId;
 
@@ -27,14 +23,13 @@ public class TemplateItemAgencyVO {
 		this.id = id;
 	}
 
-	public String getItemId() {
-		return itemId;
+	public Integer getCode() {
+		return code;
 	}
 
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
+	public void setCode(Integer code) {
+		this.code = code;
 	}
-
 
 	public String getAgencyItemId() {
 		return agencyItemId;
@@ -60,19 +55,12 @@ public class TemplateItemAgencyVO {
 		this.itemTargetType = itemTargetType;
 	}
 
-	public String getAgencyId() {
-		return agencyId;
+	public String getItemId() {
+		return itemId;
 	}
 
-	public void setAgencyId(String agencyId) {
-		this.agencyId = agencyId;
+	public void setItemId(String itemId) {
+		this.itemId = itemId;
 	}
 
-	public String getAgencyName() {
-		return agencyName;
-	}
-
-	public void setAgencyName(String agencyName) {
-		this.agencyName = agencyName;
-	}
 }

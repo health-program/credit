@@ -6,16 +6,18 @@ public class TemplateItemAgencyQuery extends OffsetPage {
 
     private String agencyId;
 
+    private Integer code;
+
     private String itemName;
 
     private Integer itemTargetType;
 
-    public String getAgencyId() {
-        return agencyId;
+    public Integer getCode() {
+        return code;
     }
 
-    public void setAgencyId(String agencyId) {
-        this.agencyId = agencyId;
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
     public String getItemName() {
@@ -32,5 +34,13 @@ public class TemplateItemAgencyQuery extends OffsetPage {
 
     public void setItemTargetType(Integer itemTargetType) {
         this.itemTargetType = itemTargetType;
+    }
+
+    public String getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(String agencyId) {
+        this.agencyId = agencyId;
     }
 }

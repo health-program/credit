@@ -5,19 +5,16 @@
     <select id="searchAgencyTemplatesByQuery" resultType="com.paladin.credit.service.template.vo.TemplateItemAgencyVO">
         SELECT
         a.id,
-        o.id AS agencyId,
-        o.name AS agencyName,
+        a.code,
         t.id AS itemId,
         t.item_name AS itemName,
         t.item_target_type AS itemTargetType
         FROM
-        org_agency AS o
-        LEFT JOIN template_item_agency AS a ON o.id = a.agency_id
+        template_item_agency AS a
         LEFT JOIN template_item AS t ON a.item_id = t.id
-        WHERE
-        o.is_delete = 0
-        <if test="query.agencyId != null">
-            AND o.id = #{query.agencyId}
+        WHERE 1 = 1
+        <if test="query.code != null">
+            AND  a.code = #{query.code}
         </if>
         <if test="query.itemName != null and query.itemName != ''">
             AND t.item_name = #{query.itemName}
@@ -34,9 +31,9 @@
         i.item_target_type AS itemTargetType
         FROM
         template_item AS i
-        LEFT JOIN ( SELECT item_id, agency_id FROM template_item_agency WHERE 1 =1
-        <if test="query.agencyId != null">
-            AND template_item_agency.agency_id = #{query.agencyId}
+        LEFT JOIN ( SELECT item_id, code FROM template_item_agency WHERE 1 =1
+        <if test="query.code != null">
+            AND template_item_agency.code = #{query.code}
         </if>
         ) a ON i.id = a.item_id
         WHERE
