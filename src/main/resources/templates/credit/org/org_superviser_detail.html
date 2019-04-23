@@ -6,10 +6,10 @@
 <body>
     <tt:constant enumcode="supervise-scope," />
     <section class="content-header">
-        <h1>管理员维护</h1>
+        <h1>监管人员维护</h1>
         <ol class="breadcrumb">
-            <li><a href="/credit/org/superviser/index"><i class="fa fa-list-alt"></i>列表</a></li>
-            <li class="active">详情</li>
+            <li><a href="/credit/org/superviser/index"><i class="fa fa-list-alt"></i>监管人员列表</a></li>
+            <li class="active">监管人员详情</li>
         </ol>
     </section>
     <section class="content">
@@ -23,7 +23,7 @@
     $(function() {
         var options = {
             id: "model",
-            name: "详情",
+            name: "监管人员详情",
             url: "/credit/org/superviser/update?id=" + $("#id").val(),
             columns: [
                 { title: "名称", name: "name", required: "required", inputType: "TEXT" },
