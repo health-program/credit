@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+    
+    <section class="content-header">
+        <h1>人员机构维护</h1>
+        <ol class="breadcrumb">
+            <li><a href="/credit/org/personnel/agency/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/credit/org/personnel/agency/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <div th:include="/credit/footer" />
+    <script type="text/javascript">
+
+    $(function() {
+    	var options = {
+	        id: "model",
+	        name: "详情",
+	        url:"/credit/org/personnel/agency/update?id="+$("#id").val(),
+	        columns: [
+				{ title: "名称", name: "name", required: "required", inputType: "TEXT" },
+				{ title: "agency_id", name: "agencyId", inputType: "TEXT" },
+				{ title: "账号", name: "account", required: "required", inputType: "TEXT" },
+				{ title: "角色", name: "role", required: "required", inputType: "TEXT" }
+				]
+	    }
+    
+        $.getAjax("/credit/org/personnel/agency/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);、
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>
