@@ -52,6 +52,11 @@ public class TemplateItemAgencyService extends ServiceSupport<TemplateItemAgency
         return new PageResult<>(page);
   }
 
+    /**
+     * 功能描述: <日常操作功能管理获取对应机构模板>
+     * @param query
+     * @return  com.paladin.framework.common.PageResult<com.paladin.credit.service.template.vo.TemplateItemAgencyVO>
+     */
       public PageResult<TemplateItemAgencyVO> searchTemplatesByQuery(TemplateItemAgencyQuery query) {
         Page<TemplateItemAgencyVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
         templateItemAgencyMapper.searchTemplatesByQuery(query);
