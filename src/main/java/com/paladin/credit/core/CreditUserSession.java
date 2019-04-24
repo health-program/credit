@@ -45,6 +45,7 @@ public class CreditUserSession extends UserSession implements AuthorizationInfo 
 	protected int roleLevel;
 	protected String[] agencyIds;
 	protected String[] superviseScopes;
+	protected String currentSuperviseScope;
 	protected boolean isSystemAdmin = false;
 
 	/**
@@ -81,6 +82,16 @@ public class CreditUserSession extends UserSession implements AuthorizationInfo 
 	public String[] getSuperviseScopes() {
 		return superviseScopes;
 	}
+	
+
+	public String getCurrentSuperviseScope() {
+		return currentSuperviseScope;
+	}
+	
+	public void setCurrentSuperviseScope(String currentSuperviseScope) {
+		this.currentSuperviseScope = currentSuperviseScope;
+	}
+
 	
 	/**
 	 * 菜单资源
@@ -149,6 +160,8 @@ public class CreditUserSession extends UserSession implements AuthorizationInfo 
 		map.put("account", getAccount());
 		return map;
 	}
+
+
 
 
 }

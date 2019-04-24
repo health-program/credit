@@ -6,6 +6,7 @@ import org.apache.shiro.authc.DisabledAccountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.paladin.common.core.ConstantsContainer;
 import com.paladin.common.core.permission.PermissionContainer;
 import com.paladin.common.core.permission.Role;
 import com.paladin.common.model.syst.SysUser;
@@ -30,6 +31,7 @@ public class CreditUserSessionFactory {
 			userSession = new CreditUserSession(sysUser.getId(), "系统管理员", sysUser.getAccount());
 			userSession.isSystemAdmin = true;
 			userSession.roleLevel = CreditUserSession.ROLE_LEVEL_ADMIN;
+			userSession.currentSuperviseScope = ConstantsContainer.getType("supervise-scope").get(0).getValue();
 		} else if (type == SysUser.TYPE_SUPERVISE) {
 			String userId = sysUser.getUserId();
 
@@ -61,6 +63,7 @@ public class CreditUserSessionFactory {
 
 			if (scope != null && scope.length() > 0) {
 				userSession.superviseScopes = scope.split(",");
+				userSession.currentSuperviseScope = userSession.superviseScopes[0];				
 			}
 
 			userSession.roleIds = roles;
