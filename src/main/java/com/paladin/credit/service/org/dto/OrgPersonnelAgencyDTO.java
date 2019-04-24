@@ -1,35 +1,23 @@
 package com.paladin.credit.service.org.dto;
 
-import java.util.Date;
+import javax.validation.constraints.NotEmpty;
 
 public class OrgPersonnelAgencyDTO {
 
-	// 
+
 	private String id;
 
-	// 名称
+
+	@NotEmpty(message = "名称不能为空")
 	private String name;
 
-	// 
 	private String agencyId;
 
-	// 账号
+	@NotEmpty(message = "账号不能为空")
 	private String account;
 
-	// 角色
+	@NotEmpty(message = "角色不能为空")
 	private String role;
-
-	// 
-	private Date createTime;
-
-	// 
-	private String createUserId;
-
-	// 
-	private Date updateTime;
-
-	// 
-	private String updateUserId;
 
 	public String getId() {
 		return id;
@@ -71,36 +59,5 @@ public class OrgPersonnelAgencyDTO {
 		this.role = role;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public String getCreateUserId() {
-		return createUserId;
-	}
-
-	public void setCreateUserId(String createUserId) {
-		this.createUserId = createUserId;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getUpdateUserId() {
-		return updateUserId;
-	}
-
-	public void setUpdateUserId(String updateUserId) {
-		this.updateUserId = updateUserId;
-	}
 
 }

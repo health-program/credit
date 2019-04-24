@@ -65,10 +65,9 @@ public class OrgPersonnelAgencyController extends ControllerSupport {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
-        OrgPersonnelAgency model = beanCopy(orgPersonnelAgencyDTO, new OrgPersonnelAgency());
 		String id = UUIDUtil.createUUID();
-		model.setId(id);
-		if (orgPersonnelAgencyService.save(model) > 0) {
+		orgPersonnelAgencyDTO.setId(id);
+		if (orgPersonnelAgencyService.saveAgenecy(orgPersonnelAgencyDTO) > 0) {
 			return CommonResponse.getSuccessResponse(beanCopy(orgPersonnelAgencyService.get(id), new OrgPersonnelAgencyVO()));
 		}
 		return CommonResponse.getFailResponse();

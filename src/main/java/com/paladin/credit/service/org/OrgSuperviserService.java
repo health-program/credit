@@ -1,24 +1,23 @@
 package com.paladin.credit.service.org;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.paladin.common.core.permission.PermissionContainer;
 import com.paladin.common.core.permission.Role;
 import com.paladin.common.model.syst.SysUser;
 import com.paladin.common.service.syst.SysUserService;
 import com.paladin.credit.core.CreditAgencyContainer;
+import com.paladin.credit.core.CreditAgencyContainer.Agency;
 import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.core.DataPermissionUtil;
-import com.paladin.credit.core.CreditAgencyContainer.Agency;
 import com.paladin.credit.model.org.OrgSuperviser;
 import com.paladin.credit.service.org.dto.OrgSuperviserDTO;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
@@ -101,8 +100,7 @@ public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 		return update(superviser) > 0;
 	}
 
-	@SuppressWarnings("unused")
-	private String checkAgency(String agencyIdString) {
+	public String checkAgency(String agencyIdString) {
 		if (agencyIdString == null || agencyIdString.length() == 0) {
 			throw new BusinessException("机构不能为空");
 		}
