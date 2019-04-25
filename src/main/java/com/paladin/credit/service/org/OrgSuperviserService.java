@@ -100,7 +100,8 @@ public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 		return update(superviser) > 0;
 	}
 
-	public String checkAgency(String agencyIdString) {
+	@SuppressWarnings("unused")
+	private String checkAgency(String agencyIdString) {
 		if (agencyIdString == null || agencyIdString.length() == 0) {
 			throw new BusinessException("机构不能为空");
 		}

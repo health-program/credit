@@ -32,8 +32,7 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
 
     @Autowired
     private SysUserService sysUserService;
-    @Autowired
-    private OrgSuperviserService orgSuperviserService;
+
     @Autowired
     private PermissionContainer permissionContainer;
     @Autowired
@@ -53,12 +52,11 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
             id = UUIDUtil.createUUID();
         }
         String account = dto.getAccount();
-        if (sysUserService.validateAccount(account)) {
-            sysUserService.createUserAccount(account, id, SysUser.TYPE_AGENCY);
-        } else {
-            throw new BusinessException("账号不可用");
-        }
-
+        Optional<String> stringOptional = Optional.ofNullable(account);
+        String userId = id;
+        stringOptional.filter(s ->sysUserService.validateAccount(s))
+                .map(s -> sysUserService.createUserAccount(s, userId, SysUser.TYPE_AGENCY))
+                .orElseThrow(() -> new BusinessException("账号不可用"));
         String roleId = dto.getRole();
         String role = checkRole(roleId);
         String agencyId = dto.getAgencyId();
@@ -128,5 +126,23 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
         Page<OrgPersonnelAgencyVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
         personnelAgencyMapper.findPageList(query);
         return new PageResult<>(page);
+    }
+
+    /**
+     * 功能描述: <通过Id和账号删除机构人员账号>
+     * @param account
+     * @param id
+     * @return  int
+     */
+    public int removeAgencyPeopleById(String id, String account) {
+        int i = 0;
+        SysUser user = sysUserService.getUserByAccount(account);
+        Optional<SysUser> userOptional = Optional.ofNullable(user);
+        Integer state = userOptional.map(u -> sysUserService.removeByPrimaryKey(u.getId()))
+                .orElseThrow(() -> new BusinessException("无相关人员账号"));
+        if (state > 0) {
+             i = removeByPrimaryKey(id);
+        }
+    return i;
     }
 }
