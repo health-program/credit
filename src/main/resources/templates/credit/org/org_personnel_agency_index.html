@@ -96,7 +96,7 @@
     function remove(row) {
         if (row) {
             layer.confirm('确定删除吗?', function () {
-                $.getAjax('/credit/org/personnel/agency/delete?id=' + row.id, function () {
+                $.getAjax('/credit/org/personnel/agency/delete?id=' + row.id+'&account='+row.account, function () {
                     $.successMessage("删除成功");
                     table.refresh();
                 });
