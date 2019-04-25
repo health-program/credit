@@ -14,7 +14,7 @@
             <form id="searchbar" class="form-horizontal form-search">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input type="text" class="form-control" name="name" th:value="${query?.name}" placeholder="请输入查询的姓名" />
+                        <input type="text" class="form-control" name="name" th:value="${query?.name}" placeholder="请输入查询的名称" />
                     </div>
                     <div class="col-md-10">
                         <div class="pull-right">
@@ -33,7 +33,7 @@
             <table id="dataGrid"></table>
             <div id="toolbar">
                 <div class="btn-group">
-                    <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                    <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>添加机构人员</a>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
                 [
                     {title: "名称", field: "name"},
                     {title: "账号", field: "account"},
-                    {title: "管理机构", field: "agencyName"},
+                    {title: "管理机构名称", field: "agencyName"},
                     {
                         title: "操作",
                         align: "center",

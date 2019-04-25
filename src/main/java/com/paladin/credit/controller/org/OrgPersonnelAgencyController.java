@@ -68,7 +68,7 @@ public class OrgPersonnelAgencyController extends ControllerSupport {
         }
         String id = UUIDUtil.createUUID();
         orgPersonnelAgencyDTO.setId(id);
-        if (orgPersonnelAgencyService.saveAgenecy(orgPersonnelAgencyDTO) > 0) {
+        if (orgPersonnelAgencyService.saveAgenecyPeople(orgPersonnelAgencyDTO) > 0) {
             return CommonResponse.getSuccessResponse(beanCopy(orgPersonnelAgencyService.get(id), new OrgPersonnelAgencyVO()));
         }
         return CommonResponse.getFailResponse();

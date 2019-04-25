@@ -8,8 +8,8 @@
     <section class="content-header">
         <h1>人员机构维护</h1>
         <ol class="breadcrumb">
-            <li><a href="/credit/org/personnel/agency/index"><i class="fa fa-table"></i>列表</a></li>
-            <li class="active">新增</li>
+            <li><a href="/credit/org/personnel/agency/index"><i class="fa fa-table"></i>机构人员列表</a></li>
+            <li class="active">新增机构人员</li>
         </ol>
     </section>
     <section class="content">
@@ -22,15 +22,15 @@
     var options = {
         id: "model",
         cancelBtn: false,
-        name: "新增",
+        name: "新增机构人员",
         url:"/credit/org/personnel/agency/save",
         columns: [
 				{ title: "名称", name: "name", required: "required", inputType: "TEXT" },
-				{ title: "agency_id", name: "agencyId", inputType: "TEXT" },
+				{ title: "管理机构名称", name: "agencyId",  inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower", multiple: false},
 				{ title: "账号", name: "account", required: "required", inputType: "TEXT" },
-				{ title: "角色", name: "role", required: "required", inputType: "TEXT" }
+				{ title: "角色", name: "role", required: "required", inputType: "SELECT-SERVER", url: "/credit/permission/role/in", multiple: false }
 				]
-    }
+    };
 
     $(function() {       
         var html = generateEditHtml(options);

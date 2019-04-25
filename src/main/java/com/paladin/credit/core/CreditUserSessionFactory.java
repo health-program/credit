@@ -1,18 +1,22 @@
 package com.paladin.credit.core;
 
-import java.util.ArrayList;
-
-import org.apache.shiro.authc.DisabledAccountException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.google.common.base.Strings;
 import com.paladin.common.core.ConstantsContainer;
 import com.paladin.common.core.permission.PermissionContainer;
 import com.paladin.common.core.permission.Role;
 import com.paladin.common.model.syst.SysUser;
+import com.paladin.credit.model.org.OrgPersonnelAgency;
 import com.paladin.credit.model.org.OrgSuperviser;
+import com.paladin.credit.service.org.OrgPersonnelAgencyService;
 import com.paladin.credit.service.org.OrgSuperviserService;
 import com.paladin.framework.core.session.UserSession;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class CreditUserSessionFactory {
@@ -22,6 +26,10 @@ public class CreditUserSessionFactory {
 
 	@Autowired
 	private OrgSuperviserService adminService;
+
+	@Autowired
+	private OrgPersonnelAgencyService agencyService;
+
 
 	public UserSession createSession(SysUser sysUser) {
 		int type = sysUser.getType();
@@ -70,6 +78,36 @@ public class CreditUserSessionFactory {
 			userSession.roleLevel = roleLevel;
 		} else if (type == SysUser.TYPE_AGENCY) {
 			// 机构
+			String userId = sysUser.getUserId();
+			OrgPersonnelAgency orgPersonnelAgency = agencyService.get(userId);
+			String agencyId = orgPersonnelAgency.getAgencyId();
+			String roleId = orgPersonnelAgency.getRole();
+			if (roleId == null || roleId.length() == 0) {
+				throw new DisabledAccountException("账号异常，没有角色");
+			}
+			Role role = permissionContainer.getRole(roleId);
+			List<String> roleStr = null;
+			int roleLevel = -1;
+			if (role != null) {
+				 roleStr = Collections.singletonList(role.getId());
+				roleLevel = Math.max(roleLevel, role.getRoleLevel());
+			}
+			if (roleStr == null) {
+				throw new DisabledAccountException("账号异常，没有角色");
+			}
+			userSession = new CreditUserSession(userId,orgPersonnelAgency.getName(),orgPersonnelAgency.getAccount());
+
+			String[] agencyIds = null;
+			if (!Strings.isNullOrEmpty(agencyId)){
+				 agencyIds = agencyId.split(",");
+			}
+			if (agencyIds == null) {
+				throw new DisabledAccountException("账号异常，未配置管理机构");
+			}
+
+			userSession.roleIds = roleStr;
+			userSession.roleLevel = roleLevel;
+			userSession.agencyIds = agencyIds;
 		} else if (type == SysUser.TYPE_PERSONAL) {
 			// 个人
 		}
