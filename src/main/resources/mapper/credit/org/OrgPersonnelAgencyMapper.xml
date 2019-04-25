@@ -16,5 +16,4 @@
             AND  a.name = #{query.name}
         </if>
     </select>
-
 </mapper>

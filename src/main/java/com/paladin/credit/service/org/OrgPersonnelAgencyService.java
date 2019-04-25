@@ -17,6 +17,7 @@ import com.paladin.credit.service.org.dto.OrgPersonnelAgencyQuery;
 import com.paladin.credit.service.org.vo.OrgPersonnelAgencyVO;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
+import com.paladin.framework.core.copy.SimpleBeanCopier;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,36 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
 
         return save(orgPersonnelAgency);
     }
+    /**
+     * 功能描述: <更新机构用户>
+     * @param dto
+     * @return  int
+     */
+    public int updateAgenecyPeople(OrgPersonnelAgency agency) {
+        int i = 0;
+        int roleLevel = CreditUserSession.getCurrentUserSession().getRoleLevel();
+        Preconditions.checkState(roleLevel == CreditUserSession.ROLE_LEVEL_ADMIN || roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY, "您无权添加机构人员账号");
+        String id = agency.getId();
+        if (Strings.isNullOrEmpty(id)) {
+            throw new BusinessException("修改的账号不存在");
+        }
+        OrgPersonnelAgency personnelAgency = this.get(id);
+        String accountOld = personnelAgency.getAccount();
+        SysUser user = sysUserService.getUserByAccount(accountOld);
+        if (user == null) {
+            throw new BusinessException("修改的账号不存在");
+        }
+        String accountNew = agency.getAccount();//参数传来的新account
 
+        if (sysUserService.validateAccount(accountNew)) {
+            if (sysUserService.updateAccount(id, accountOld, accountNew) > 0) {
+                i =  update(agency);
+            }
+        } else {
+            throw new BusinessException("账号不可用,或已存在该账号");
+        }
+        return i;
+    }
 
     private String checkRole(String roleIdString) {
         if (Strings.isNullOrEmpty(roleIdString)) {

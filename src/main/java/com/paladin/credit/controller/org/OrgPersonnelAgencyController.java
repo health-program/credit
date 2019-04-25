@@ -48,6 +48,7 @@ public class OrgPersonnelAgencyController extends ControllerSupport {
         return CommonResponse.getSuccessResponse(beanCopy(orgPersonnelAgencyService.get(id), new OrgPersonnelAgencyVO()));
     }
 
+
     @GetMapping("/add")
     public String addInput() {
         return "/credit/org/org_personnel_agency_add";
@@ -81,8 +82,7 @@ public class OrgPersonnelAgencyController extends ControllerSupport {
             return validErrorHandler(bindingResult);
         }
         String id = orgPersonnelAgencyDTO.getId();
-        OrgPersonnelAgency model = beanCopy(orgPersonnelAgencyDTO, orgPersonnelAgencyService.get(id));
-        if (orgPersonnelAgencyService.update(model) > 0) {
+        if (orgPersonnelAgencyService.updateAgenecyPeople(beanCopy(orgPersonnelAgencyDTO,orgPersonnelAgencyService.get(id))) > 0) {
             return CommonResponse.getSuccessResponse(beanCopy(orgPersonnelAgencyService.get(id), new OrgPersonnelAgencyVO()));
         }
         return CommonResponse.getFailResponse();
