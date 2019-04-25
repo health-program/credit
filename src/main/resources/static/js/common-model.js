@@ -1327,6 +1327,7 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
                         input.val(ov).trigger('change');
                     } else {
                         input.val(ov);
+                        input.val(ov).trigger('change');
                     }
                 } else {
                     if (column.multiple === true) {
