@@ -1,5 +1,7 @@
 package com.paladin.credit.service.org;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.paladin.common.core.permission.PermissionContainer;
@@ -7,8 +9,12 @@ import com.paladin.common.core.permission.Role;
 import com.paladin.common.model.syst.SysUser;
 import com.paladin.common.service.syst.SysUserService;
 import com.paladin.credit.core.CreditUserSession;
+import com.paladin.credit.mapper.org.OrgPersonnelAgencyMapper;
 import com.paladin.credit.model.org.OrgPersonnelAgency;
 import com.paladin.credit.service.org.dto.OrgPersonnelAgencyDTO;
+import com.paladin.credit.service.org.dto.OrgPersonnelAgencyQuery;
+import com.paladin.credit.service.org.vo.OrgPersonnelAgencyVO;
+import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
@@ -24,6 +30,8 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
     private OrgSuperviserService orgSuperviserService;
     @Autowired
     private PermissionContainer permissionContainer;
+    @Autowired
+    private OrgPersonnelAgencyMapper personnelAgencyMapper;
 
 
     /**
@@ -72,5 +80,11 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
         }
 
         return roleIdString;
+    }
+
+    public PageResult<OrgPersonnelAgencyVO> findPageList(OrgPersonnelAgencyQuery query) {
+        Page<OrgPersonnelAgencyVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+        personnelAgencyMapper.findPageList(query);
+        return new PageResult<>(page);
     }
 }

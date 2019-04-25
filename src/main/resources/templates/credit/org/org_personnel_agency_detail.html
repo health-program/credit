@@ -4,7 +4,7 @@
 <head th:include="/credit/header" />
 
 <body>
-    
+    <tt:constant enumcode="sex-type,identification-type,political-affiliation-type,nation-type,"/>
     <section class="content-header">
         <h1>人员机构维护</h1>
         <ol class="breadcrumb">
@@ -28,15 +28,16 @@
 	        url:"/credit/org/personnel/agency/update?id="+$("#id").val(),
 	        columns: [
 				{ title: "名称", name: "name", required: "required", inputType: "TEXT" },
-				{ title: "agency_id", name: "agencyId", inputType: "TEXT" },
+				{ title: "管理机构", name: "agencyId", inputType: "TEXT" },
 				{ title: "账号", name: "account", required: "required", inputType: "TEXT" },
 				{ title: "角色", name: "role", required: "required", inputType: "TEXT" }
+
 				]
 	    }
-    
+
         $.getAjax("/credit/org/personnel/agency/get?id="+$("#id").val(), function(data) {
             var html = generateHtml(options);
-            $(".content").html(html);、
+            $(".content").html(html);
             $.initComponment($(".content"));
            
             var model = new tonto.Model("model", options.columns);
