@@ -8,8 +8,10 @@ public class OrgPersonnelAgencyVO {
 	// 名称
 	private String name;
 
-	// 
+
 	private String agencyId;
+
+	private  String agencyName;
 
 	// 账号
 	private String account;
@@ -57,4 +59,11 @@ public class OrgPersonnelAgencyVO {
 		this.role = role;
 	}
 
+	public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
+	}
 }
