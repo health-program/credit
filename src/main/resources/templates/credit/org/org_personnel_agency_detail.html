@@ -8,8 +8,8 @@
     <section class="content-header">
         <h1>人员机构维护</h1>
         <ol class="breadcrumb">
-            <li><a href="/credit/org/personnel/agency/index"><i class="fa fa-list-alt"></i>列表</a></li>
-            <li class="active">详情</li>
+            <li><a href="/credit/org/personnel/agency/index"><i class="fa fa-list-alt"></i>机构人员列表</a></li>
+            <li class="active">>机构人员详情</li>
         </ol>
     </section>
     <section class="content">
@@ -28,9 +28,9 @@
 	        url:"/credit/org/personnel/agency/update?id="+$("#id").val(),
 	        columns: [
                 { title: "名称", name: "name", required: "required", inputType: "TEXT" },
-                { title: "管理机构名称", name: "agencyId",  inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower", multiple: true},
+                { title: "管理机构名称", name: "agencyId",  inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower", multiple: false},
                 { title: "账号", name: "account", required: "required", inputType: "TEXT" },
-                { title: "角色", name: "role", required: "required", inputType: "SELECT-SERVER", url: "/credit/permission/role/in", multiple: true }
+                { title: "角色", name: "role", required: "required", inputType: "SELECT-SERVER", url: "/credit/permission/role/in", multiple: false }
 
 				]
 	    }

@@ -17,7 +17,6 @@ import com.paladin.credit.service.org.dto.OrgPersonnelAgencyQuery;
 import com.paladin.credit.service.org.vo.OrgPersonnelAgencyVO;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
-import com.paladin.framework.core.copy.SimpleBeanCopier;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +71,7 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
     }
     /**
      * 功能描述: <更新机构用户>
-     * @param dto
+     * @param agency
      * @return  int
      */
     public int updateAgenecyPeople(OrgPersonnelAgency agency) {
@@ -89,8 +88,7 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
         if (user == null) {
             throw new BusinessException("修改的账号不存在");
         }
-        String accountNew = agency.getAccount();//参数传来的新account
-
+        String accountNew = agency.getAccount();
         if (sysUserService.validateAccount(accountNew)) {
             if (sysUserService.updateAccount(id, accountOld, accountNew) > 0) {
                 i =  update(agency);
