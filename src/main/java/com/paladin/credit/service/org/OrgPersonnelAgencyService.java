@@ -17,7 +17,6 @@ import com.paladin.credit.service.org.dto.OrgPersonnelAgencyQuery;
 import com.paladin.credit.service.org.vo.OrgPersonnelAgencyVO;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
-import com.paladin.framework.core.copy.SimpleBeanCopier;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
