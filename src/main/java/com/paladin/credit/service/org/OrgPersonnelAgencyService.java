@@ -72,7 +72,7 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
     }
     /**
      * 功能描述: <更新机构用户>
-     * @param dto
+     * @param agency
      * @return  int
      */
     public int updateAgenecyPeople(OrgPersonnelAgency agency) {
@@ -90,13 +90,16 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
             throw new BusinessException("修改的账号不存在");
         }
         String accountNew = agency.getAccount();//参数传来的新account
-
-        if (sysUserService.validateAccount(accountNew)) {
-            if (sysUserService.updateAccount(id, accountOld, accountNew) > 0) {
-                i =  update(agency);
+        if (!accountNew.equals(accountOld)) {
+            if (sysUserService.validateAccount(accountNew)) {
+                if (sysUserService.updateAccount(id, accountOld, accountNew) > 0) {
+                    i = update(agency);
+                }
+            } else {
+                throw new BusinessException("账号不可用,或已存在该账号");
             }
         } else {
-            throw new BusinessException("账号不可用,或已存在该账号");
+            i = update(agency);
         }
         return i;
     }
