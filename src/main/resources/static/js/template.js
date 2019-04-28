@@ -88,11 +88,6 @@ function createItemEditor(data, el, callback) {
 // 标签域构建器
 var _templateItemFieldBuilder = new _FieldBuilder("TEMPLATE-ITEM", {
     getEditValue: function(column, model) {
-        // 获取域EDIT页面值
-        if (typeof column.getEditValue === 'function') {
-            return column.getEditValue(column, model);
-        }
-
         //return model.editBody.find("input[name='" + column.name + "']").tagsinput("items")
     },
     getFormData: function(data, column, model) {
@@ -104,16 +99,8 @@ var _templateItemFieldBuilder = new _FieldBuilder("TEMPLATE-ITEM", {
     },
     fillView: function(column, data, model) {
         // VIEW页面填充值时候调用
-        if (typeof column.fillView === 'function') {
-            return column.fillView(column, data, model);
-        }
     },
     fillEdit: function(column, data, model) {
-        // EDIT页面填充值时候调用
-        if (typeof column.fillEdit === 'function') {
-            return column.fillEdit(column, data, model);
-        }
-
         var div = model.editBody.find("[name='" + column.name + "']"),
             selections = data[column.name],
             item = data[column.itemField],
@@ -138,37 +125,19 @@ var _templateItemFieldBuilder = new _FieldBuilder("TEMPLATE-ITEM", {
             //increaseArea: '10%' // optional
         });
     },
-    generateViewFormColspan: function(column, options) {
-        if (typeof column.generateViewFormColspan === 'function') {
-            return column.generateViewFormColspan(column, options);
-        }
-        return column.colspan || options.maxColspan;
-    },
     generateViewFormHtml: function(column, isFirst, options) {
-        if (typeof column.generateViewFormHtml === 'function') {
-            return column.generateViewFormHtml(column, isFirst, options);
-        }
         var colspan = column.colspan || options.maxColspan;
-        var html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + column.title + '：</label>\n';
+        var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + column.title + '：</label>\n';
         html += '<div name="' + column.name + '" class="col-sm-' + ((options.maxColspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '"></div>\n';
         return {
             colspan: colspan,
             html: html
         };
     },
-    generateEditFormColspan: function(column, options) {
-        if (typeof column.generateEditFormColspan === 'function') {
-            return column.generateEditFormColspan(column, options);
-        }
-        return column.colspan || options.maxColspan;
-    },
     generateEditFormHtml: function(column, isFirst, options) {
-        if (typeof column.generateEditFormHtml === 'function') {
-            return column.generateEditFormHtml(column, isFirst, options);
-        }
         var colspan = column.colspan || options.maxColspan,
             required = column.required === 'required',
-            html = '<label for="' + column.name + '" class="col-sm-' + (isFirst ? options.firstLabelSize : options.labelSize) + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
+            html = '<label for="' + column.name + '" class="col-sm-' +  options.labelSize + ' control-label">' + (required ? '<i class="required-label fa fa-asterisk"></i>' : '') +
             column.title + '：</label>\n';
         html += '<div name="' + column.name + '" class="col-sm-' + ((options.maxColspan - 1) * (options.inputSize + options.labelSize) + options.inputSize) + '"></div>\n';
         return {
