@@ -1,8 +1,9 @@
 package com.paladin.credit.controller.daily;
 
+import com.paladin.common.core.ConstantsContainer;
+import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.model.template.TemplateItem;
 import com.paladin.credit.service.template.TemplateItemAgencyService;
-import com.paladin.credit.service.template.TemplateItemService;
 import com.paladin.credit.service.template.dto.TemplateItemAgencyQuery;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.web.response.CommonResponse;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * <日常操作功能管理>
- *
  * @author Huangguochen
  * @create 2019/4/17 13:09
  */
@@ -23,9 +23,6 @@ public class DailyOperationController extends ControllerSupport {
 
     @Autowired
     private TemplateItemAgencyService templateItemAgencyService;
-
-    @Autowired
-    private TemplateItemService templateItemService;
 
     @GetMapping("/{targetType}")
     public String index( @PathVariable String targetType,Model model) {
@@ -47,16 +44,11 @@ public class DailyOperationController extends ControllerSupport {
     @RequestMapping(value = "/find/page/{targetType}", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public Object findPage(TemplateItemAgencyQuery query,@PathVariable String targetType) {
-        int type = Integer.parseInt(targetType);
-        if (type == TemplateItem.ITEM_TARGET_TYPE_AGENCY) {
-            query.setItemTargetType(type);
-        }else if (type == TemplateItem.ITEM_TARGET_TYPE_PERSONNEL ){
-            query.setItemTargetType(type);
-        } else {
-            query.setItemTargetType(type);
-        }
-    return CommonResponse.getSuccessResponse(
-        templateItemAgencyService.searchTemplatesByQuery(query));
+        query.setItemTargetType(Integer.valueOf(targetType));
+        String code = CreditUserSession.getCurrentUserSession().getCurrentSuperviseScope();
+        String type = ConstantsContainer.getTypeKey("supervise-scope", code);
+        query.setCode(Integer.valueOf(type));
+        return CommonResponse.getSuccessResponse(templateItemAgencyService.searchTemplatesByQuery(query));
     }
 
     @GetMapping("/write/{targetType}")

@@ -1323,7 +1323,7 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
                 }
             } else {
                 if (ov || ov === 0) {
-                    input.val(ov).trigger('change');
+                    input.val(ov).trigger('change');                  
                 } else {
                     if (column.multiple === true) {
 

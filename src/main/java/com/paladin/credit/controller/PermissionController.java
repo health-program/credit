@@ -6,18 +6,16 @@ import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.core.DataPermissionUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.web.response.CommonResponse;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @ApiIgnore
 @Controller
@@ -51,6 +49,35 @@ public class PermissionController extends ControllerSupport {
 					result.add(map);
 				}
 			}
+		}
+
+		return CommonResponse.getSuccessResponse(result);
+	}
+
+	@RequestMapping("/role/in")
+	@ResponseBody
+	public Object findInRole() {
+		List<Role> roles = permissionContainer.getRoles();
+		CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+		List<Map<String, Object>> result = null;
+		if (userSession.isAdminRoleLevel()) {
+			result = roles.stream()
+					.filter(role -> role.getRoleLevel() == CreditUserSession.ROLE_LEVEL_AGENCY || role.getRoleLevel() == CreditUserSession.ROLE_LEVEL_ADMIN)
+					.collect(ArrayList::new, (lists, role) -> {
+						HashMap<String, Object> map = new HashMap<>(2);
+						map.put("id", role.getId());
+						map.put("name", role.getRoleName());
+						lists.add(map);
+					}, List::addAll);
+		}else if (userSession.getRoleLevel() == CreditUserSession.ROLE_LEVEL_AGENCY){
+			result = roles.stream()
+					.filter(role -> role.getRoleLevel() == CreditUserSession.ROLE_LEVEL_AGENCY)
+					.collect(ArrayList::new, (lists, role) -> {
+						HashMap<String, Object> map = new HashMap<>(2);
+						map.put("id", role.getId());
+						map.put("name", role.getRoleName());
+						lists.add(map);
+					}, List::addAll);
 		}
 
 		return CommonResponse.getSuccessResponse(result);

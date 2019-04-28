@@ -65,5 +65,8 @@
         <if test="query.itemName != null and query.itemName != ''">
             AND template_item.item_name = #{query.itemName}
         </if>
+        <if test="query.code != null">
+            AND template_item_agency.code = #{query.code}
+        </if>
     </select>
 </mapper>
