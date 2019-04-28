@@ -90,7 +90,7 @@ var _templateItemFieldBuilder = new _FieldBuilder("TEMPLATE-ITEM", {
     getEditValue: function(column, model) {
         //return model.editBody.find("input[name='" + column.name + "']").tagsinput("items")
     },
-    getFormData: function(data, column, model) {
+    getFormData: function(column, data, model) {
         var vals = [];
         model.editBody.find("input[name='" + column.name + "']:checked").each(function() {
             vals.push($(this).val());
