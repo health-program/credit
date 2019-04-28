@@ -17,7 +17,7 @@
             AND  a.code = #{query.code}
         </if>
         <if test="query.itemName != null and query.itemName != ''">
-            AND t.item_name = #{query.itemName}
+            AND t.item_name LIKE  CONCAT('%',#{query.itemName}  ,'%')
         </if>
         <if test="query.itemTargetType != null">
             AND t.item_target_type = #{query.itemTargetType}
@@ -39,7 +39,7 @@
         WHERE
         a.item_id IS NULL
         <if test="query.itemName != null and query.itemName != ''">
-            AND i.item_name = #{query.itemName}
+            AND i.item_name LIKE  CONCAT('%',#{query.itemName}  ,'%')
         </if>
         <if test="query.itemTargetType != null">
             AND i.item_target_type = #{query.itemTargetType}
@@ -63,7 +63,7 @@
             AND template_item.item_target_type = #{query.itemTargetType}
         </if>
         <if test="query.itemName != null and query.itemName != ''">
-            AND template_item.item_name = #{query.itemName}
+            AND template_item.item_name LIKE  CONCAT('%',#{query.itemName}  ,'%')
         </if>
         <if test="query.code != null">
             AND template_item_agency.code = #{query.code}
