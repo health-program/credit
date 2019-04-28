@@ -233,7 +233,7 @@ function generateEditFormHtml(options, hide) {
 }
 
 function generateViewHtml(options) {
-	options.editable = false;
+    options.editable = false;
     var html = generateBox(options, generateViewFormHtml(options));
     return html;
 }
@@ -1381,7 +1381,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             data[column.name] = v.split(column.separator || ",");
         }
     },
-    getFormData: function(data, column, model) {
+    getFormData: function(column, data, model) {
         delete data[column.name];
         delete data[column.fileName];
         if (column.editDisplay !== "hide") {
@@ -1825,7 +1825,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
         }
         return null;
     },
-    getFormData: function(data, column) {
+    getFormData: function(column, data) {
         var datas = [];
         if (column.contentMap) {
             for (var o in column.contentMap) {
@@ -2050,7 +2050,7 @@ var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
     getEditValue: function(column, model) {
         return column.editor.getContent();
     },
-    getFormData: function(data, column) {
+    getFormData: function(column, data) {
         data[column.name] = column.editor.getContent();
     },
     formDataHandler: function(column, formData, model) {
