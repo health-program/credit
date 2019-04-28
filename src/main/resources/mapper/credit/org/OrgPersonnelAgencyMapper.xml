@@ -11,9 +11,9 @@
         FROM
         org_personnel_agency  a
         LEFT JOIN org_agency  b ON a.agency_id = b.id
-        WHERE b.is_delete = 0 OR b.id IS NULL
+        WHERE 1 = 1
         <if test="query.name != null">
-            HAVING  a.name LIKE  CONCAT('%',#{query.name} ,'%')
+            AND  a.name LIKE  CONCAT('%',#{query.name} ,'%')
         </if>
     </select>
 </mapper>
