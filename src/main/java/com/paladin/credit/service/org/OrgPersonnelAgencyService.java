@@ -6,7 +6,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.paladin.common.core.permission.PermissionContainer;
 import com.paladin.common.core.permission.Role;
+import com.paladin.common.model.org.OrgRole;
 import com.paladin.common.model.syst.SysUser;
+import com.paladin.common.service.org.OrgRoleService;
 import com.paladin.common.service.syst.SysUserService;
 import com.paladin.credit.core.CreditAgencyContainer;
 import com.paladin.credit.core.CreditUserSession;
@@ -17,6 +19,7 @@ import com.paladin.credit.service.org.dto.OrgPersonnelAgencyQuery;
 import com.paladin.credit.service.org.vo.OrgPersonnelAgencyVO;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
+import com.paladin.framework.core.copy.SimpleBeanCopier;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,8 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
     private PermissionContainer permissionContainer;
     @Autowired
     private OrgPersonnelAgencyMapper personnelAgencyMapper;
+    @Autowired
+    private OrgRoleService orgRoleService;
 
 
     /**
@@ -45,60 +50,74 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
      */
     public int saveAgenecyPeople(OrgPersonnelAgencyDTO dto) {
         int roleLevel = CreditUserSession.getCurrentUserSession().getRoleLevel();
-        Preconditions.checkState( roleLevel == CreditUserSession.ROLE_LEVEL_ADMIN || roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY,"您无权添加机构人员账号");
+        Preconditions.checkState(
+            roleLevel == CreditUserSession.ROLE_LEVEL_ADMIN
+                || roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY,
+            "您无权添加机构人员账号");
         String id = dto.getId();
         if (Strings.isNullOrEmpty(id)) {
-            id = UUIDUtil.createUUID();
+          id = UUIDUtil.createUUID();
         }
-        String account = dto.getAccount();
-        Optional<String> stringOptional = Optional.ofNullable(account);
-        String userId = id;
-        stringOptional.filter(s ->sysUserService.validateAccount(s))
-                .map(s -> sysUserService.createUserAccount(s, userId, SysUser.TYPE_AGENCY))
-                .orElseThrow(() -> new BusinessException("账号不可用"));
+        String newAccount = dto.getAccount();
+        boolean createAccountSuccess = checkAccount(null, newAccount, id);
+        if (!createAccountSuccess) {
+            throw  new BusinessException("创建账号失败");
+        }
         String roleId = dto.getRole();
         String role = checkRole(roleId);
         String agencyId = dto.getAgencyId();
-        String agencyIds = checkAgency(agencyId);
+        OrgRole orgRole = orgRoleService.get(role);
+        if ( orgRole.getRoleLevel() == CreditUserSession.ROLE_LEVEL_AGENCY ){
+            agencyId = checkAgency(agencyId);
+        }
         OrgPersonnelAgency orgPersonnelAgency = new OrgPersonnelAgency();
+        SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(dto,orgPersonnelAgency);
         orgPersonnelAgency.setId(id);
-        orgPersonnelAgency.setName(dto.getName());
-        orgPersonnelAgency.setAgencyId(agencyIds);
-        orgPersonnelAgency.setAccount(account);
         orgPersonnelAgency.setRole(role);
-
+        orgPersonnelAgency.setAgencyId(agencyId);
         return save(orgPersonnelAgency);
     }
-    /**
-     * 功能描述: <更新机构用户>
-     * @param agency
-     * @return  int
-     */
+  /**
+   * 功能描述: <更新机构用户>
+   *
+   * @param agency
+   * @return int
+   */
     public int updateAgenecyPeople(OrgPersonnelAgency agency) {
-        int i = 0;
+        int i;
         int roleLevel = CreditUserSession.getCurrentUserSession().getRoleLevel();
-        Preconditions.checkState(roleLevel == CreditUserSession.ROLE_LEVEL_ADMIN || roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY, "您无权添加机构人员账号");
+        Preconditions.checkState(
+            roleLevel == CreditUserSession.ROLE_LEVEL_ADMIN
+                || roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY,
+            "您无权添加机构人员账号");
         String id = agency.getId();
         if (Strings.isNullOrEmpty(id)) {
-            throw new BusinessException("修改的账号不存在");
+          throw new BusinessException("修改的账号不存在");
         }
         OrgPersonnelAgency personnelAgency = this.get(id);
-        String accountOld = personnelAgency.getAccount();
-        SysUser user = sysUserService.getUserByAccount(accountOld);
-        if (user == null) {
-            throw new BusinessException("修改的账号不存在");
+        String newAgencyId = agency.getAgencyId();
+        String newRoleId = agency.getRole();
+        if (newRoleId.equals(personnelAgency.getRole())) {
+            newRoleId = checkRole(newRoleId);
+            agency.setRole(newRoleId);
         }
-        String accountNew = agency.getAccount();//参数传来的新account
-        if (!accountNew.equals(accountOld)) {
-            if (sysUserService.validateAccount(accountNew)) {
-                if (sysUserService.updateAccount(id, accountOld, accountNew) > 0) {
-                    i = update(agency);
-                }
-            } else {
-                throw new BusinessException("账号不可用,或已存在该账号");
+        if ( newAgencyId.equals(personnelAgency.getAgencyId())){
+            OrgRole orgRole = orgRoleService.get(newRoleId);
+            if ( orgRole.getRoleLevel() == CreditUserSession.ROLE_LEVEL_AGENCY ){
+                newAgencyId = checkAgency(newAgencyId);
+                agency.setAgencyId(newAgencyId);
             }
-        } else {
+        }
+        String accountOld = personnelAgency.getAccount();
+        String accountNew = agency.getAccount();
+        if (!accountNew.equals(accountOld)) {
+            boolean updateAccountSuccess = checkAccount(accountOld, accountNew, id);
+            if ( !updateAccountSuccess){
+                throw  new BusinessException("更新账号失败");
+            }
             i = update(agency);
+        } else {
+          i = update(agency);
         }
         return i;
     }
@@ -114,14 +133,37 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
 
     private String checkAgency(String agencyIdString) {
         if (Strings.isNullOrEmpty(agencyIdString)) {
-            throw new BusinessException("机构不能为空");
+          throw new BusinessException("机构不能为空");
         }
         String[] aids = agencyIdString.split(",");
         List<CreditAgencyContainer.Agency> agencies = CreditAgencyContainer.getAgencies(aids);
         if (agencies == null || agencies.size() == 0) {
-            throw new BusinessException("机构不能为空");
+          throw new BusinessException("机构不能为空");
         }
-        return agencies.stream().map(CreditAgencyContainer.Agency::getId).collect(Collectors.joining(",")) ;
+        return agencies.stream()
+            .map(CreditAgencyContainer.Agency::getId)
+            .collect(Collectors.joining(","));
+    }
+
+    private boolean checkAccount(String oldAccount, String newAccount, String userId) {
+        if (Strings.isNullOrEmpty(oldAccount)) {
+            Optional<String> stringOptional = Optional.ofNullable(newAccount);
+            return stringOptional
+                    .filter(s -> sysUserService.validateAccount(s))
+                    .map(s -> sysUserService.createUserAccount(s, userId, SysUser.TYPE_AGENCY))
+                    .orElseThrow(() -> new BusinessException("账号不可用"))
+                    > 0;
+        } else {
+            SysUser user = sysUserService.getUserByAccount(oldAccount);
+            if (user == null) {
+                throw new BusinessException("修改的账号不存在");
+            }
+            if (sysUserService.validateAccount(newAccount)) {
+                return sysUserService.updateAccount(userId, oldAccount, newAccount) > 0;
+            } else {
+                throw new BusinessException("账号不可用,或已存在该账号");
+            }
+        }
     }
 
     public PageResult<OrgPersonnelAgencyVO> findPageList(OrgPersonnelAgencyQuery query) {
@@ -137,14 +179,12 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
      * @return  int
      */
     public int removeAgencyPeopleById(String id, String account) {
-        int i = 0;
         SysUser user = sysUserService.getUserByAccount(account);
         Optional<SysUser> userOptional = Optional.ofNullable(user);
-        Integer state = userOptional.map(u -> sysUserService.removeByPrimaryKey(u.getId()))
-                .orElseThrow(() -> new BusinessException("无相关人员账号"));
-        if (state > 0) {
-             i = removeByPrimaryKey(id);
-        }
-    return i;
+        return userOptional
+            .map(u -> sysUserService.removeByPrimaryKey(u.getId()))
+            .filter(state -> state > 0)
+            .map(s -> removeByPrimaryKey(id))
+            .orElseThrow(() -> new BusinessException("无相关人员账号"));
     }
 }

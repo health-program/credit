@@ -14,12 +14,12 @@
             <form id="searchbar" class="form-horizontal form-search">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input type="text" class="form-control" name="name" th:value="${query?.name}" placeholder="请输入查询的名称" />
+                        <input type="text" class="form-control" name="name" th:value="${query?.name}" placeholder="请输入机构人员的名称" />
                     </div>
                     <div class="col-md-10">
                         <div class="pull-right">
                             <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
-                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('form')[0].reset()"><i class="fa fa-repeat"></i>重置</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
                         </div>
                     </div>
                 </div>
@@ -53,11 +53,13 @@
                 [
                     {title: "名称", field: "name"},
                     {title: "账号", field: "account"},
-                    {title: "管理机构名称", field: "agencyName"},
+                    {title: "管理机构名称", field: "agencyName",formatter:function (value, row, index) {
+                            return value ? value : "所有机构"
+                        }},
                     {
                         title: "操作",
                         align: "center",
-                        width: "200px",
+                        width: "150px",
                         events: {
                             'click .detail': function (e, value, row, index) {
                                 detail(row);
