@@ -14,6 +14,7 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     private Integer resultGrade;
 
+    private  String  agencyName;
 
     @QueryCondition(type = QueryType.LIKE)
     public String getItem() {
@@ -49,5 +50,13 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     public void setResultGrade(Integer resultGrade) {
         this.resultGrade = resultGrade;
+    }
+
+    public String getAgencyName() {
+        return agencyName;
+    }
+
+    public void setAgencyName(String agencyName) {
+        this.agencyName = agencyName;
     }
 }

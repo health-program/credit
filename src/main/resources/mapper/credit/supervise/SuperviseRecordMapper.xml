@@ -4,20 +4,40 @@
 
     <select id="searchAgencyReportsByQuery"
             resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO">
-    SELECT
-	a.`name` AS agencyName,
-	a.id AS agencyId,
-	Count( r.result_grade = 1 OR NULL ) AS grade1,
-	Count( r.result_grade = 2 OR NULL ) AS grade2,
-	Count( r.result_grade = 3 OR NULL ) AS grade3,
-	Count( r.result_grade = 4 OR NULL ) AS grade4,
-	Count( r.result_grade = 5 OR NULL ) AS grade5
-FROM
-	supervise_record AS r
-	LEFT JOIN org_agency AS a ON r.agency_id = a.id
-WHERE
-	a.is_delete = 0
-GROUP BY
-	r.agency_id
+		SELECT
+		a.`name` AS agencyName,
+		a.id AS agencyId,
+		Count( r.result_grade = 1 OR NULL ) AS grade1,
+		Count( r.result_grade = 2 OR NULL ) AS grade2,
+		Count( r.result_grade = 3 OR NULL ) AS grade3,
+		Count( r.result_grade = 4 OR NULL ) AS grade4,
+		Count( r.result_grade = 5 OR NULL ) AS grade5
+	FROM
+		supervise_record AS r
+		LEFT JOIN org_agency AS a ON r.agency_id = a.id
+	WHERE
+		a.is_delete = 0
+	<if test="query.agencyName != null and query.agencyName != ''">
+		AND  a.name LIKE  CONCAT('%',#{query.agencyName},'%')
+	</if>
+	GROUP BY
+		r.agency_id
+    </select>
+    <select id="searchReportDetailByQuery" resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordVO">
+		SELECT
+		a.`name` AS agencyName,
+		s.result_name AS resultName,
+		s.result_grade AS resultGrade,
+		s.item
+		FROM
+		supervise_record AS s
+		LEFT JOIN org_agency AS a ON s.agency_id = a.id
+		WHERE a.is_delete = 0
+		<if test="agencyId != null">
+			AND a.id = #{agencyId}
+		</if>
+		<if test="grade != null">
+			AND s.result_grade = #{grade}
+		</if>
     </select>
 </mapper>

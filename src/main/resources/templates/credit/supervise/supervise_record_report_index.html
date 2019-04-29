@@ -12,7 +12,10 @@
         <div class="box-body">
             <form id="searchbar" class="form-horizontal form-search">
                 <div class="form-group">
-                    <div class="col-md-12">
+                    <div class="col-md-2">
+                        <input name="agencyName" class="form-control" placeholder="请输入机构名称" th:value="${query?.agencyName}" />
+                    </div>
+                    <div class="col-md-10">
                         <div class="pull-right">
                             <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
                             <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>

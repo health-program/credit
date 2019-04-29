@@ -80,6 +80,20 @@ public class SuperviseRecordController extends ControllerSupport {
         return CommonResponse.getSuccessResponse(superviseRecordService.searchAgencyReportsByQuery(query));
     }
 
+  @GetMapping("/report/view/{agencyId}/{grade}")
+  public String reportIndex(
+      @PathVariable String agencyId, @PathVariable String grade, Model model) {
+    model.addAttribute("agencyId", agencyId);
+    model.addAttribute("grade", grade);
+    return "/credit/supervise/supervise_record_report_detail";
+  }
+
+  @RequestMapping(value = "/find/report/detail/page", method = {RequestMethod.GET, RequestMethod.POST})
+  @ResponseBody
+  public Object findReportDetailPage(@RequestParam String agencyId,@RequestParam Integer grade) {
+    return CommonResponse.getSuccessResponse(
+        superviseRecordService.searchReportDetailByQuery(agencyId,grade));
+  }
 
 /*    @PostMapping("/update")
 	@ResponseBody

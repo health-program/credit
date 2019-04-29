@@ -17,6 +17,8 @@ public class SuperviseRecordVO {
 	// 机构ID
 	private String agencyId;
 
+	private String agencyName;
+
 	// 人员ID
 	private String personnelId;
 
@@ -159,4 +161,11 @@ public class SuperviseRecordVO {
 		this.explainAttachment = explainAttachment;
 	}
 
+	public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
+	}
 }

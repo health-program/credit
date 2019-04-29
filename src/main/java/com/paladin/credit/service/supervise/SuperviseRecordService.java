@@ -10,6 +10,7 @@ import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordPersonnelDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO;
+import com.paladin.credit.service.supervise.vo.SuperviseRecordVO;
 import com.paladin.credit.service.template.TemplateItemSelectionService;
 import com.paladin.credit.service.template.TemplateItemService;
 import com.paladin.framework.common.PageResult;
@@ -125,5 +126,15 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         Page<SuperviseRecordReportVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
         superviseRecordMapper.searchAgencyReportsByQuery(query);
         return  new PageResult<>(page);
+    }
+
+    /**
+     * 功能描述: <查询机构报表详情>
+     * @param agencyId
+     * @param grade
+     * @return  java.util.List<com.paladin.credit.service.supervise.vo.SuperviseRecordVO>
+     */
+    public List<SuperviseRecordVO> searchReportDetailByQuery(String agencyId,Integer grade) {
+        return superviseRecordMapper.searchReportDetailByQuery(agencyId,grade);
     }
 }
