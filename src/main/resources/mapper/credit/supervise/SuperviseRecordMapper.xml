@@ -40,4 +40,41 @@
 			AND s.result_grade = #{grade}
 		</if>
     </select>
+    <select id="searchAgencyReportsOrgByQuery"
+            resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordReportOrgVO">
+        SELECT
+        r.result_grade as resultGrade,
+        a.name as agencyName,
+        a.social_credit_code as socialCreditCode,
+        a.address as address,
+        a.charge_person as chargePerson,
+        a.contact_way as contactWay,
+        a.agency_type as agencyType,
+        a.register_time as registerTime,
+        a.business_scope as businessScope
+        FROM
+        (
+        SELECT
+        *
+        FROM
+        supervise_record AS r
+        WHERE
+        NOT EXISTS (
+        SELECT
+        1
+        FROM
+        supervise_record
+        WHERE
+        agency_id = r.agency_id
+        AND result_grade > r.result_grade
+        )
+        ) AS r
+        LEFT JOIN org_agency AS a ON r.agency_id = a.id
+        WHERE
+        a.is_delete = 0
+        <if test="query.resultGrade != null">
+            AND r.result_grade = #{query.resultGrade}
+        </if>
+        order by r.result_grade
+    </select>
 </mapper>

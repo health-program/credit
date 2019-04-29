@@ -9,6 +9,7 @@ import com.paladin.credit.model.template.TemplateItemSelection;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordPersonnelDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
+import com.paladin.credit.service.supervise.vo.SuperviseRecordReportOrgVO;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordVO;
 import com.paladin.credit.service.template.TemplateItemSelectionService;
@@ -125,6 +126,17 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     public PageResult<SuperviseRecordReportVO> searchAgencyReportsByQuery(SuperviseRecordQuery query) {
         Page<SuperviseRecordReportVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
         superviseRecordMapper.searchAgencyReportsByQuery(query);
+        return  new PageResult<>(page);
+    }
+    /**
+     * 功能描述 :<查询医疗机构信誉等级表>
+     * @Date 14:15 2019/4/29
+     * @Param  * @param query
+     * @return com.paladin.framework.common.PageResult<com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO>
+     **/
+    public PageResult<SuperviseRecordReportOrgVO> searchAgencyReportsOrgByQuery(SuperviseRecordQuery query) {
+        Page<SuperviseRecordReportOrgVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+        superviseRecordMapper.searchAgencyReportsOrgByQuery(query);
         return  new PageResult<>(page);
     }
 

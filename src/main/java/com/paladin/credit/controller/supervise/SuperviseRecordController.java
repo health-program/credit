@@ -34,19 +34,19 @@ public class SuperviseRecordController extends ControllerSupport {
         return "/credit/supervise/supervise_record_index";
     }
 
-    @RequestMapping(value = "/find/page", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/find/page", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     @QueryOutputMethod(queryClass = SuperviseRecordQuery.class, paramIndex = 0)
     public Object findPage(SuperviseRecordQuery query) {
         return CommonResponse.getSuccessResponse(superviseRecordService.searchPage(query));
     }
-    
+
     @GetMapping("/get")
     @ResponseBody
-    public Object getDetail(@RequestParam String id, Model model) {   	
+    public Object getDetail(@RequestParam String id, Model model) {
         return CommonResponse.getSuccessResponse(beanCopy(superviseRecordService.get(id), new SuperviseRecordVO()));
     }
-    
+
     @GetMapping("/add")
     public String addInput() {
         return "/credit/supervise/supervise_record_add";
@@ -54,46 +54,57 @@ public class SuperviseRecordController extends ControllerSupport {
 
     @GetMapping("/detail")
     public String detailInput(@RequestParam String id, Model model) {
-    	model.addAttribute("id", id);
+        model.addAttribute("id", id);
         return "/credit/supervise/supervise_record_detail";
     }
 
-  @PostMapping("/save")
-  @ResponseBody
-  public Object save(
-      @Valid @RequestBody SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      return validErrorHandler(bindingResult);
-    }
+    @PostMapping("/save")
+    @ResponseBody
+    public Object save(
+            @Valid @RequestBody SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return validErrorHandler(bindingResult);
+        }
 
-    return CommonResponse.getResponse(superviseRecordService.saveRecords(superviseRecordDTO));
-  }
+        return CommonResponse.getResponse(superviseRecordService.saveRecords(superviseRecordDTO));
+    }
+    //查询医疗机构信誉等级表页面跳转
+    @GetMapping("/report/org/index")
+    public String reportOrgIndex() {
+        return "/credit/supervise/supervise_record_report_org_index";
+    }
+    //查询医疗机构信誉等级表分页查询
+    @RequestMapping(value = "/find/report/org/page", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object findReportOrgPage(SuperviseRecordQuery query) {
+        return CommonResponse.getSuccessResponse(superviseRecordService.searchAgencyReportsOrgByQuery(query));
+    }
 
     @GetMapping("/report/index")
     public String reportIndex() {
         return "/credit/supervise/supervise_record_report_index";
     }
 
-    @RequestMapping(value = "/find/report/page", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/find/report/page", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object findReportPage(SuperviseRecordQuery query) {
         return CommonResponse.getSuccessResponse(superviseRecordService.searchAgencyReportsByQuery(query));
     }
 
-  @GetMapping("/report/view/{agencyId}/{grade}")
-  public String reportIndex(
-      @PathVariable String agencyId, @PathVariable String grade, Model model) {
-    model.addAttribute("agencyId", agencyId);
-    model.addAttribute("grade", grade);
-    return "/credit/supervise/supervise_record_report_detail";
-  }
+    @GetMapping("/report/view/{agencyId}/{grade}")
+    public String reportIndex(
+            @PathVariable String agencyId, @PathVariable String grade, Model model) {
+        model.addAttribute("agencyId", agencyId);
+        model.addAttribute("grade", grade);
+        return "/credit/supervise/supervise_record_report_detail";
+    }
 
-  @RequestMapping(value = "/find/report/detail/page", method = {RequestMethod.GET, RequestMethod.POST})
-  @ResponseBody
-  public Object findReportDetailPage(@RequestParam String agencyId,@RequestParam Integer grade) {
-    return CommonResponse.getSuccessResponse(
-        superviseRecordService.searchReportDetailByQuery(agencyId,grade));
-  }
+    @RequestMapping(value = "/find/report/detail/page", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object findReportDetailPage(@RequestParam String agencyId, @RequestParam Integer grade) {
+        return CommonResponse.getSuccessResponse(
+                superviseRecordService.searchReportDetailByQuery(agencyId, grade));
+    }
 
 /*    @PostMapping("/update")
 	@ResponseBody
@@ -109,32 +120,32 @@ public class SuperviseRecordController extends ControllerSupport {
 		return CommonResponse.getFailResponse();
 	}*/
 
-    @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(superviseRecordService.removeByPrimaryKey(id));
     }
-    
+
     @PostMapping(value = "/export")
-	@ResponseBody
-	public Object export(@RequestBody SuperviseRecordExportCondition condition) {
-		if (condition == null) {
-			return CommonResponse.getFailResponse("导出失败：请求参数异常");
-		}
-		condition.sortCellIndex();
-		SuperviseRecordQuery query = condition.getQuery();
-		try {
-			if (query != null) {
-				if (condition.isExportAll()) {
-					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, superviseRecordService.searchAll(query), SuperviseRecord.class));
-				} else if (condition.isExportPage()) {
-					return CommonResponse.getSuccessResponse("success",
-							ExportUtil.export(condition, superviseRecordService.searchPage(query).getData(), SuperviseRecord.class));
-				}
-			}
-			return CommonResponse.getFailResponse("导出数据失败：请求参数错误");
-		} catch (IOException | ExcelWriteException e) {
-			return CommonResponse.getFailResponse("导出数据失败：" + e.getMessage());
-		}
-	}
+    @ResponseBody
+    public Object export(@RequestBody SuperviseRecordExportCondition condition) {
+        if (condition == null) {
+            return CommonResponse.getFailResponse("导出失败：请求参数异常");
+        }
+        condition.sortCellIndex();
+        SuperviseRecordQuery query = condition.getQuery();
+        try {
+            if (query != null) {
+                if (condition.isExportAll()) {
+                    return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, superviseRecordService.searchAll(query), SuperviseRecord.class));
+                } else if (condition.isExportPage()) {
+                    return CommonResponse.getSuccessResponse("success",
+                            ExportUtil.export(condition, superviseRecordService.searchPage(query).getData(), SuperviseRecord.class));
+                }
+            }
+            return CommonResponse.getFailResponse("导出数据失败：请求参数错误");
+        } catch (IOException | ExcelWriteException e) {
+            return CommonResponse.getFailResponse("导出数据失败：" + e.getMessage());
+        }
+    }
 }
