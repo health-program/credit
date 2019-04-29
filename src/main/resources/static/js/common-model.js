@@ -627,11 +627,11 @@ _Model.prototype.checkViewDependency = function() {
         var depends = that.dependency[o],
             targetColumn = that.getColumn(depends[0].target);
         if (!that.isDependencySatisfy(depends, data)) {
-            if (targetColumn.viewDisplay == "hide") return;
+            if (targetColumn.viewDisplay == "hide") continue;
             targetColumn.fieldBuilder.hideView(targetColumn, that);
             targetColumn.viewDisplay = "hide";
         } else {
-            if (targetColumn.viewDisplay == "show") return;
+            if (targetColumn.viewDisplay == "show") continue;
             targetColumn.fieldBuilder.showView(targetColumn, that);
             targetColumn.viewDisplay = "show";
         }
@@ -658,7 +658,7 @@ _Model.prototype.checkEditDependency = function() {
 
         var targetCol = that.getColumn(dependencies[0].target);
         if (isOk) {
-            if (targetCol.editDisplay == "show") return;
+            if (targetCol.editDisplay == "show") continue;
             if (targetCol.editable === false) {
                 targetCol.fieldBuilder.showView(targetCol, that, targetCol.fieldBuilder.getViewTarget(targetCol, that));
             } else {
@@ -666,7 +666,7 @@ _Model.prototype.checkEditDependency = function() {
             }
             targetCol.editDisplay = "show";
         } else {
-            if (targetCol.editDisplay == "hide") return;
+            if (targetCol.editDisplay == "hide") continue;
             if (targetCol.editable === false) {
                 targetCol.fieldBuilder.hideView(targetCol, that, targetCol.fieldBuilder.getViewTarget(targetCol, that));
             } else {
