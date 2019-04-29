@@ -1,12 +1,18 @@
 package com.paladin.credit.service.supervise;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.paladin.credit.mapper.supervise.SuperviseRecordMapper;
 import com.paladin.credit.model.supervise.SuperviseRecord;
 import com.paladin.credit.model.template.TemplateItem;
 import com.paladin.credit.model.template.TemplateItemSelection;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordPersonnelDTO;
+import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
+import com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO;
 import com.paladin.credit.service.template.TemplateItemSelectionService;
 import com.paladin.credit.service.template.TemplateItemService;
+import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.utils.StringUtil;
@@ -25,6 +31,9 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
 
     @Autowired
     private TemplateItemSelectionService templateItemSelectionService;
+
+    @Autowired
+    private SuperviseRecordMapper superviseRecordMapper;
 
     @Transactional
     public int saveRecords(SuperviseRecordDTO superviseRecordDTO) {
@@ -104,5 +113,17 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
             }
         }
         return i;
+    }
+
+    /**
+     * 功能描述: <查询所有机构报表>
+     * @param query
+     * @return  com.paladin.framework.common.PageResult<com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO>
+     * @date  2019/4/29
+     */
+    public PageResult<SuperviseRecordReportVO> searchAgencyReportsByQuery(SuperviseRecordQuery query) {
+        Page<SuperviseRecordReportVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+        superviseRecordMapper.searchAgencyReportsByQuery(query);
+        return  new PageResult<>(page);
     }
 }

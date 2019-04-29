@@ -2,4 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.credit.mapper.supervise.SuperviseRecordMapper">
 
+    <select id="searchAgencyReportsByQuery"
+            resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO">
+    SELECT
+	a.`name` AS agencyName,
+	a.id AS agencyId,
+	Count( r.result_grade = 1 OR NULL ) AS grade1,
+	Count( r.result_grade = 2 OR NULL ) AS grade2,
+	Count( r.result_grade = 3 OR NULL ) AS grade3,
+	Count( r.result_grade = 4 OR NULL ) AS grade4,
+	Count( r.result_grade = 5 OR NULL ) AS grade5
+FROM
+	supervise_record AS r
+	LEFT JOIN org_agency AS a ON r.agency_id = a.id
+WHERE
+	a.is_delete = 0
+GROUP BY
+	r.agency_id
+    </select>
 </mapper>

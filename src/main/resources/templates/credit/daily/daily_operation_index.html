@@ -4,7 +4,7 @@
 <head th:include="/credit/header" />
 
 <body>
-<tt:constant enumcode="item-target-type" />
+<tt:constant enumcode="item-target-type,supervise-scope" />
 <section class="content-header">
    <h1 th:text="|日常操作功能管理-${name}|"></h1>
 </section>
@@ -51,6 +51,7 @@
             columns: [
                 [
                     { title: "项目名称", field: "itemName" , formatter:function (value, row, index) { return value ? value : "无"}},
+                    { title: "监管科室·机构", field: "code", enumcode:"supervise-scope"},
                     {
                         title: "操作",
                         align: "center",

@@ -69,6 +69,18 @@ public class SuperviseRecordController extends ControllerSupport {
     return CommonResponse.getResponse(superviseRecordService.saveRecords(superviseRecordDTO));
   }
 
+    @GetMapping("/report/index")
+    public String reportIndex() {
+        return "/credit/supervise/supervise_record_report_index";
+    }
+
+    @RequestMapping(value = "/find/report/page", method = { RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public Object findReportPage(SuperviseRecordQuery query) {
+        return CommonResponse.getSuccessResponse(superviseRecordService.searchAgencyReportsByQuery(query));
+    }
+
+
 /*    @PostMapping("/update")
 	@ResponseBody
     public Object update(@Valid SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {

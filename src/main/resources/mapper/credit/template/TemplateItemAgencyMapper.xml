@@ -51,6 +51,7 @@
         template_item_agency.id,
         template_item.id AS itemId,
         template_item.item_name AS itemName,
+        template_item_agency.code,
         template_item_agency.agency_id AS agencyId
         FROM
         template_item_agency
