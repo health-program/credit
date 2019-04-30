@@ -22,6 +22,8 @@ public class SuperviseRecordReportVO {
 
     private  Integer grade5;
 
+    private  Integer mgrade;
+
     public String getAgencyName() {
         return agencyName;
     }
@@ -76,5 +78,13 @@ public class SuperviseRecordReportVO {
 
     public void setAgencyId(String agencyId) {
         this.agencyId = agencyId;
+    }
+
+    public Integer getMgrade() {
+        return mgrade;
+    }
+
+    public void setMgrade(Integer mgrade) {
+        this.mgrade = mgrade;
     }
 }

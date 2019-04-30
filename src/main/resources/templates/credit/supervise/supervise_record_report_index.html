@@ -3,9 +3,9 @@
 <head th:include="/credit/header" />
 
 <body>
-<tt:constant enumcode="selection-grade-type,item-target-type," />
+<tt:constant enumcode="selection-grade-type,item-target-type,agency-credit-grade" />
 <section class="content-header">
-    <h1>医疗机构信用评价</h1>
+    <h1>医疗机构信用评价-评价汇总</h1>
 </section>
 <section class="content">
     <div class="box box-solid">
@@ -85,7 +85,7 @@
                                 return '无'
                             }
                     }},
-                    { title: "综合信用评价等级",width: "150px", formatter:gradeSort}
+                    { title: "综合信用评价等级", field: "mgrade", width: "150px", enumcode:"agency-credit-grade"}
                 ]
             ],
             url: '/credit/supervise/record/find/report/page',
@@ -97,20 +97,6 @@
             toolbar: "#toolbar",
             showRefresh: true
         });
-    }
-
-    function gradeSort(value, row, index) {
-        if (row.grade5) {
-            return 'E类'
-        } else if (row.grade4) {
-            return 'D类'
-        } else if (row.grade3) {
-            return 'C类'
-        } else if (row.grade2) {
-            return 'B类'
-        } else if (row.grade1) {
-            return 'A类'
-        }
     }
     /*]]>*/
 </script>

@@ -68,12 +68,12 @@ public class SuperviseRecordController extends ControllerSupport {
 
         return CommonResponse.getResponse(superviseRecordService.saveRecords(superviseRecordDTO));
     }
-    //查询医疗机构信誉等级表页面跳转
+
     @GetMapping("/report/org/index")
     public String reportOrgIndex() {
         return "/credit/supervise/supervise_record_report_org_index";
     }
-    //查询医疗机构信誉等级表分页查询
+
     @RequestMapping(value = "/find/report/org/page", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object findReportOrgPage(SuperviseRecordQuery query) {

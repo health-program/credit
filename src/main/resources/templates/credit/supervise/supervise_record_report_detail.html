@@ -39,7 +39,8 @@
                     { title: "机构名称", field: "agencyName" },
                     { title: "监察项目", field: "item" },
                     { title: "监察结果名称", field: "resultName",formatter:function (value, row, index) { return value ?  value : "无"} },
-                    { title: "监察结果等级", field: "resultGrade", enumcode: "selection-grade-type" }
+                    { title: "监察结果等级", field: "resultGrade", enumcode: "selection-grade-type" },
+                    { title: "录入时间", field: "createTime", formatter:datetimeFormat }
                 ]
             ],
             url: '/credit/supervise/record/find/report/detail/page?agencyId='+agencyId+'&grade='+grade,

@@ -3,9 +3,9 @@
 <head th:include="/credit/header"/>
 
 <body>
-<tt:constant enumcode="selection-grade-type,item-target-type,"/>
+<tt:constant enumcode="selection-grade-type,item-target-type,agency-credit-grade"/>
 <section class="content-header">
-    <h1>医疗机构信用评价表</h1>
+    <h1>医疗机构信用评价-机构详情</h1>
 </section>
 <section class="content">
     <div class="box box-solid">
@@ -13,14 +13,8 @@
             <form id="searchbar" class="form-horizontal form-search">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <!--<input type="text" class="form-control" name="name" th:value="${query?.resultGrade}" placeholder="请输入信用等级" />-->
-                        <select type="text" class="form-control" name="resultGrade" th:value="${query?.resultGrade}">
-                            <option value="">请先选择信用等级</option>
-                            <option value="1">A(诚实守信)</option>
-                            <option value="2">B(信用良好)</option>
-                            <option value="3">C(一般失信)</option>
-                            <option value="4">D(较重失信)</option>
-                            <option value="5">F(严重失信)</option>
+                        <select class="form-control  tonto-select-constant" name="resultGrade" enumcode="agency-credit-grade" th:value="${query?.resultGrade}">
+                            <option value="">请选择信用等级</option>
                         </select>
                     </div>
                     <div class="col-md-10">
@@ -61,27 +55,8 @@
         table = $.createTable("#dataGrid", {
             columns: [
                 [
-                    {
-                        title: "信誉等级", field: "resultGrade", formatter: function (value, row, index) {
-                            if (value == "1") {
-                                return value="A(诚实守信)";
-                            }
-                            if (value == "2") {
-                                return value="B(信用良好)";
-                            }
-                            if (value == "3") {
-                                return value="C(一般失信)";
-                            }
-                            if (value == "4") {
-                                return value="D(较重失信)";
-                            }
-                            if (value == "5") {
-                                return value="F(严重失信)";
-                            }
-
-                        }
-                    },
-                    {title: "单位名称", field: "name"},
+                    {title: "信誉等级", field: "resultGrade", enumcode:"agency-credit-grade"},
+                    {title: "单位名称", field: "agencyName"},
                     {title: "社会信用代码", field: "socialCreditCode"},
                     {title: "单位地址", field: "address"},
                     {title: "法定代表人或负责人", field: "chargePerson"},

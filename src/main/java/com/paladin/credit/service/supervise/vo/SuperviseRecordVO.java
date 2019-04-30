@@ -4,6 +4,7 @@ package com.paladin.credit.service.supervise.vo;
 import com.paladin.common.core.AttachmentContainer;
 import com.paladin.common.model.syst.SysAttachment;
 
+import java.util.Date;
 import java.util.List;
 
 public class SuperviseRecordVO {
@@ -48,6 +49,8 @@ public class SuperviseRecordVO {
 
 	// 监察结果名称
 	private String explainAttachment;
+
+	private Date createTime;
 
 	// 获取附件文件
 	public List<SysAttachment> getExplainAttachmentFile() {
@@ -167,5 +170,13 @@ public class SuperviseRecordVO {
 
 	public void setAgencyName(String agencyName) {
 		this.agencyName = agencyName;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 }
