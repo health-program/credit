@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="selection-grade-type,item-target-type," />
+<section class="content-header">
+    <h1>医疗机构信用评价</h1>
+    <ol class="breadcrumb">
+        <li><a href="/credit/supervise/record/report/index"><i class="fa fa-list-alt"></i>信用评价列表</a></li>
+        <li class="active">详情</li>
+    </ol>
+</section>
+<input type="hidden" id="agencyId" th:value="${agencyId}">
+<input type="hidden" id="grade" th:value="${grade}">
+<section class="content">
+    <div class="box box-solid">
+        <div id="result" class="box-body">
+            <table id="dataGrid"></table>
+            <div id="toolbar">
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/credit/footer" />
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var table,grade,agencyId;
+    $(function() {
+        grade = $("#grade").val();
+        agencyId = $("#agencyId").val();
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            columns: [
+                [
+                    { title: "机构名称", field: "agencyName" },
+                    { title: "监察项目", field: "item" },
+                    { title: "监察结果名称", field: "resultName",formatter:function (value, row, index) { return value ?  value : "无"} },
+                    { title: "监察结果等级", field: "resultGrade", enumcode: "selection-grade-type" },
+                    { title: "录入时间", field: "createTime", formatter:datetimeFormat }
+                ]
+            ],
+            url: '/credit/supervise/record/find/report/detail/page?agencyId='+agencyId+'&grade='+grade,
+            searchbar: '#searchbar',
+            exportUrl: '/credit/org/agency/export',
+            showExport: true,
+            showColumns: true,
+            showRefresh: true
+        });
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

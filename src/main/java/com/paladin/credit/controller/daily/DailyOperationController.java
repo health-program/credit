@@ -37,7 +37,7 @@ public class DailyOperationController extends ControllerSupport {
             model.addAttribute("name","医疗相关人员");
             model.addAttribute("type","3");
         }
-    return "/credit/daily/daily_operation_index.html";
+    return "/credit/daily/daily_operation_index";
     }
 
 
@@ -65,7 +65,7 @@ public class DailyOperationController extends ControllerSupport {
             model.addAttribute("url","/credit/daily/operation/3");
         }
         model.addAttribute("itemId", itemId);
-        return "/credit/daily/daily_operation_write.html";
+        return "/credit/daily/daily_operation_write";
     }
 
 }
