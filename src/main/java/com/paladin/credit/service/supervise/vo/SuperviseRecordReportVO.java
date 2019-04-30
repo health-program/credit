@@ -1,5 +1,7 @@
 package com.paladin.credit.service.supervise.vo;
 
+import java.util.Date;
+
 /**
  * <机构报表管理前台展示>
  *
@@ -23,6 +25,10 @@ public class SuperviseRecordReportVO {
     private  Integer grade5;
 
     private  Integer mgrade;
+
+    private Date bgtime;
+
+    private Date endtime;
 
     public String getAgencyName() {
         return agencyName;
@@ -86,5 +92,21 @@ public class SuperviseRecordReportVO {
 
     public void setMgrade(Integer mgrade) {
         this.mgrade = mgrade;
+    }
+
+    public Date getBgtime() {
+        return bgtime;
+    }
+
+    public void setBgtime(Date bgtime) {
+        this.bgtime = bgtime;
+    }
+
+    public Date getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Date endtime) {
+        this.endtime = endtime;
     }
 }

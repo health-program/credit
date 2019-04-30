@@ -5,46 +5,44 @@
     <select id="searchAgencyReportsByQuery"
             resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO">
         SELECT
-        agencyName,agencyId,grade1,grade2,grade3,grade4,grade5,mgrade
+        d.name AS agencyName,d.id AS agencyId,mgrade,bgtime,endtime,grade1,grade2,grade3,grade4,grade5
         FROM
         (
         SELECT
-        a.`name` AS agencyName,
-        a.id AS agencyId,
-        Count( r.result_grade = 1 OR NULL ) AS grade1,
-        Count( r.result_grade = 2 OR NULL ) AS grade2,
-        Count( r.result_grade = 3 OR NULL ) AS grade3,
-        Count( r.result_grade = 4 OR NULL ) AS grade4,
-        Count( r.result_grade = 5 OR NULL ) AS grade5
-        FROM
-        supervise_record AS r
-        LEFT JOIN org_agency AS a ON r.agency_id = a.id
-        WHERE
-        a.is_delete = 0
-        <if test="query.agencyName != null and query.agencyName != ''">
-            AND  a.name LIKE  CONCAT('%',#{query.agencyName},'%')
-        </if>
-        GROUP BY
-        r.agency_id
-        ) a
-        INNER JOIN (
-        SELECT
-        s.agency_id,
-        MAX( s.result_grade ) AS mgrade
-        FROM
-        supervise_agency_record AS s
-        INNER JOIN ( SELECT create_time AS time, agency_id FROM supervise_agency_record ORDER BY create_time DESC LIMIT 0, 1 ) AS latelyTime ON latelyTime.agency_id = s.agency_id
-        WHERE
-        s.create_time  <![CDATA[<=]]> CURRENT_DATE ( ) AND DATE_FORMAT( s.create_time, '%Y-%m' ) >=
+        a.agency_id,
+        max( a.result_grade ) AS mgrade,
         IF
         (
-        TIMESTAMPDIFF( MONTH, DATE_SUB( CURRENT_DATE ( ), INTERVAL 1 YEAR ), latelyTime.time ) > 0,
-        DATE_FORMAT( latelyTime.time, '%Y-%m' ),
-        DATE_SUB( CURRENT_DATE ( ), INTERVAL 1 YEAR )
+        TIMESTAMPDIFF( DAY, DATE_SUB( NOW( ), INTERVAL 1 YEAR ), b.time ) > 0,
+        b.time,
+        DATE_SUB( NOW( ), INTERVAL 1 YEAR )
+        ) AS bgtime,
+        NOW( ) AS endtime,
+        Count( a.result_grade = 1 OR NULL ) AS grade1,
+        Count( a.result_grade = 2 OR NULL ) AS grade2,
+        Count( a.result_grade = 3 OR NULL ) AS grade3,
+        Count( a.result_grade = 4 OR NULL ) AS grade4,
+        Count( a.result_grade = 5 OR NULL ) AS grade5
+        FROM
+        supervise_record a
+        INNER JOIN ( SELECT MIN(create_time)  AS time  , agency_id AS b_agencyId  FROM supervise_record  GROUP BY agency_id ) b ON a.agency_id = b.b_agencyId
+        WHERE
+        a.create_time  <![CDATA[<]]> NOW( ) AND a.create_time >=
+        IF
+        (
+        TIMESTAMPDIFF( DAY, DATE_SUB( NOW( ), INTERVAL 1 YEAR ), b.time ) > 0,
+        b.time,
+        DATE_SUB( NOW( ), INTERVAL 1 YEAR )
         )
         GROUP BY
-        s.agency_id
-        ) b ON a.agencyId = b.agency_id
+        a.agency_id
+        ) c
+        INNER JOIN org_agency d ON c.agency_id = d.id
+        WHERE
+        d.is_delete = 0
+        <if test="query.agencyName != null and query.agencyName != ''">
+            AND   d.name LIKE  CONCAT('%',#{query.agencyName},'%')
+        </if>
     </select>
     <select id="searchReportDetailByQuery" resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordVO">
 		SELECT

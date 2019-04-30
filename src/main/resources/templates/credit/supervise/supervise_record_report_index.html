@@ -85,7 +85,8 @@
                                 return '无'
                             }
                     }},
-                    { title: "综合信用评价等级", field: "mgrade", width: "150px", enumcode:"agency-credit-grade"}
+                    { title: "综合信用评价等级", field: "mgrade", width: "150px", enumcode:"agency-credit-grade"},
+                    {  title: "评价日期",formatter:assessDate}
                 ]
             ],
             url: '/credit/supervise/record/find/report/page',
@@ -97,6 +98,12 @@
             toolbar: "#toolbar",
             showRefresh: true
         });
+    }
+
+    function assessDate(value, row, index) {
+        let bgtime = dateFormat(row.bgtime);
+        let endtime =dateFormat(row.endtime);
+        return bgtime + "~"+endtime
     }
     /*]]>*/
 </script>
