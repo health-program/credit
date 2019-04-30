@@ -67,7 +67,7 @@
     <select id="searchAgencyReportsOrgByQuery"
             resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordReportOrgVO">
         SELECT
-        MAX(result_grade)AS resultGrade ,
+        resultGrade,
         a.name as agencyName,
         a.social_credit_code as socialCreditCode,
         a.address as address,
@@ -77,15 +77,13 @@
         a.register_time as registerTime,
         a.business_scope as businessScope
         FROM
-        supervise_record AS r
+        (SELECT MAX(result_grade) AS resultGrade,agency_id FROM supervise_record GROUP BY agency_id ) AS r
         LEFT JOIN org_agency AS a ON r.agency_id = a.id
         WHERE
         a.is_delete = 0
         <if test="query.resultGrade != null">
-            AND r.result_grade = #{query.resultGrade}
+            AND resultGrade = #{query.resultGrade}
         </if>
-
-        GROUP BY agencyName
         order by resultGrade
     </select>
 </mapper>
