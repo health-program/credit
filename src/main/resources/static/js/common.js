@@ -1166,8 +1166,8 @@ function _initTable() {
         options = $.extend(selfOptions, options);
 
         // 回显时，页码回显
-        var _limit = $(options.pageLimitEL || "#pageLimit").val(),
-            _offset = $(options.pageOffsetEL || "#pageOffset").val(),
+        var _limit = $(options.pageLimitEL || "#pageLimit").val() * 1,
+            _offset = $(options.pageOffsetEL || "#pageOffset").val() * 1,
             _page = (_limit && _offset) ? _offset / _limit + 1 : 1;
 
         if (_limit) {
