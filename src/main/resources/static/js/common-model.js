@@ -398,15 +398,15 @@ var _Model = function(name, column, options) {
                 if (extraParam) {
                     if (typeof extraParam === 'function') {
                         extraParam = extraParam();
-                    } else {
-                        for (var o in extraParam) {
-                            formData.push({
-                                name: o,
-                                value: extraParam[o],
-                                type: "text",
-                                required: false
-                            });
-                        }
+                    } 
+                    
+                    for (var o in extraParam) {
+                        formData.push({
+                            name: o,
+                            value: extraParam[o],
+                            type: "text",
+                            required: false
+                        });
                     }
                 }
 
