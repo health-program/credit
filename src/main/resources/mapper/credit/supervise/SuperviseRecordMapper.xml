@@ -83,7 +83,7 @@
         WHERE
         create_time >
         IF (
-        b.min_time > DATE_SUB(NOW(), INTERVAL 1 YEAR),
+        b.min_time &lt; DATE_SUB(NOW(), INTERVAL 1 YEAR),
         DATE_SUB(NOW(), INTERVAL 1 YEAR),
         b.min_time
         )
