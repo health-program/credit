@@ -74,16 +74,20 @@
         a.agency_type as agencyType,
         a.register_time as registerTime,
         a.business_scope as businessScope
-        FROM
-        (
-        SELECT
+        FROM ( SELECT
         MAX(result_grade) AS resultGrade,
         agency_id
         FROM
         supervise_record
+        INNER JOIN ( SELECT MIN(create_time) AS min_time FROM supervise_record ) AS a
         WHERE
-        create_time BETWEEN DATE_SUB(NOW(), INTERVAL 1 YEAR)
-        AND NOW()
+        create_time >
+        IF (
+        a.min_time > DATE_SUB(NOW(), INTERVAL 1 YEAR),
+        DATE_SUB(NOW(), INTERVAL 1 YEAR),
+        a.min_time
+        )
+        AND create_time &lt; NOW()
         GROUP BY
         agency_id
         ) AS r
