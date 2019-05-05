@@ -19,16 +19,16 @@
                 <form id="searchbar" class="form-horizontal form-search">
                     <input type="hidden" id="targetType" name="targetType" th:value="${type}">
                     <div class="form-group">
-                        <div class="col-md-3" id="orgDiv">
+                        <div class="col-md-2" id="orgDiv">
                             <input name="agencyName" class="form-control" placeholder="请输入机构名称" th:value="${query?.agencyName}" />
                         </div>
-                        <div class="col-md-3" id="personnelDiv">
+                        <div class="col-md-2" id="personnelDiv">
                             <input name="personnelName" class="form-control" placeholder="请输入医疗人员姓名" th:value="${query?.personnelName}" />
                         </div>
-                        <div class="col-md-3" id="relatedPersonnelDiv">
+                        <div class="col-md-2" id="relatedPersonnelDiv">
                             <input name="relatedPersonnelName" class="form-control" placeholder="请输入医疗相关人员姓名" th:value="${query?.relatedPersonnelName}" />
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <input name="item" class="form-control" placeholder="请输入项目名称" th:value="${query?.item}" />
                         </div>
                         <div class="col-md-2">
@@ -36,7 +36,15 @@
                                 <option value="">请选择监察结果等级</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <input name="bgTime" placeholder="请输入监察开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.bgTime}" >
+                        </div>
+                        <div class="col-md-3">
+                            <input name="endTime" placeholder="请输入监察结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.endTime}" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
                             <div class="pull-right">
                                 <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>

@@ -4,6 +4,8 @@ import com.paladin.framework.common.OffsetPage;
 import com.paladin.framework.common.QueryCondition;
 import com.paladin.framework.common.QueryType;
 
+import java.util.Date;
+
 public class SuperviseRecordQuery extends OffsetPage {
 
     private String item;
@@ -19,6 +21,10 @@ public class SuperviseRecordQuery extends OffsetPage {
     private String personnelName;
 
     private String relatedPersonnelName;
+
+    private Date bgTime;
+
+    private Date endTime;
 
     @QueryCondition(type = QueryType.LIKE)
     public String getItem() {
@@ -78,5 +84,21 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     public void setRelatedPersonnelName(String relatedPersonnelName) {
         this.relatedPersonnelName = relatedPersonnelName;
+    }
+
+    public Date getBgTime() {
+        return bgTime;
+    }
+
+    public void setBgTime(Date bgTime) {
+        this.bgTime = bgTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

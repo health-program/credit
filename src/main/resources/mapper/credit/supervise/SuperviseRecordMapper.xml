@@ -133,5 +133,11 @@
         <if test="query.relatedPersonnelName != null and query.relatedPersonnelName != ''">
             AND r.personnel_name LIKE CONCAT('%',#{query.relatedPersonnelName},'%')
         </if>
+         <if test="param1.bgTime != null">
+             AND  r.create_time  >=  #{query.bgTime}
+         </if>
+          <if test="query.endTime != null" >
+              AND  r.create_time <![CDATA[<=]]> #{query.endTime}
+          </if>
     </select>
 </mapper>

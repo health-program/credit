@@ -7,7 +7,7 @@
     <tt:constant enumcode="selection-grade-type,item-target-type,sex-type"/>
     <input type="hidden" id="targetType" name="targetType" th:value="${targetType}">
     <section class="content-header">
-        <h1>监察记录</h1>
+        <h1 th:text="|监察记录-${name}|"></h1>
         <ol class="breadcrumb">
             <li><a  th:href="@{'/credit/daily/operation/' + ${targetType}}" ><i class="fa fa-list-alt"></i>项目列表</a></li>
             <li><a  th:href="@{'/credit/supervise/record/index/' + ${targetType} + '/'+${name}}" ><i class="fa fa-list-alt"></i>监察记录列表</a></li>
@@ -15,6 +15,15 @@
         </ol>
     </section>
     <section class="content">
+        <div id="detail"></div>
+<!--        <div>
+            <div class="col-sm-2 col-sm-offset-3">
+                <button type="button" id="passBtn" onclick="checkSuccess()" class="btn btn-success btn-block"><i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;审核通过</button>
+            </div>
+            <div class="col-sm-2 col-sm-offset-1">
+                <button type="button" id="unpassBtn" onclick="checkFail()" class="btn btn-danger btn-block"><i class="glyphicon glyphicon-remove"></i>&nbsp;&nbsp;审核不通过</button>
+            </div>
+        </div>-->
     </section>
     <div class="col-sm-2 col-sm-offset-5 btn-back">
     	<a th:href="@{'/credit/supervise/record/index/' + ${targetType} + '/'+${name}}" class="btn btn-primary btn-block">返回</a>
@@ -26,7 +35,7 @@
     $(function() {
     	var options = {
 	        id: "model",
-	        name: "详情",
+	        name: "监察详情",
 	        url:"/credit/supervise/record/update?id="+$("#id").val(),
 	        columns: [
                 { title: "监察项目", name: "item", required: "required",colspan:2, inputType: "TEXT" },
@@ -46,13 +55,40 @@
     
         $.getAjax("/credit/supervise/record/get?id="+$("#id").val(), function(data) {
             var html = generateViewHtml(options);
-            $(".content").html(html);
-            $.initComponment($(".content"));
+            $("#detail").html(html);
+            $.initComponment($("#detail"));
            
             var model = new tonto.Model("model", options.columns);
             model.setData(data);
         });
     });
+
+/*    function checkSuccess() {
+        $.postAjax("/hrms/complaint/zjbind/check/success", {
+            id: personnelId,
+            illustrate: $("input[name='illustrate']").val()
+        }, function(data) {
+            $.successAlert("操作成功", function() {
+                window.location = '/hrms/complaint/zjbind/index';
+            });
+        });
+    }
+
+    function checkFail() {
+        var ill = $("input[name='illustrate']").val();
+        if (!ill) {
+            $.errorMessage("请填写审核意见");
+            return;
+        }
+        $.postAjax("/hrms/complaint/zjbind/check/fail", {
+            id: personnelId,
+            illustrate: ill
+        }, function(data) {
+            $.successAlert("操作成功", function() {
+                window.location = '/hrms/complaint/zjbind/index';
+            });
+        });
+    }*/
     </script>
 </body>
 
