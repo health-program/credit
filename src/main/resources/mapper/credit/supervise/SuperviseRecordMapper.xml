@@ -84,13 +84,8 @@
         FROM
         supervise_record
         WHERE
-        create_time &gt;=
-        IF (
-        create_time &lt; DATE_SUB(NOW(), INTERVAL 1 YEAR),
-        create_time,
-        DATE_SUB(NOW(), INTERVAL 1 YEAR)
-        )
-        AND create_time &lt; NOW()
+        create_time BETWEEN DATE_SUB(NOW(), INTERVAL 1 YEAR)
+        AND  NOW()
         GROUP BY
         agency_id
         ) AS r
