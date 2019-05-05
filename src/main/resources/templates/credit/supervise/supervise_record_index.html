@@ -6,27 +6,37 @@
 <body>
     <tt:constant enumcode="selection-grade-type,item-target-type," />
     <section class="content-header">
-        <h1>检查记录</h1>
+        <h1 th:text="|监察记录-${name}|"></h1>
+        <ol class="breadcrumb">
+            <li><a  th:href="@{'/credit/daily/operation/' + ${type}}" ><i class="fa fa-list-alt"></i>项目列表</a></li>
+            <li class="active">监察记录列表</li>
+        </ol>
     </section>
     <section class="content">
+        <input type="hidden" id="name" th:value="${name}">
         <div class="box box-solid">
             <div class="box-body">
                 <form id="searchbar" class="form-horizontal form-search">
+                    <input type="hidden" id="targetType" name="targetType" th:value="${type}">
                     <div class="form-group">
+                        <div class="col-md-3" id="orgDiv">
+                            <input name="agencyName" class="form-control" placeholder="请输入机构名称" th:value="${query?.agencyName}" />
+                        </div>
+                        <div class="col-md-3" id="personnelDiv">
+                            <input name="personnelName" class="form-control" placeholder="请输入医疗人员姓名" th:value="${query?.personnelName}" />
+                        </div>
+                        <div class="col-md-3" id="relatedPersonnelDiv">
+                            <input name="relatedPersonnelName" class="form-control" placeholder="请输入医疗相关人员姓名" th:value="${query?.relatedPersonnelName}" />
+                        </div>
                         <div class="col-md-3">
                             <input name="item" class="form-control" placeholder="请输入项目名称" th:value="${query?.item}" />
-                        </div>
-                        <div class="col-md-2">
-                            <select name="targetType" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.targetType}" enumcode="item-target-type">
-                                <option value="">请选择目标类型</option>
-                            </select>
                         </div>
                         <div class="col-md-2">
                             <select name="resultGrade" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.resultGrade}" enumcode="selection-grade-type">
                                 <option value="">请选择监察结果等级</option>
                             </select>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div class="pull-right">
                                 <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -50,9 +60,12 @@
     </section>
     <div th:include="/credit/footer" />
     <script type="text/javascript">
-    var table;
+    var table,type,name;
     $(function() {
+        type = $("#targetType").val();
+        name = $("#name").val();
         initDataGrid();
+        hideColumn();
     });
 
     function initDataGrid() {
@@ -61,14 +74,16 @@
             columns: [
                 [
 
+                    { title: "医疗机构名称", field: "agencyName" ,width: "150px" },
+                    { title: "医疗人员姓名", field: "personnelName" },
+                    { title: "医疗相关人员姓名", field: "relatedPersonnelName" },
                     { title: "监察项目", field: "item" },
-                    { title: "目标类型", field: "targetType", enumcode: "item-target-type" },
+                    /*{ title: "目标类型", field: "targetType", enumcode: "item-target-type" },*/
                     { title: "监察结果名称", field: "resultName",formatter:function (value, row, index) { return value ?  value : "无"} },
                     { title: "监察结果等级", field: "resultGrade", enumcode: "selection-grade-type" },
                     {
                         title: "操作",
-                        align: "center",
-                        width: "200px",
+                        width: "150px",
                         events: {
                             'click .detail': function(e, value, row, index) {
                                 detail(row);
@@ -100,7 +115,7 @@
     }
 
     function detail(row) {
-        window.location = '/credit/supervise/record/detail' + (row ? ('?id=' + row.id) : '');
+        window.location = '/credit/supervise/record/detail' + (row ? ('?id=' + row.id+"&targetType="+type+"&name="+name) : '');
     }
 
     function remove(row) {
@@ -111,6 +126,25 @@
                     table.refresh();
                 });
             });
+        }
+    }
+
+    function hideColumn() {
+        if (type == 1) {
+           table.hideColumn("personnelName");
+           table.hideColumn("relatedPersonnelName");
+           $("#relatedPersonnelDiv").hide();
+           $("#personnelDiv").hide();
+        }else if (type == 2) {
+            table.hideColumn("agencyName");
+            table.hideColumn("relatedPersonnelName");
+            $("#relatedPersonnelDiv").hide();
+            $("#orgDiv").hide();
+        } else {
+            table.hideColumn("agencyName");
+            table.hideColumn("personnelName");
+            $("#orgDiv").hide();
+            $("#personnelDiv").hide();
         }
     }
     </script>

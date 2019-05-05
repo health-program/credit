@@ -16,6 +16,10 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     private  String  agencyName;
 
+    private String personnelName;
+
+    private String relatedPersonnelName;
+
     @QueryCondition(type = QueryType.LIKE)
     public String getItem() {
         return item;
@@ -58,5 +62,21 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     public void setAgencyName(String agencyName) {
         this.agencyName = agencyName;
+    }
+
+    public String getPersonnelName() {
+        return personnelName;
+    }
+
+    public void setPersonnelName(String personnelName) {
+        this.personnelName = personnelName;
+    }
+
+    public String getRelatedPersonnelName() {
+        return relatedPersonnelName;
+    }
+
+    public void setRelatedPersonnelName(String relatedPersonnelName) {
+        this.relatedPersonnelName = relatedPersonnelName;
     }
 }

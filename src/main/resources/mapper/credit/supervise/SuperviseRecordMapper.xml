@@ -95,4 +95,39 @@
         </if>
         order by resultGrade
     </select>
+    <select id="searchSuperviseRecordsPageByQuery"
+            resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO">
+        SELECT
+        r.id,
+        r.target_type AS targetType,
+        r.personnel_name AS relatedPersonnelName,
+        r.item,
+        r.result_name AS resultName,
+        r.result_grade AS resultGrade,
+        a.`name` AS agencyName,
+        p.`name` AS personnelName
+        FROM
+        supervise_record AS r
+        LEFT JOIN org_agency AS a ON r.agency_id = a.id
+        LEFT JOIN org_personnel AS p ON r.personnel_id = p.id
+        WHERE 1 = 1
+        <if test="query.item != null and query.item != ''">
+            AND r.item LIKE CONCAT('%',#{query.item},'%')
+        </if>
+        <if test="query.targetType != null">
+            AND r.target_type = #{query.targetType}
+        </if>
+        <if test="param1.resultGrade != null">
+            AND r.result_grade = #{query.resultGrade}
+        </if>
+        <if test="query.agencyName != null and query.agencyName != ''">
+            AND a.name LIKE CONCAT('%',#{query.agencyName},'%')
+        </if>
+        <if test="query.personnelName != null and query.personnelName != ''">
+            AND p.name LIKE CONCAT('%',#{query.personnelName},'%')
+        </if>
+        <if test="query.relatedPersonnelName != null and query.relatedPersonnelName != ''">
+            AND r.personnel_name LIKE CONCAT('%',#{query.relatedPersonnelName},'%')
+        </if>
+    </select>
 </mapper>

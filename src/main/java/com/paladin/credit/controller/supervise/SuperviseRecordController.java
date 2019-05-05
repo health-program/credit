@@ -28,9 +28,11 @@ public class SuperviseRecordController extends ControllerSupport {
     @Autowired
     private SuperviseRecordService superviseRecordService;
 
-    @GetMapping("/index")
+    @GetMapping("/index/{type}/{name}")
     @QueryInputMethod(queryClass = SuperviseRecordQuery.class)
-    public String index() {
+    public String index( @PathVariable String type, @PathVariable String name , Model model) {
+        model.addAttribute("type",type);
+        model.addAttribute("name",name);
         return "/credit/supervise/supervise_record_index";
     }
 
@@ -38,7 +40,7 @@ public class SuperviseRecordController extends ControllerSupport {
     @ResponseBody
     @QueryOutputMethod(queryClass = SuperviseRecordQuery.class, paramIndex = 0)
     public Object findPage(SuperviseRecordQuery query) {
-        return CommonResponse.getSuccessResponse(superviseRecordService.searchPage(query));
+        return CommonResponse.getSuccessResponse(superviseRecordService.searchSuperviseRecordsPageByQuery(query));
     }
 
     @GetMapping("/get")
@@ -53,8 +55,10 @@ public class SuperviseRecordController extends ControllerSupport {
     }
 
     @GetMapping("/detail")
-    public String detailInput(@RequestParam String id, Model model) {
+    public String detailInput(@RequestParam String id,@RequestParam String targetType,@RequestParam String name, Model model) {
         model.addAttribute("id", id);
+        model.addAttribute("name", name);
+        model.addAttribute("targetType", targetType);
         return "/credit/supervise/supervise_record_detail";
     }
 

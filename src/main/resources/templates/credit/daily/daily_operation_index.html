@@ -10,6 +10,7 @@
 </section>
 <section class="content">
     <input type="hidden" id="type" th:value="${type}">
+    <input type="hidden" id="name" th:value="${name}">
     <div class="box box-solid">
         <div class="box-body">
             <form id="searchbar" class="form-horizontal form-search">
@@ -35,13 +36,19 @@
         <div id="result" class="box-body">
             <table id="dataGrid"></table>
             <div id="toolbar">
+                <div class="btn-group">
+                    <a onclick="records()" class="btn btn-default"><i class="fa fa-list"></i>&nbsp;监察记录</a>
+                </div>
             </div>
         </div>
     </div>
 </section>
 <div th:include="/credit/footer" />
 <script type="text/javascript">
+    var type,name;
     $(function() {
+        type = $("#type").val();
+        name = $("#name").val();
         initDataGrid();
     });
 
@@ -77,7 +84,7 @@
                     }
                 ]
             ],
-            url: '/credit/daily/operation/find/page/'+$("#type").val(),
+            url: '/credit/daily/operation/find/page/'+type,
             searchbar: '#searchbar',
             /* exportUrl: '/credit/template/item/agency/export',
              showExport: true,*/
@@ -111,6 +118,11 @@
     function write(row) {
         window.location = '/credit/daily/operation/write/'+$("#type").val()+(row ? ('?itemId=' + row.itemId) : '');
     }
+
+    function records() {
+        window.location = '/credit/supervise/record/index/'+type+'/'+name;
+    }
+
 </script>
 </body>
 

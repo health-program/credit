@@ -5,17 +5,19 @@
 
 <body>
     <tt:constant enumcode="selection-grade-type,item-target-type,sex-type"/>
+    <input type="hidden" id="targetType" name="targetType" th:value="${targetType}">
     <section class="content-header">
-        <h1>检查记录</h1>
+        <h1>监察记录</h1>
         <ol class="breadcrumb">
-            <li><a href="/credit/supervise/record/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li><a  th:href="@{'/credit/daily/operation/' + ${targetType}}" ><i class="fa fa-list-alt"></i>项目列表</a></li>
+            <li><a  th:href="@{'/credit/supervise/record/index/' + ${targetType} + '/'+${name}}" ><i class="fa fa-list-alt"></i>监察记录列表</a></li>
             <li class="active">详情</li>
         </ol>
     </section>
     <section class="content">
     </section>
     <div class="col-sm-2 col-sm-offset-5 btn-back">
-    	<a href="/credit/supervise/record/index" class="btn btn-primary btn-block">返回</a>
+    	<a th:href="@{'/credit/supervise/record/index/' + ${targetType} + '/'+${name}}" class="btn btn-primary btn-block">返回</a>
     </div>
     <input type="hidden" id="id" th:value="${id}"/>
     <div th:include="/credit/footer" />
