@@ -79,13 +79,13 @@
         agency_id
         FROM
         supervise_record
-        INNER JOIN ( SELECT MIN(create_time) AS min_time FROM supervise_record ) AS a
+        INNER JOIN ( SELECT MIN(create_time) AS min_time FROM supervise_record ) AS b
         WHERE
         create_time >
         IF (
-        a.min_time > DATE_SUB(NOW(), INTERVAL 1 YEAR),
+        b.min_time > DATE_SUB(NOW(), INTERVAL 1 YEAR),
         DATE_SUB(NOW(), INTERVAL 1 YEAR),
-        a.min_time
+        b.min_time
         )
         AND create_time &lt; NOW()
         GROUP BY
