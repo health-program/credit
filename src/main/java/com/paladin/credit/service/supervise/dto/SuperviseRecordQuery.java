@@ -26,6 +26,8 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     private Date endTime;
 
+    private Integer status;
+
     @QueryCondition(type = QueryType.LIKE)
     public String getItem() {
         return item;
@@ -100,5 +102,13 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

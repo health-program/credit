@@ -13,11 +13,11 @@
         max( a.result_grade ) AS mgrade,
         IF
         (
-        TIMESTAMPDIFF( DAY, DATE_SUB( NOW( ), INTERVAL 1 YEAR ), b.time ) > 0,
+        TIMESTAMPDIFF( DAY, DATE_SUB( current_date(), INTERVAL 1 YEAR ), b.time ) > 0,
         b.time,
-        DATE_SUB( NOW( ), INTERVAL 1 YEAR )
+        DATE_SUB( current_date(), INTERVAL 1 YEAR )
         ) AS bgtime,
-        NOW( ) AS endtime,
+        current_date() AS endtime,
         Count( a.result_grade = 1 OR NULL ) AS grade1,
         Count( a.result_grade = 2 OR NULL ) AS grade2,
         Count( a.result_grade = 3 OR NULL ) AS grade3,
@@ -27,12 +27,12 @@
         supervise_record a
         INNER JOIN ( SELECT MIN(create_time)  AS time  , agency_id AS b_agencyId  FROM supervise_record WHERE `status` = 1 GROUP BY agency_id ) b ON a.agency_id = b.b_agencyId
         WHERE a.`status` = 1 AND
-        a.create_time  <![CDATA[<]]> NOW( ) AND a.create_time >=
+        a.create_time  <![CDATA[<]]> current_date() AND a.create_time >=
         IF
         (
-        TIMESTAMPDIFF( DAY, DATE_SUB( NOW( ), INTERVAL 1 YEAR ), b.time ) > 0,
+        TIMESTAMPDIFF( DAY, DATE_SUB( current_date(), INTERVAL 1 YEAR ), b.time ) > 0,
         b.time,
-        DATE_SUB( NOW( ), INTERVAL 1 YEAR )
+        DATE_SUB( current_date(), INTERVAL 1 YEAR )
         )
         GROUP BY
         a.agency_id
@@ -134,12 +134,15 @@
         <if test="query.relatedPersonnelName != null and query.relatedPersonnelName != ''">
             AND r.personnel_name LIKE CONCAT('%',#{query.relatedPersonnelName},'%')
         </if>
-         <if test="param1.bgTime != null">
-             AND  r.create_time  >=  #{query.bgTime}
-         </if>
-          <if test="query.endTime != null" >
-              AND  r.create_time <![CDATA[<=]]> #{query.endTime}
-          </if>
+        <if test="param1.bgTime != null">
+            AND r.create_time >= #{query.bgTime}
+        </if>
+        <if test="query.endTime != null">
+            AND r.create_time <![CDATA[<=]]> #{query.endTime}
+        </if>
+        <if test="query.status != null">
+            AND r.status = #{query.status}
+        </if>
     </select>
     <update id="updateRecordById">
         UPDATE supervise_record SET  status = #{status} , illustrate = #{illustrate}  WHERE  status = 0 AND  id = #{id}
