@@ -37,10 +37,10 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <input name="bgTime" placeholder="请输入监察开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.bgTime}" >
+                            <input name="bgTime" placeholder="请选择监察开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.bgTime}" >
                         </div>
                         <div class="col-md-3">
-                            <input name="endTime" placeholder="请输入监察结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.endTime}" >
+                            <input name="endTime" placeholder="请选择监察结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.endTime}" >
                         </div>
                     </div>
                     <div class="form-group">
@@ -91,7 +91,7 @@
                     { title: "监察结果等级", field: "resultGrade", enumcode: "selection-grade-type" },
                     {
                         title: "操作",
-                        width: "150px",
+                        width: "200px",
                         events: {
                             'click .detail': function(e, value, row, index) {
                                 detail(row);
@@ -99,13 +99,19 @@
                             'click .remove': function(e, value, row, index) {
                                 remove(row);
                             },
-                            'click .write': function(e, value, row, index) {
-                                write(row);
+                            'click .check': function(e, value, row, index) {
+                                check(row);
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
-                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
-                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                            if (row.status === 0) {
+                                return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                    '<button class="check btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-check-square-o"></i>审核</button>' +
+                                    '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                            } else {
+                                return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>'
+
+                            }
 
                         }
                     }
@@ -135,6 +141,10 @@
                 });
             });
         }
+    }
+
+    function check(row) {
+        window.location = '/credit/supervise/record/check' + (row ? ('?id=' + row.id+"&targetType="+type+"&name="+name) : '');
     }
 
     function hideColumn() {

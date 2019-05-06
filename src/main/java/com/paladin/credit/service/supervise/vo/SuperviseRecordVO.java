@@ -52,6 +52,10 @@ public class SuperviseRecordVO {
 
 	private Date createTime;
 
+	private String illustrate;
+
+	private Integer status;
+
 	// 获取附件文件
 	public List<SysAttachment> getExplainAttachmentFile() {
 		if (explainAttachment != null && explainAttachment.length() != 0) {
@@ -178,5 +182,21 @@ public class SuperviseRecordVO {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	public String getIllustrate() {
+		return illustrate;
+	}
+
+	public void setIllustrate(String illustrate) {
+		this.illustrate = illustrate;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

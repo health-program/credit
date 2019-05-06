@@ -49,9 +49,24 @@ public class SuperviseRecordController extends ControllerSupport {
         return CommonResponse.getSuccessResponse(beanCopy(superviseRecordService.get(id), new SuperviseRecordVO()));
     }
 
-    @GetMapping("/add")
-    public String addInput() {
-        return "/credit/supervise/supervise_record_add";
+    @GetMapping("/check")
+    public String check(@RequestParam String id,@RequestParam String targetType,@RequestParam String name, Model model) {
+        model.addAttribute("id", id);
+        model.addAttribute("name", name);
+        model.addAttribute("targetType", targetType);
+        return "/credit/supervise/supervise_record_check";
+    }
+
+    @PostMapping("/check/success")
+    @ResponseBody
+    public Object checkSuccess(@RequestParam String id, @RequestParam(required = false) String illustrate) {
+        return CommonResponse.getResponse(superviseRecordService.check(id, illustrate, true));
+    }
+
+    @PostMapping("/check/fail")
+    @ResponseBody
+    public Object checkFail(@RequestParam String id, @RequestParam String illustrate) {
+        return CommonResponse.getResponse(superviseRecordService.check(id, illustrate, false));
     }
 
     @GetMapping("/detail")

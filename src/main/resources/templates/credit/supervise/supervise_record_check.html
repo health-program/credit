@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="selection-grade-type,item-target-type,sex-type"/>
+<section class="content-header">
+    <h1 th:text="|监察记录-${name}|"></h1>
+    <ol class="breadcrumb">
+        <li><a  th:href="@{'/credit/daily/operation/' + ${targetType}}" ><i class="fa fa-list-alt"></i>项目列表</a></li>
+        <li><a  th:href="@{'/credit/supervise/record/index/' + ${targetType} + '/'+${name}}" ><i class="fa fa-list-alt"></i>监察记录列表</a></li>
+        <li class="active">审核</li>
+    </ol>
+</section>
+<section class="content" style="padding-bottom: 0;">
+    <div id="model_container" class="box box-widget" >
+        <div class="box-header no-border" >
+            <h3 class="box-title">监察审核</h3>
+            <div class="box-tools pull-right">
+            </div>
+        </div>
+        <div id="model_view" class="box-body">
+            <form class="form-horizontal" style="padding-left:100px">
+                <div class="form-group">
+                    <label for="item" class="col-sm-2 control-label">监察项目：</label>
+                    <div class="col-sm-8">
+                        <p name="item" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="targetType" class="col-sm-2 control-label">目标类型：</label>
+                    <div class="col-sm-8">
+                        <p name="targetType" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="agencyId" class="col-sm-2 control-label">机构：</label>
+                    <div class="col-sm-3">
+                        <p name="agencyId" class="form-control-static description"></p>
+                    </div>
+                    <label for="personnelId" class="col-sm-2 control-label">人员：</label>
+                    <div class="col-sm-3">
+                        <p name="personnelId" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="personnelName" class="col-sm-2 control-label">人员姓名：</label>
+                    <div class="col-sm-3">
+                        <p name="personnelName" class="form-control-static description"></p>
+                    </div>
+                    <label for="personnelSex" class="col-sm-2 control-label">人员性别：</label>
+                    <div class="col-sm-3">
+                        <p name="personnelSex" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="personnelIdentification" class="col-sm-2 control-label">人员身份证：</label>
+                    <div class="col-sm-3">
+                        <p name="personnelIdentification" class="form-control-static description"></p>
+                    </div>
+                    <label for="personnelAddress" class="col-sm-2 control-label">人员地址：</label>
+                    <div class="col-sm-3">
+                        <p name="personnelAddress" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="resultName" class="col-sm-2 control-label">监察结果名称：</label>
+                    <div class="col-sm-3">
+                        <p name="resultName" class="form-control-static description"></p>
+                    </div>
+                    <label for="resultGrade" class="col-sm-2 control-label">监察结果等级：</label>
+                    <div class="col-sm-3">
+                        <p name="resultGrade" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="explain" class="col-sm-2 control-label">说明：</label>
+                    <div class="col-sm-8">
+                        <pre name="explain" style="min-height:150px" class="form-control-static description"></pre>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="explainAttachment" class="col-sm-2 control-label">附件：</label>
+                    <div name="explainAttachment" class="col-sm-8"></div>
+                </div>
+                <div class="form-group">
+                    <label for="illustrate" class="col-sm-2 control-label">审核意见：</label>
+                    <div class="col-sm-8">
+                        <textarea name="illustrate" id="illustrate" placeholder="请输入审核意见" rows="3" type="text" class="form-control"></textarea></div>
+                </div>
+                <div class="form-group" style="padding-top:20px">
+                    <div class="col-sm-2 col-sm-offset-3" >
+                        <button type="button" id="passBtn" onclick="checkSuccess()" class="btn btn-success btn-block"><i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;审核通过</button>
+                    </div>
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <button type="button" id="unpassBtn" onclick="checkFail()" class="btn btn-danger btn-block"><i class="glyphicon glyphicon-remove"></i>&nbsp;&nbsp;审核不通过</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<div class="col-sm-2 col-sm-offset-5 btn-back">
+    <a th:href="@{'/credit/supervise/record/index/' + ${targetType} + '/'+${name}}" class="btn btn-primary btn-block">返回</a>
+</div>
+<input type="hidden" id="id" th:value="${id}"/>
+<input type="hidden" id="targetType" th:value="${targetType}"/>
+<input type="hidden" id="name" th:value="${name}"/>
+<div th:include="/credit/footer" />
+<script type="text/javascript">
+    var recordId,type,name;
+    $(function() {
+        recordId = $("#id").val();
+        type = $("#targetType").val();
+        name = $("#name").val();
+        var options = {
+            id: "model",
+            name: "监察审核",
+            columns: [
+                { title: "监察项目", name: "item", required: "required",colspan:2, inputType: "TEXT" },
+                { title: "目标类型", name: "targetType", enum: "item-target-type",colspan:2, required: "required", inputType: "SELECT" },
+                { title: "机构", name: "agencyId", required: "required",inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower", dependency:["targetType","1"] },
+                { title: "人员", name: "personnelId", required: "required", inputType: "TEXT" ,dependency:["targetType","2"]},
+                { title: "人员姓名", name: "personnelName", required: "required", inputType: "TEXT",dependency:["targetType","3"] },
+                { title: "人员性别", name: "personnelSex", required: "required", inputType: "RADIO", enum: "sex-type",dependency:["targetType","3"] },
+                { title: "人员身份证", name: "personnelIdentification", required: "required", inputType: "TEXT",dependency:["targetType","3"] },
+                { title: "人员地址", name: "personnelAddress", inputType: "TEXT",dependency:["targetType","3"] },
+                { title: "监察结果名称", name: "resultName", required: "required", inputType: "TEXT" },
+                { title: "监察结果等级", name: "resultGrade", enum: "selection-grade-type", required: "required", inputType: "SELECT" },
+                { title: "说明", name: "explain", required: "required", inputType: "TEXTAREA" },
+                { title: "附件", name: "explainAttachment", fileName: "explainAttachmentFile", maxFileCount: 5, required: "required", inputType: "ATTACHMENT" }
+            ]
+        };
+
+        $.getAjax("/credit/supervise/record/get?id="+recordId, function(data) {
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+
+        function checkSuccess() {
+            $.postAjax("/credit/supervise/record/check/success", {
+                id: recordId,
+                illustrate: $("input[name='illustrate']").val()
+            }, function(data) {
+                $.successAlert("审核成功", function() {
+                    window.location = '/credit/supervise/record/index/'+type+'/'+name;
+                });
+            });
+        }
+
+        function checkFail() {
+            var ill = $("#illustrate").val();
+            if (!ill) {
+                $.errorMessage("请填写审核意见");
+                return;
+            }
+            $.postAjax("/credit/supervise/record/check/fail", {
+                id: recordId,
+                illustrate: ill
+            }, function(data) {
+                $.successAlert("审核成功", function() {
+                    window.location = '/credit/supervise/record/index/'+type+'/'+name;
+                });
+            });
+        }
+</script>
+</body>
+
+</html>

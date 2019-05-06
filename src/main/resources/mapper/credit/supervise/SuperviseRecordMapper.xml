@@ -25,8 +25,8 @@
         Count( a.result_grade = 5 OR NULL ) AS grade5
         FROM
         supervise_record a
-        INNER JOIN ( SELECT MIN(create_time)  AS time  , agency_id AS b_agencyId  FROM supervise_record  GROUP BY agency_id ) b ON a.agency_id = b.b_agencyId
-        WHERE
+        INNER JOIN ( SELECT MIN(create_time)  AS time  , agency_id AS b_agencyId  FROM supervise_record WHERE `status` = 1 GROUP BY agency_id ) b ON a.agency_id = b.b_agencyId
+        WHERE a.`status` = 1 AND
         a.create_time  <![CDATA[<]]> NOW( ) AND a.create_time >=
         IF
         (
@@ -106,6 +106,7 @@
         r.target_type AS targetType,
         r.personnel_name AS relatedPersonnelName,
         r.item,
+        r.status,
         r.result_name AS resultName,
         r.result_grade AS resultGrade,
         a.`name` AS agencyName,
@@ -140,4 +141,7 @@
               AND  r.create_time <![CDATA[<=]]> #{query.endTime}
           </if>
     </select>
+    <update id="updateRecordById">
+        UPDATE supervise_record SET  status = #{status} , illustrate = #{illustrate}  WHERE  status = 0 AND  id = #{id}
+    </update>
 </mapper>

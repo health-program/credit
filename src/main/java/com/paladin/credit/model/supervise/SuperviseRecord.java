@@ -45,6 +45,10 @@ public class SuperviseRecord extends BaseModel {
 	// 监察结果名称
 	private String explainAttachment;
 
+	private String illustrate;
+
+	private Integer status;
+
 	public String getId() {
 		return id;
 	}
@@ -149,6 +153,19 @@ public class SuperviseRecord extends BaseModel {
 		this.explainAttachment = explainAttachment;
 	}
 
+	public String getIllustrate() {
+		return illustrate;
+	}
 
+	public void setIllustrate(String illustrate) {
+		this.illustrate = illustrate;
+	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 }

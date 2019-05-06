@@ -2,6 +2,9 @@ package com.paladin.credit.service.supervise;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.mapper.supervise.SuperviseRecordMapper;
 import com.paladin.credit.model.supervise.SuperviseRecord;
 import com.paladin.credit.model.template.TemplateItem;
@@ -24,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -41,6 +46,8 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     @Transactional
     public int saveRecords(SuperviseRecordDTO superviseRecordDTO) {
     int i = 0;
+    int roleLevel = CreditUserSession.getCurrentUserSession().getRoleLevel();
+    Preconditions.checkState(roleLevel >= CreditUserSession.ROLE_LEVEL_AGENCY,"您没有操作该功能权限");
     String itemId = superviseRecordDTO.getItemId();
     if (StringUtil.isEmpty(itemId)) {
       throw new BusinessException("找不到对应模板项目");
@@ -59,6 +66,11 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     record.setExplainText(superviseRecordDTO.getExplain());
     record.setExplainAttachment(superviseRecordDTO.getExplainAttachment());
     record.setTargetType(itemTargetType);
+    if (roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY){
+        record.setStatus(0);
+    } else if (roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE ) {
+        record.setStatus(1);
+    }
     Integer isMultiple = templateItem.getIsMultiple();
     TemplateItemSelection templateItemSelection;
     if (isMultiple == 1) {
@@ -161,5 +173,44 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         Page<SuperviseRecordSimpleVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
         superviseRecordMapper.searchSuperviseRecordsPageByQuery(query);
         return  new PageResult<>(page);
+    }
+
+  /**
+   * 功能描述: <监察记录审核>
+   *
+   * @param id
+   * @param illustrate
+   * @param success
+   * @return int
+   * @date 2019/5/6
+   */
+    public int check(String id, String illustrate, boolean success) {
+        int i;
+        if (Strings.isNullOrEmpty(id)) {
+          throw new BusinessException("无审核记录");
+        }
+        CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+        int roleLevel = userSession.getRoleLevel();
+        Preconditions.checkState(roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE, "您没有操作该功能权限");
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 hh:mm a");
+        String checkTime = now.format(formatter);
+        String checkPeople = userSession.getUserName();
+        String newIllustrate;
+        if (success) {
+          if (Strings.isNullOrEmpty(illustrate)) {
+            newIllustrate = checkPeople + "于" + checkTime + " 回复:通过";
+          } else {
+            newIllustrate = checkPeople + "于" + checkTime + " 回复:" + illustrate;
+          }
+          i = superviseRecordMapper.updateRecordById(id, newIllustrate, 1);
+        } else {
+          if (Strings.isNullOrEmpty(illustrate)) {
+            throw new BusinessException("请输入审核意见");
+          }
+          newIllustrate = checkPeople + "于" + checkTime + " 回复:" + illustrate;
+          i = superviseRecordMapper.updateRecordById(id, newIllustrate, 2);
+        }
+        return i;
     }
 }

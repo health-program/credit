@@ -24,6 +24,8 @@ public class SuperviseRecordSimpleVO {
 
     private String item;
 
+    private Integer status;
+
     public String getId() {
         return id;
     }
@@ -86,5 +88,13 @@ public class SuperviseRecordSimpleVO {
 
     public void setItem(String item) {
         this.item = item;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
