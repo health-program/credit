@@ -75,9 +75,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="explain" class="col-sm-2 control-label">说明：</label>
+                    <label for="explainText" class="col-sm-2 control-label">说明：</label>
                     <div class="col-sm-8">
-                        <pre name="explain" style="min-height:150px" class="form-control-static description"></pre>
+                        <pre name="explainText" style="min-height:150px" class="form-control-static description"></pre>
                     </div>
                 </div>
                 <div class="form-group">
@@ -128,7 +128,7 @@
                 { title: "人员地址", name: "personnelAddress", inputType: "TEXT",dependency:["targetType","3"] },
                 { title: "监察结果名称", name: "resultName", required: "required", inputType: "TEXT" },
                 { title: "监察结果等级", name: "resultGrade", enum: "selection-grade-type", required: "required", inputType: "SELECT" },
-                { title: "说明", name: "explain", required: "required", inputType: "TEXTAREA" },
+                { title: "说明", name: "explainText", required: "required", inputType: "TEXTAREA" },
                 { title: "附件", name: "explainAttachment", fileName: "explainAttachmentFile", maxFileCount: 5, required: "required", inputType: "ATTACHMENT" }
             ]
         };

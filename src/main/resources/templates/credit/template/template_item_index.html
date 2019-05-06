@@ -62,8 +62,7 @@
                     { title: "项目适用对象", field: "itemTargetType", enumcode: "item-target-type" },
                     {
                         title: "操作",
-                        align: "center",
-                        width: "200px",
+                        width: "150px",
                         events: {
                             'click .detail': function(e, value, row, index) {
                                 detail(row);
@@ -77,7 +76,7 @@
                         },
                         formatter: function operateFormatter(value, row, index) {
                             return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
-                                '<button class="write btn btn-xs btn-success" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>录入</button>' +
+                                /*'<button class="write btn btn-xs btn-success" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>录入</button>' +*/
                                 '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
                         }
                     }
