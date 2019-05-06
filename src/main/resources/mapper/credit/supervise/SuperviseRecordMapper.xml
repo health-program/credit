@@ -74,24 +74,37 @@
         a.agency_type as agencyType,
         a.register_time as registerTime,
         a.business_scope as businessScope
-        FROM ( SELECT
-        MAX(result_grade) AS resultGrade,
-        agency_id
         FROM
-        supervise_record
-        INNER JOIN ( SELECT MIN(create_time) AS min_time FROM supervise_record ) AS b
-        WHERE
-        create_time >
-        IF (
-        b.min_time &lt; DATE_SUB(NOW(), INTERVAL 1 YEAR),
-        DATE_SUB(NOW(), INTERVAL 1 YEAR),
-        b.min_time
-        )
-        AND create_time &lt; NOW()
+        (
+        SELECT
+        MAX(result_grade) AS resultGrade,
+        agency_id AS eId
+        FROM
+        supervise_record AS e
+        INNER JOIN (
+        SELECT
+        MIN(create_time) AS min_time,
+        agency_id AS cId
+        FROM
+        supervise_record c
+        WHERE `status` = 1
         GROUP BY
         agency_id
+        ) AS b on e.agency_id = b.cId
+        WHERE
+        `status` = 1
+        AND
+        create_time >=
+        IF (
+        b.min_time &lt; DATE_SUB(CURDATE(), INTERVAL 1 YEAR),
+        DATE_SUB(CURDATE(), INTERVAL 1 YEAR),
+        b.min_time
+        )
+        AND create_time &lt; CURDATE()
+        GROUP BY
+        e.agency_id
         ) AS r
-        LEFT JOIN org_agency AS a ON r.agency_id = a.id
+        LEFT JOIN org_agency AS a ON r.eId = a.id
         WHERE
         a.is_delete = 0
         <if test="query.resultGrade != null">
