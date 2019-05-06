@@ -201,12 +201,18 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
           if (Strings.isNullOrEmpty(illustrate)) {
             newIllustrate = checkPeople + "于" + checkTime + " 回复:通过";
           } else {
+              if (illustrate.length() >SuperviseRecord.DEFAULT_ILLUSTRATE_SIZE) {
+                  throw new BusinessException("审核意见不应大于30个字符");
+              }
             newIllustrate = checkPeople + "于" + checkTime + " 回复:" + illustrate;
           }
           i = superviseRecordMapper.updateRecordById(id, newIllustrate, 1);
         } else {
           if (Strings.isNullOrEmpty(illustrate)) {
             throw new BusinessException("请输入审核意见");
+          }
+          if (illustrate.length() > SuperviseRecord.DEFAULT_ILLUSTRATE_SIZE) {
+              throw new BusinessException("审核意见不应大于30个字符");
           }
           newIllustrate = checkPeople + "于" + checkTime + " 回复:" + illustrate;
           i = superviseRecordMapper.updateRecordById(id, newIllustrate, 2);

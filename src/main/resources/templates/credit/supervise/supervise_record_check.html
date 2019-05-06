@@ -87,7 +87,8 @@
                 <div class="form-group">
                     <label for="illustrate" class="col-sm-2 control-label">审核意见：</label>
                     <div class="col-sm-8">
-                        <textarea name="illustrate" id="illustrate" placeholder="请输入审核意见" rows="3" type="text" class="form-control"></textarea></div>
+                        <input name="illustrate" id="illustrate" placeholder="请输入审核意见(不超过30个字符)"  type="text" class="form-control">
+                    </div>
                 </div>
                 <div class="form-group" style="padding-top:20px">
                     <div class="col-sm-2 col-sm-offset-3" >
@@ -154,6 +155,10 @@
             var ill = $("#illustrate").val();
             if (!ill) {
                 $.errorMessage("请填写审核意见");
+                return;
+            }
+            if (ill.length > 20) {
+                $.errorMessage("审核意见不应大于30个字符");
                 return;
             }
             $.postAjax("/credit/supervise/record/check/fail", {

@@ -6,6 +6,8 @@ import javax.persistence.Id;
 
 public class SuperviseRecord extends BaseModel {
 
+	public static final  int DEFAULT_ILLUSTRATE_SIZE = 30;
+
 	@Id
 	private String id;
 
