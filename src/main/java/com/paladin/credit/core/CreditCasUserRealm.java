@@ -1,4 +1,4 @@
-package com.paladin.common.core.cas;
+package com.paladin.credit.core;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,22 +16,24 @@ import org.pac4j.core.profile.CommonProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.paladin.common.core.CommonUserSession;
 import com.paladin.common.model.syst.SysUser;
 import com.paladin.common.service.syst.SysUserService;
+import com.paladin.framework.core.session.UserSession;
 
 import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jPrincipal;
 import io.buji.pac4j.token.Pac4jToken;
 
-public class CasUserRealm extends Pac4jRealm {
+public class CreditCasUserRealm extends Pac4jRealm {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private SysUserService sysUserService;
+	private CreditUserSessionFactory userSessionFactory;
 
-	public CasUserRealm(SysUserService sysUserService) {
+	public CreditCasUserRealm(SysUserService sysUserService, CreditUserSessionFactory userSessionFactory) {
 		super();
 		this.sysUserService = sysUserService;
+		this.userSessionFactory = userSessionFactory;
 		this.setAuthenticationTokenClass(Pac4jToken.class);
 	}
 
@@ -48,9 +50,9 @@ public class CasUserRealm extends Pac4jRealm {
 		logger.debug("后台登录：SysUserRealm.doGetAuthenticationInfo()");
 
 		final Pac4jToken token = (Pac4jToken) authenticationToken;
-        final List<CommonProfile> profiles = token.getProfiles();
-        final Pac4jPrincipal principal = new Pac4jPrincipal(profiles, getPrincipalNameAttribute());
-        
+		final List<CommonProfile> profiles = token.getProfiles();
+		final Pac4jPrincipal principal = new Pac4jPrincipal(profiles, getPrincipalNameAttribute());
+
 		String username = principal.getName();
 		SysUser sysUser = sysUserService.getUserByAccount(username);
 
@@ -62,11 +64,11 @@ public class CasUserRealm extends Pac4jRealm {
 			throw new LockedAccountException(); // 帐号锁定
 		}
 
-		CommonUserSession userSession = new CommonUserSession(sysUser.getId(), username, username);
-		List<Object> principals = Arrays.asList(userSession,principal);
-        PrincipalCollection principalCollection = new SimplePrincipalCollection(principals, getName());       
-        SimpleAuthenticationInfo authenticationInfo=  new SimpleAuthenticationInfo(principalCollection, token.getCredentials());
-		
+		UserSession userSession = userSessionFactory.createSession(sysUser);
+		List<Object> principals = Arrays.asList(userSession, principal);
+		PrincipalCollection principalCollection = new SimplePrincipalCollection(principals, getName());
+		SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(principalCollection, token.getCredentials());
+
 		logger.info("===>用户[" + username + ":" + userSession.getUserName() + "]登录系统<===");
 		// 登录日志与更新最近登录时间
 		sysUserService.updateLastTime(username);

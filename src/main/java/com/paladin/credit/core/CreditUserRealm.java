@@ -13,25 +13,23 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.paladin.common.model.syst.SysUser;
 import com.paladin.common.service.syst.SysUserService;
 import com.paladin.framework.core.session.UserSession;
 
-@Component
 public class CreditUserRealm extends AuthorizingRealm {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
 	private SysUserService sysUserService;
-
-	@Autowired
 	private CreditUserSessionFactory userSessionFactory;
 
-	public CreditUserRealm() {
+	public CreditUserRealm(SysUserService sysUserService, CreditUserSessionFactory userSessionFactory) {
+		
+		this.sysUserService = sysUserService;
+		this.userSessionFactory = userSessionFactory;
+		
 		HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
 		hashedCredentialsMatcher.setHashAlgorithmName("md5");// 散列算法:这里使用MD5算法;
 		hashedCredentialsMatcher.setHashIterations(1);// 散列的次数，当于 m比如散列两次，相d5("");
