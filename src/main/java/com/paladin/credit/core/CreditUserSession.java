@@ -93,6 +93,11 @@ public class CreditUserSession extends UserSession implements AuthorizationInfo 
 	}
 
 	
+	@Override
+	public boolean isSystemAdmin() {
+		return isSystemAdmin;
+	}
+	
 	/**
 	 * 菜单资源
 	 * 
@@ -160,8 +165,5 @@ public class CreditUserSession extends UserSession implements AuthorizationInfo 
 		map.put("account", getAccount());
 		return map;
 	}
-
-
-
 
 }

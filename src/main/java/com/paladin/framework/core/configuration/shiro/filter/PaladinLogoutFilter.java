@@ -1,4 +1,4 @@
-package com.paladin.framework.core.configuration.shiro;
+package com.paladin.framework.core.configuration.shiro.filter;
 
 import java.util.Locale;
 
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.paladin.framework.utils.WebUtil;
 import com.paladin.framework.web.response.CommonResponse;
 
-public class AjaxLogoutFilter extends LogoutFilter {
+public class PaladinLogoutFilter extends LogoutFilter {
 
 	private static final Logger log = LoggerFactory.getLogger(LogoutFilter.class);
 

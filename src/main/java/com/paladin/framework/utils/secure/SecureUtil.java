@@ -23,9 +23,8 @@ public class SecureUtil {
 	public static String createPassword(String password, String salt) {
 		return new SimpleHash("md5", password, ByteSource.Util.bytes(salt), 1).toHex();
 	}
-	
-	
+
 	public static void main(String[] args) {
-		System.out.println(createPassword("1","3ad6c1dd71e0ec26c62ae1b7c81b3e82"));
+		System.out.println(createPassword("admin", "3ad6c1dd71e0ec26c62ae1b7c81b3e82"));
 	}
 }

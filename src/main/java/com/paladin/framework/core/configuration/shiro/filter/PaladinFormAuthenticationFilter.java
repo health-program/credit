@@ -1,4 +1,4 @@
-package com.paladin.framework.core.configuration.shiro;
+package com.paladin.framework.core.configuration.shiro.filter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -16,24 +16,16 @@ import com.paladin.framework.core.session.UserSession;
 import com.paladin.framework.utils.WebUtil;
 import com.paladin.framework.web.response.CommonResponse;
 
-public class AjaxFormAuthenticationFilter extends FormAuthenticationFilter {
+public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
 
-	private static final Logger log = LoggerFactory.getLogger(AjaxFormAuthenticationFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(PaladinFormAuthenticationFilter.class);
 
-	@SuppressWarnings("unused")
-	private ShiroProperties shiroProperties;
-	
-	public AjaxFormAuthenticationFilter(ShiroProperties shiroProperties) {
-		this.shiroProperties = shiroProperties;
-	}
-	
 	protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
 		if (isLoginRequest(request, response)) {
 			if (isLoginSubmission(request, response)) {
 				if (log.isTraceEnabled()) {
 					log.trace("Login submission detected.  Attempting to execute login.");
 				}
-
 				return executeLogin(request, response);
 			} else {
 				if (log.isTraceEnabled()) {
@@ -78,4 +70,6 @@ public class AjaxFormAuthenticationFilter extends FormAuthenticationFilter {
 		}
 
 	}
+
+
 }

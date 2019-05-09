@@ -398,8 +398,8 @@ var _Model = function(name, column, options) {
                 if (extraParam) {
                     if (typeof extraParam === 'function') {
                         extraParam = extraParam();
-                    } 
-                    
+                    }
+
                     for (var o in extraParam) {
                         formData.push({
                             name: o,
@@ -412,6 +412,7 @@ var _Model = function(name, column, options) {
 
                 // 每列对提交表单数据处理
                 for (var k = 0; k < that.columns.length; k++) {
+                	if (that.columns[k].editable === false) continue;
                     if (that.columns[k].fieldBuilder.formDataHandler(that.columns[k], formData, that) === false) {
                         return false;
                     }
@@ -647,8 +648,8 @@ _Model.prototype.checkEditDependency = function() {
 
         for (var i = 0; i < dependencies.length; i++) {
             var depend = dependencies[i],
-                dependCol = that.getColumn(depend.dependColumn),
-                val = dependCol.fieldBuilder.getEditValue(dependCol, that);
+                dependCol = that.getColumn(depend.dependColumn);
+            var val = dependCol.editable === false ? (data ? that.data[depend.dependColumn] : null) : dependCol.fieldBuilder.getEditValue(dependCol, that);
 
             if (!that.isInDependencyValues(val, depend.dependValue)) {
                 isOk = false;
@@ -660,7 +661,7 @@ _Model.prototype.checkEditDependency = function() {
         if (isOk) {
             if (targetCol.editDisplay == "show") continue;
             if (targetCol.editable === false) {
-                targetCol.fieldBuilder.showView(targetCol, that, targetCol.fieldBuilder.getViewTarget(targetCol, that));
+                targetCol.fieldBuilder.showView(targetCol, that, targetCol.fieldBuilder.getEditTarget(targetCol, that));
             } else {
                 targetCol.fieldBuilder.showEdit(targetCol, that);
             }
@@ -668,7 +669,7 @@ _Model.prototype.checkEditDependency = function() {
         } else {
             if (targetCol.editDisplay == "hide") continue;
             if (targetCol.editable === false) {
-                targetCol.fieldBuilder.hideView(targetCol, that, targetCol.fieldBuilder.getViewTarget(targetCol, that));
+                targetCol.fieldBuilder.hideView(targetCol, that, targetCol.fieldBuilder.getEditTarget(targetCol, that));
             } else {
                 targetCol.fieldBuilder.hideEdit(targetCol, that);
             }
@@ -1516,32 +1517,10 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             attDiv.html(html);
         }
     },
-    getEditTarget: function(column, model) {
-        return model.editBody.find("[name='" + column.fileName + "']");
-    },
-    hideEdit: function(column, model, target) {
-        var i = target || this.getEditTarget(column, model);
-        if (!i || i.length == 0) return;
-        var d = i.parent().parent().parent().parent().parent();
-        var f = d.parent();
-        d.hide();
-        d.prev().hide();
-        if (f.children(":visible").length == 0) {
-            f.hide();
-        }
-    },
-    showEdit: function(column, model, target) {
-        var i = target || this.getEditTarget(column, model);;
-        if (!i || i.length == 0) return;
-        var d = i.parent().parent().parent().parent().parent();
-        d.show();
-        d.prev().show();
-        d.parent().show();
-    },
     fillEdit: function(column, data, model, target) {
         var name = column.fileName,
             atts = data ? data[name] : null,
-            fileInput = target || this.getEditTarget(column, model);;
+            fileInput = target || model.editBody.find("[name='" + column.fileName + "']");
 
         if (fileInput.length == 0) return;
 

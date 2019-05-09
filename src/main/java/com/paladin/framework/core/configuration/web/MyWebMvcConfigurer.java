@@ -29,17 +29,18 @@ import com.paladin.framework.core.SpringHandlerInterceptor;
 import com.paladin.framework.core.format.DateFormatter;
 
 @Configuration
-@ConditionalOnProperty(name = "paladin.configuration.auto.web", havingValue = "true", matchIfMissing = true)
-@EnableConfigurationProperties(MyWebProperties.class)
+@ConditionalOnProperty(prefix = "paladin", value = "web-enabled", havingValue = "true", matchIfMissing = true)
+@EnableConfigurationProperties(WebProperties.class)
 public class MyWebMvcConfigurer implements WebMvcConfigurer {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Resource
-	private MyWebProperties webProperties;
+	private WebProperties webProperties;
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
 		String filePath = webProperties.getFilePath();
 		String staticPath = webProperties.getStaticPath();
 		String faviconPath = webProperties.getFaviconPath();
@@ -59,7 +60,9 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/").setViewName(webProperties.getRootView());
+		String rootView = webProperties.getRootView();
+
+		registry.addViewController("/").setViewName(rootView);
 		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
 	}
 
@@ -98,5 +101,5 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
 		return bean;
 	}
-	
+
 }

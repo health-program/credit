@@ -29,7 +29,7 @@ public class WebUtil {
 		}
 
 	}
-	
+
 	public static void sendJsonByCors(HttpServletResponse response, Object obj, String allowOrigin) {
 
 		response.setContentType("application/json");
