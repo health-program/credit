@@ -68,7 +68,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     record.setTargetType(itemTargetType);
     if (roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY){
         record.setStatus(0);
-    } else if (roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE ) {
+    } else if (roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN ) {
         record.setStatus(1);
     }
     Integer isMultiple = templateItem.getIsMultiple();
@@ -191,7 +191,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         }
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
         int roleLevel = userSession.getRoleLevel();
-        Preconditions.checkState(roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE, "您没有操作该功能权限");
+        Preconditions.checkState(roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN, "您没有操作该功能权限");
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 hh:mm a");
         String checkTime = now.format(formatter);

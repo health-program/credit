@@ -138,7 +138,7 @@ public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 			throw new BusinessException("角色不能为空");
 		}
 
-		if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE) {
+		if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN) {
 			throw new BusinessException("角色等级不能低于监督人员");
 		}
 

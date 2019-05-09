@@ -1,9 +1,9 @@
 package com.paladin.credit.controller;
 
 import com.paladin.common.core.ConstantsContainer;
+import com.paladin.common.core.ConstantsContainer.KeyValue;
 import com.paladin.common.core.permission.MenuPermission;
 import com.paladin.common.model.org.OrgPermission;
-import com.paladin.common.model.syst.SysUser;
 import com.paladin.common.service.syst.SysUserService;
 import com.paladin.credit.core.CreditUserSession;
 import com.paladin.framework.core.session.UserSession;
@@ -21,19 +21,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.util.ArrayUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Api("用户认证模块")
 @Controller
 @RequestMapping("/credit")
 public class LoginController {
 
+	private final static String CONSTANT_TYPE_SUPERVISE_SCOPE = "supervise-scope";
+	
 	@Autowired
 	private SysUserService sysUserService;
 
@@ -41,33 +41,38 @@ public class LoginController {
 	@GetMapping(value = "/index")
 	public Object main(HttpServletRequest request) {
 		CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
-		String account = userSession.getAccount();
-		SysUser user = sysUserService.getUserByAccount(account);
 		ModelAndView model = new ModelAndView("/credit/index");
-		List<ConstantsContainer.KeyValue> supervise = ConstantsContainer.getType("supervise-scope");
-		String scope = userSession.getCurrentSuperviseScope();
-		String scopeName = "目前监管科室·机构:" +ConstantsContainer.getTypeValue("supervise-scope", scope);
-		String userName = userSession.getUserName();
-		if (user.getType() == SysUser.TYPE_SYS_ADMIN) {
-			model.addObject("supervise", supervise);
-			model.addObject("currentScopeName", scopeName);
-		} else if (user.getType() == SysUser.TYPE_SUPERVISE) {
-			String[] superviseScopes = userSession.getSuperviseScopes();
-			List<ConstantsContainer.KeyValue> ownedSupervise =
-			  supervise.stream()
-				  .filter(keyValue -> ArrayUtils.contains(superviseScopes, keyValue.getKey()))
-				  .collect(Collectors.toList());
-			model.addObject("supervise", ownedSupervise);
-			model.addObject("currentScopeName", scopeName);
+		model.addObject("name", userSession.getUserName());
+		
+		// 加载监管范围
+		boolean isSupervisor = false;
+		List<KeyValue> supervise = null;
+		String currentSuperviseScope = null;
+
+		if (userSession.isAdminRoleLevel()) {
+			isSupervisor = true;
+			supervise = ConstantsContainer.getType(CONSTANT_TYPE_SUPERVISE_SCOPE);
+			currentSuperviseScope = userSession.getCurrentSuperviseScope();
+		} else if (userSession.getRoleLevel() >= CreditUserSession.ROLE_LEVEL_SUPERVISE) {
+			isSupervisor = true;
+			supervise = ConstantsContainer.getTypes(CONSTANT_TYPE_SUPERVISE_SCOPE, userSession.getSuperviseScopes());
+			currentSuperviseScope = userSession.getCurrentSuperviseScope();
 		}
-		model.addObject("name", userName);
+
+		if (isSupervisor) {
+			model.addObject("isSupervisor", true);
+			model.addObject("supervise", supervise);
+			model.addObject("currentSuperviseScope", ConstantsContainer.getTypeValue(CONSTANT_TYPE_SUPERVISE_SCOPE, currentSuperviseScope));
+		}
+
+		// 加载菜单
 		Collection<MenuPermission> menus = userSession.getMenuResources();
 		StringBuilder sb = new StringBuilder("<li class=\"header\">菜单</li>");
 		createMenuHtml(menus, sb);
 		model.addObject("menuHtml", sb.toString());
 		return model;
 	}
-	
+
 	private void createMenuHtml(Collection<MenuPermission> menus, StringBuilder sb) {
 		for (MenuPermission menu : menus) {
 			OrgPermission op = menu.getSource();
@@ -84,7 +89,7 @@ public class LoginController {
 
 			if (children.size() > 0) {
 				sb.append("<li class=\"treeview\"><a class=\"nav-link\"");
-				if (href != null && href.length() >0) {
+				if (href != null && href.length() > 0) {
 					sb.append(" onclick=\"addTabs({id:'").append(op.getId()).append("',title: '").append(op.getName()).append("',close: true,url: '")
 							.append(href).append("',urlType: 'relative'});\"");
 				}
@@ -164,10 +169,9 @@ public class LoginController {
 
 	@RequestMapping(value = "/update/{superviseCode}", method = RequestMethod.GET)
 	@ResponseBody
-	public Object update( @PathVariable String superviseCode, Model model) {
+	public Object update(@PathVariable String superviseCode, Model model) {
 		CreditUserSession.getCurrentUserSession().setCurrentSuperviseScope(superviseCode);
 		return CommonResponse.getSuccessResponse();
 	}
-
 
 }

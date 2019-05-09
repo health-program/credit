@@ -37,7 +37,9 @@ public class CreditUserSession extends UserSession implements AuthorizationInfo 
 	/** 机构级别 */
 	public static int ROLE_LEVEL_AGENCY = 2;
 	/** 监管级别 */
-	public static int ROLE_LEVEL_SUPERVISE = 5;
+	public static int ROLE_LEVEL_SUPERVISE = 4;
+	/** 监管管理级别 */
+	public static int ROLE_LEVEL_SUPERVISE_ADMIN = 5;
 	/** 管理级别 */
 	public static int ROLE_LEVEL_ADMIN = 9;
 
@@ -83,16 +85,30 @@ public class CreditUserSession extends UserSession implements AuthorizationInfo 
 		return superviseScopes;
 	}
 	
-
+	/**
+	 * 获取当前选择监察范围
+	 * @return
+	 */
 	public String getCurrentSuperviseScope() {
 		return currentSuperviseScope;
 	}
 	
+	/**
+	 * 设置当前监察范围
+	 * @param currentSuperviseScope
+	 */
 	public void setCurrentSuperviseScope(String currentSuperviseScope) {
-		this.currentSuperviseScope = currentSuperviseScope;
+		if(superviseScopes != null && superviseScopes.length >0) {
+			for(String scope: superviseScopes) {
+				if(scope.equals(currentSuperviseScope)) {
+					this.currentSuperviseScope = currentSuperviseScope;
+					onChange();
+					return;
+				}
+			}
+		}
 	}
 
-	
 	@Override
 	public boolean isSystemAdmin() {
 		return isSystemAdmin;
@@ -103,6 +119,7 @@ public class CreditUserSession extends UserSession implements AuthorizationInfo 
 	 * 
 	 * @return
 	 */
+	@JsonIgnore
 	public Collection<MenuPermission> getMenuResources() {
 		PermissionContainer container = PermissionContainer.getInstance();
 		if (isSystemAdmin) {
