@@ -12,39 +12,138 @@
             <li class="active">新增机构</li>
         </ol>
     </section>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 700px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">机构坐标获取(点击地图获取坐标)</h4>
+                </div>
+                <div class="modal-body no-padding">
+                    <div id="allmap" style="height: 500px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="confirm" >确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
     <section class="content">
+        <div id="model_container" class="box box-widget" >
+            <div class="box-header no-border" >
+                <h3 class="box-title">新增机构</h3>
+                <div class="box-tools pull-right">
+                    <a class="btn tonto-model-tool-view-btn" id="model_edit_btn" href="javascript:void(0)"><i class="fa fa-edit"></i>编辑</a>
+                </div>
+            </div>
+            <div id="model_edit" class="box-body" >
+                <form id="model_form" action="/credit/org/agency/save" method="post" class="form-horizontal null" style="padding-left:100px">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>机构名称：</label>
+                        <div class="col-sm-3">
+                            <input name="name" id="agencyName" placeholder="请输入机构名称" type="text" class="form-control" required="required"></div>
+                        <label for="agencyType" class="col-sm-2 control-label">机构类型：</label>
+                        <div class="col-sm-3">
+                            <select name="agencyType" class="form-control tonto-select-constant" enumcode="agency-type">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="licenseNo" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>执业许可证：</label>
+                        <div class="col-sm-3">
+                            <input name="licenseNo" placeholder="请输入执业许可证" type="text" class="form-control" required="required"></div>
+                        <label for="socialCreditCode" class="col-sm-2 control-label">统一社会信用代码：</label>
+                        <div class="col-sm-3">
+                            <input name="socialCreditCode" placeholder="请输入统一社会信用代码" type="text" class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="license" class="col-sm-2 control-label">执业许可证照片：</label>
+                        <div name="license" class="col-sm-8" >
+                            <input type="file" name="licenseFile" multiple>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="agencyCoordinate" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>机构坐标：</label>
+                        <div class="col-sm-3">
+                            <input name="agencyCoordinate"  id="agencyCoordinate" required="required" type="text" class="form-control">
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-info" type="button" data-toggle="modal" data-target="#myModal" onclick="init()" >获取机构坐标</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address" class="col-sm-2 control-label">地址：</label>
+                        <div class="col-sm-8">
+                            <input name="address" id="address"  placeholder="请输入地址(点击获取机构坐标可自动填写)" type="text" class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="businessScope" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>经营范围：</label>
+                        <div class="col-sm-3">
+                            <input name="businessScope" placeholder="请输入经营范围" type="text" class="form-control" required="required"></div>
+                        <label for="registerTime" class="col-sm-2 control-label">成立日期：</label>
+                        <div class="col-sm-3">
+                            <input name="registerTime" placeholder="请输入成立日期" autocomplete="off" type="text" class="form-control tonto-datepicker-date"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactWay" class="col-sm-2 control-label">联系方式：</label>
+                        <div class="col-sm-3">
+                            <input name="contactWay" placeholder="请输入联系方式" type="text" class="form-control"></div>
+                        <label for="chargePerson" class="col-sm-2 control-label">法人或负责人：</label>
+                        <div class="col-sm-3">
+                            <input name="chargePerson" placeholder="请输入法人或负责人" type="text" class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="chargePersonId" class="col-sm-2 control-label">法人或负责人证件：</label>
+                        <div class="col-sm-3">
+                            <input name="chargePersonId" placeholder="请输入法人或负责人证件" type="text" class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="personnelInformation" class="col-sm-2 control-label">人事信息：</label>
+                        <div class="col-sm-8">
+                            <textarea name="personnelInformation" placeholder="请输入人事信息" rows="5" type="text" class="form-control"></textarea></div>
+                    </div>
+                    <div class="form-group form-button-bar">
+                        <div class="col-sm-2 col-sm-offset-3">
+                            <button type="submit" id="model_form_submit_btn" class="btn btn-primary btn-block">保存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </section>
     <div class="col-sm-2 col-sm-offset-5 btn-back">
     	<a href="/credit/org/agency/index" class="btn btn-primary btn-block">返回</a>
     </div>
     <div th:include="/credit/footer" />
-    <script type="text/javascript">
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW"></script>
+</body>
+<script type="text/javascript">
     var options = {
         id: "model",
         name: "新增机构",
         url:"/credit/org/agency/save",
         cancelBtn: false,
         columns: [
-        	 { title: "机构名称", name: "name", required: "required", inputType: "TEXT" },
-             { title: "机构类型", name: "agencyType", enum: "agency-type", inputType: "SELECT" },
-             { title: "执业许可证", name: "licenseNo", required: "required", inputType: "TEXT" },
-             { title: "执业许可证照片", name: "license", fileName: "licenseFile", maxFileCount: 5, inputType: "ATTACHMENT" },
-             { title: "统一社会信用代码", name: "socialCreditCode", inputType: "TEXT" },
-             { title: "地址", name: "address", inputType: "TEXT" },
-             { title: "成立日期", name: "registerTime", inputType: "DATE" },
-             { title: "经营范围", name: "businessScope", required: "required", inputType: "TEXT" },
-             { title: "联系方式", name: "contactWay", inputType: "TEXT" },
-             { title: "法人或负责人", name: "chargePerson", inputType: "TEXT" },
-             { title: "法人或负责人证件", name: "chargePersonId", inputType: "TEXT" },
-             { title: "人事信息", name: "personnelInformation", inputType: "TEXTAREA" }
-				]
+            { title: "机构名称", name: "name", required: "required", inputType: "TEXT" },
+            { title: "机构类型", name: "agencyType", enum: "agency-type", inputType: "SELECT" },
+            { title: "执业许可证", name: "licenseNo", required: "required", inputType: "TEXT" },
+            { title: "统一社会信用代码", name: "socialCreditCode", inputType: "TEXT" },
+            { title: "执业许可证照片", name: "license", fileName: "licenseFile", maxFileCount: 5, inputType: "ATTACHMENT" },
+            { title: "机构坐标", name: "agencyCoordinate", inputType: "TEXT",colspan:2 },
+            { title: "地址", name: "address", inputType: "TEXT" },
+            { title: "经营范围", name: "businessScope", required: "required", inputType: "TEXT" },
+            { title: "成立日期", name: "registerTime", inputType: "DATE" },
+            { title: "联系方式", name: "contactWay", inputType: "TEXT" },
+            { title: "法人或负责人", name: "chargePerson", inputType: "TEXT" },
+            { title: "法人或负责人证件", name: "chargePersonId", inputType: "TEXT" },
+            { title: "人事信息", name: "personnelInformation", inputType: "TEXTAREA" }
+        ]
     }
 
-    $(function() {       
-        var html = generateEditHtml(options);
-        $(".content").html(html);
-        $.initComponment($(".content"));
-
+    $(function() {
         var model = new tonto.Model("model", options.columns, {
             pattern:"edit",
             successCallback:function(){
@@ -54,8 +153,123 @@
             }
         });
         model.setData(null);
+        $("#confirm").click(function(){
+            let val = $("#agencyCoordinate").val();
+            if (!val) {
+                $.errorMessage("未获取到机构坐标!");
+            } else {
+                $("#myModal").modal('hide');
+            }
+        });
     });
-    </script>
-</body>
+
+
+        var marker2;
+        var map = new BMap.Map("allmap");
+        var cityName = '昆山';
+        map.centerAndZoom(new BMap.Point(120.987239,31.391653), 14);
+        var geoc = new BMap.Geocoder();
+        map.enableScrollWheelZoom(true);
+        var bdary = new BMap.Boundary();
+        bdary.get(cityName, function (rs) {
+            var EN_JW = "180, 90;";         //东北角
+            var NW_JW = "-180,  90;";       //西北角
+            var WS_JW = "-180, -90;";       //西南角
+            var SE_JW = "180, -90;";        //东南角
+            //4.添加环形遮罩层
+            var ply1 = new BMap.Polygon(rs.boundaries[0] + SE_JW + SE_JW + WS_JW + NW_JW + EN_JW + SE_JW, { strokeColor: "none", fillColor: "rgb(246,246,246)", fillOpacity:1, strokeOpacity: 0.5 }); //建立多边形覆盖物
+            map.addOverlay(ply1);
+            //5. 给目标行政区划添加边框，其实就是给目标行政区划添加一个没有填充物的遮罩层
+            var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 2, strokeColor: "#00f",fillColor: "" });
+            map.addOverlay(ply);
+            //map.setViewport(ply.getPath());    //调整视野
+            map.addEventListener("click", function(e){
+                map.removeOverlay(marker2);
+                //通过点击百度地图，可以获取到对应的point, 由point的lng、lat属性就可以获取对应的经度纬度
+                var pt = e.point;
+                var point = new BMap.Point(pt.lng, pt.lat);
+                marker2 = new BMap.Marker(point);  // 创建标注
+                map.addOverlay(marker2);               // 将标注添加到地图中
+                marker2.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                geoc.getLocation(pt, function(rs){
+                    //将对应的HTML元素设置值
+                    let address = rs.addressComponents;
+                    let business = '';
+                    if (rs.business.length > 0) {
+                        business = rs.business + '镇'
+                    }
+                    document.getElementById("agencyCoordinate").value=rs.point.lng + ','+rs.point.lat;
+                    document.getElementById("address").value=address.province+address.city+address.district+ business +address.street+address.streetNumber;
+                });
+            })
+        });
+
+    //计算缩放级别的函数
+    function getZoom (maxLng, minLng, maxLat, minLat) {
+        var zoom = ["50","100","200","500","1000","2000","5000","10000","20000","25000","50000","100000","200000","500000","1000000","2000000"]//级别18到3。
+        //最大最小的坐标点
+        var pointA = new BMap.Point(maxLng,maxLat);  // 创建点坐标A
+        var pointB = new BMap.Point(minLng,minLat);  // 创建点坐标B
+        var distance = map.getDistance(pointA,pointB).toFixed(1);  //获取两点距离,保留小数点后两位
+        for(var i=0,zoomLen = zoom.length; i <zoomLen; i++) {
+            if(zoom[i] - distance > 0) {
+                return 18 -i + 3;
+                //地图范围常常是比例尺距离的10倍以上 所以加3
+            }
+        }
+    }
+    function setZoomByAgencyCoordinate(agencyCoordinate) {
+        let split = agencyCoordinate.split(',');
+        var zoom = getZoom(split[0], split[0], split[1], split[1]);
+        setTimeout(function () {
+            map.centerAndZoom(new BMap.Point(split[0],split[1]), zoom);
+            marker2 = new BMap.Marker(new BMap.Point(split[0],split[1]));
+            marker2.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            map.addOverlay(marker2);
+        } ,1000 * 0.5);
+    }
+
+    function setZoomByName(name) {
+        // 将地址解析结果显示在地图上,并调整地图视野
+        geoc.getPoint(name, function (point) {
+            if (point) {
+                $("#agencyCoordinate").val(point.lng + ',' + point.lat);
+                var zoom = getZoom(point.lng, point.lng, point.lat, point.lat);
+                setTimeout(function () {
+                    map.centerAndZoom(point, zoom);
+                    marker2 = new BMap.Marker(point);
+                    marker2.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                    map.addOverlay(marker2);
+                }, 1000 * 0.5);
+            } else {
+                $.errorAlert("您输入的机构名称无法获取到坐标!");
+                setTimeout(function () {
+                    map.centerAndZoom(new BMap.Point(120.987239,31.391653), 14);
+                }, 1000 * 0.5);
+            }
+        }, "昆山市");
+    }
+
+    function init() {
+        map.removeOverlay(marker2);
+        let name = $("#agencyName").val();
+        let agencyCoordinate = $("#agencyCoordinate").val();
+        if (name) {
+            if (agencyCoordinate) {
+                setZoomByAgencyCoordinate(agencyCoordinate);
+            } else {
+                setZoomByName(name)
+            }
+        }else {
+            if (agencyCoordinate) {
+                setZoomByAgencyCoordinate(agencyCoordinate);
+            } else {
+                setTimeout(function () {
+                    map.centerAndZoom(new BMap.Point(120.987239,31.391653), 14);
+                }, 1000 * 0.5);
+            }
+        }
+    }
+</script>
 
 </html>

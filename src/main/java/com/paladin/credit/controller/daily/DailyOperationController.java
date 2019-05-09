@@ -1,6 +1,5 @@
 package com.paladin.credit.controller.daily;
 
-import com.paladin.common.core.ConstantsContainer;
 import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.model.template.TemplateItem;
 import com.paladin.credit.service.template.TemplateItemAgencyService;
@@ -46,8 +45,7 @@ public class DailyOperationController extends ControllerSupport {
     public Object findPage(TemplateItemAgencyQuery query,@PathVariable String targetType) {
         query.setItemTargetType(Integer.valueOf(targetType));
         String code = CreditUserSession.getCurrentUserSession().getCurrentSuperviseScope();
-        String type = ConstantsContainer.getTypeKey("supervise-scope", code);
-        query.setCode(Integer.valueOf(type));
+        query.setCode(Integer.valueOf(code));
         return CommonResponse.getSuccessResponse(templateItemAgencyService.searchTemplatesByQuery(query));
     }
 

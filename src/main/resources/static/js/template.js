@@ -2,7 +2,7 @@ var allowedFileExtensions = ["jpeg", "jpg", "png", "gif", "rar", "zip", "pdf", "
 
 var agencyInSystemColumns = [
     { title: "内容", name: "selections", itemField: "itemName", required: "required", inputType: "TEMPLATE-ITEM" },
-    { title: "机构", name: "agencyId", required: "required", multiple: true, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" },
+    { title: "机构", name: "agencyId", required: "required", multiple: false, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" },
     { title: "说明", name: "explain", inputType: "TEXTAREA" },
     { title: "文件照片上传", name: "explainAttachment", inputType: "ATTACHMENT", fileName: "explainAttachmentFiles", maxFileCount: 5, allowedFileExtensions: allowedFileExtensions }
 ]

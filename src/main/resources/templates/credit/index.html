@@ -56,9 +56,16 @@
                                         <a href="javascript:see()" class="btn btn-default btn-flat">修改密码</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="/logout" class="btn btn-default btn-flat">登出</a>
+                                        <a href="/credit/logout" class="btn btn-default btn-flat">登出</a>
                                     </div>
                                 </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">[[${currentScopeName}]] <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li role="presentation" class="dropdown-header">请选择更换的监管科室·机构:</li>
+                                <li th:each="s: ${supervise}"><a th:onclick="updateCode([[${s.key}]])" href="javascript:void(0)" th:text="${s.value}"></a></li>
                             </ul>
                         </li>
                         <li>
@@ -150,9 +157,10 @@
     <script src="/static/js/app/app_iframe.min.js"></script>
     <script src="/static/assets/jquery-asidenav/js/asidenav.js"></script>
     <script src="/static/assets/layer/layer.js"></script>
+    <script src="/static/js/common.js"></script>
     <script type="text/javascript">
     function goHome() {
-        addTabs({ id: '0001', title: '人员管理', close: true, url: '/template/item/index', urlType: 'relative' });
+        addTabs({ id: '0001', title: '首页', close: true, url: '/home/page/index', urlType: 'relative' });
     }
 
     $(function() {
@@ -235,6 +243,12 @@
         }
 
         return [w + "px", h + "px"];
+    }
+
+    function updateCode(code) {
+        $.getAjax('/credit/update/'+code,function () {
+
+        })
     }
     </script>
 </body>

@@ -28,7 +28,7 @@
             columns: [
                 { title: "名称", name: "name", required: "required", inputType: "TEXT" },
                 { title: "监管科室·机构", name: "superviseScope", multiple: true, inputType: "SELECT", enum: "supervise-scope" },
-                { title: "账号", name: "account", required: "required", inputType: "TEXT" },
+                { title: "账号(5~30位字符)", name: "account", required: "required", inputType: "TEXT" },
                 { title: "角色", name: "role", required: "required", multiple: true, inputType: "SELECT-SERVER", url: "/credit/permission/role/lower" }
             ]
         }

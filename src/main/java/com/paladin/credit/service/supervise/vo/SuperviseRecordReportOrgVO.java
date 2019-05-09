@@ -25,6 +25,8 @@ public class SuperviseRecordReportOrgVO {
     //经营范围
     private String businessScope;
 
+    private  String agencyCoordinate;
+
     public String getResultGrade() {
         return resultGrade;
     }
@@ -95,5 +97,13 @@ public class SuperviseRecordReportOrgVO {
 
     public void setBusinessScope(String businessScope) {
         this.businessScope = businessScope;
+    }
+
+    public String getAgencyCoordinate() {
+        return agencyCoordinate;
+    }
+
+    public void setAgencyCoordinate(String agencyCoordinate) {
+        this.agencyCoordinate = agencyCoordinate;
     }
 }

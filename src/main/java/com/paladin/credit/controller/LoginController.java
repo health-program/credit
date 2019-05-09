@@ -1,10 +1,17 @@
 package com.paladin.credit.controller;
 
-import java.util.Collection;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.paladin.common.core.ConstantsContainer;
+import com.paladin.common.core.permission.MenuPermission;
+import com.paladin.common.model.org.OrgPermission;
+import com.paladin.common.model.syst.SysUser;
+import com.paladin.common.service.syst.SysUserService;
+import com.paladin.credit.core.CreditUserSession;
+import com.paladin.framework.core.session.UserSession;
+import com.paladin.framework.web.response.CommonResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -12,24 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.util.ArrayUtils;
 
-import com.paladin.common.core.permission.MenuPermission;
-import com.paladin.common.model.org.OrgPermission;
-import com.paladin.common.service.syst.SysUserService;
-import com.paladin.credit.core.CreditUserSession;
-import com.paladin.framework.core.session.UserSession;
-import com.paladin.framework.web.response.CommonResponse;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Api("用户认证模块")
 @Controller
@@ -43,8 +41,26 @@ public class LoginController {
 	@GetMapping(value = "/index")
 	public Object main(HttpServletRequest request) {
 		CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+		String account = userSession.getAccount();
+		SysUser user = sysUserService.getUserByAccount(account);
 		ModelAndView model = new ModelAndView("/credit/index");
-		model.addObject("name", userSession.getUserName());
+		List<ConstantsContainer.KeyValue> supervise = ConstantsContainer.getType("supervise-scope");
+		String scope = userSession.getCurrentSuperviseScope();
+		String scopeName = "目前监管科室·机构:" +ConstantsContainer.getTypeValue("supervise-scope", scope);
+		String userName = userSession.getUserName();
+		if (user.getType() == SysUser.TYPE_SYS_ADMIN) {
+			model.addObject("supervise", supervise);
+			model.addObject("currentScopeName", scopeName);
+		} else if (user.getType() == SysUser.TYPE_SUPERVISE) {
+			String[] superviseScopes = userSession.getSuperviseScopes();
+			List<ConstantsContainer.KeyValue> ownedSupervise =
+			  supervise.stream()
+				  .filter(keyValue -> ArrayUtils.contains(superviseScopes, keyValue.getKey()))
+				  .collect(Collectors.toList());
+			model.addObject("supervise", ownedSupervise);
+			model.addObject("currentScopeName", scopeName);
+		}
+		model.addObject("name", userName);
 		Collection<MenuPermission> menus = userSession.getMenuResources();
 		StringBuilder sb = new StringBuilder("<li class=\"header\">菜单</li>");
 		createMenuHtml(menus, sb);
@@ -145,5 +161,13 @@ public class LoginController {
 			return CommonResponse.getFailResponse("登录失败");
 		}
 	}
+
+	@RequestMapping(value = "/update/{superviseCode}", method = RequestMethod.GET)
+	@ResponseBody
+	public Object update( @PathVariable String superviseCode, Model model) {
+		CreditUserSession.getCurrentUserSession().setCurrentSuperviseScope(superviseCode);
+		return CommonResponse.getSuccessResponse();
+	}
+
 
 }

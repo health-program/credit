@@ -73,7 +73,8 @@
         a.contact_way as contactWay,
         a.agency_type as agencyType,
         a.register_time as registerTime,
-        a.business_scope as businessScope
+        a.business_scope as businessScope,
+        a.agency_coordinate as agencyCoordinate
         FROM
         (
         SELECT

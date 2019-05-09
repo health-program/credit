@@ -43,6 +43,8 @@ public class OrgAgencyVO {
 	// 人事信息
 	private String personnelInformation;
 
+	private  String agencyCoordinate;
+
 
 	public String getId() {
 		return id;
@@ -148,4 +150,11 @@ public class OrgAgencyVO {
 		this.personnelInformation = personnelInformation;
 	}
 
+	public String getAgencyCoordinate() {
+		return agencyCoordinate;
+	}
+
+	public void setAgencyCoordinate(String agencyCoordinate) {
+		this.agencyCoordinate = agencyCoordinate;
+	}
 }

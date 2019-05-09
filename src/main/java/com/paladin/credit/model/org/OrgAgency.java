@@ -1,8 +1,9 @@
 package com.paladin.credit.model.org;
 
 import com.paladin.framework.common.UnDeleteBaseModel;
-import java.util.Date;
+
 import javax.persistence.Id;
+import java.util.Date;
 
 public class OrgAgency extends UnDeleteBaseModel {
 
@@ -45,6 +46,8 @@ public class OrgAgency extends UnDeleteBaseModel {
 
 	// 人事信息
 	private String personnelInformation;
+
+	private  String agencyCoordinate;
 
 	public String getId() {
 		return id;
@@ -150,4 +153,11 @@ public class OrgAgency extends UnDeleteBaseModel {
 		this.personnelInformation = personnelInformation;
 	}
 
+	public String getAgencyCoordinate() {
+		return agencyCoordinate;
+	}
+
+	public void setAgencyCoordinate(String agencyCoordinate) {
+		this.agencyCoordinate = agencyCoordinate;
+	}
 }

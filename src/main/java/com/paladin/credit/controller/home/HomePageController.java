@@ -27,12 +27,12 @@ public class HomePageController extends ControllerSupport {
     @Autowired
     private PublicityMessageService publicityMessageService;
 
-  @GetMapping("/index")
-  public String index(Model model) {
-      List<PublicityMessage> notices = publicityMessageService.findAll();
-      model.addAttribute("notices",notices);
-      return "/credit/index_content";
-  }
+    @GetMapping("/index")
+    public String index(Model model) {
+        List<PublicityMessage> notices = publicityMessageService.findAll();
+        model.addAttribute("notices",notices);
+        return "/credit/index_content";
+    }
 
     @GetMapping("/notice/view")
     public String view(@RequestParam String id, Model model) {

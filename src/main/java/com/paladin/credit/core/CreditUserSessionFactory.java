@@ -39,7 +39,7 @@ public class CreditUserSessionFactory {
 			userSession = new CreditUserSession(sysUser.getId(), "系统管理员", sysUser.getAccount());
 			userSession.isSystemAdmin = true;
 			userSession.roleLevel = CreditUserSession.ROLE_LEVEL_ADMIN;
-			userSession.currentSuperviseScope = ConstantsContainer.getType("supervise-scope").get(0).getValue();
+			userSession.currentSuperviseScope = ConstantsContainer.getType("supervise-scope").get(0).getKey();
 		} else if (type == SysUser.TYPE_SUPERVISE) {
 			String userId = sysUser.getUserId();
 

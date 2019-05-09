@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/credit/header" />
+<style>
+    .row{
+        padding: 0 15px;
+    }
+    .notice-list {
+        list-style: none;
+    }
+
+    .right-tool {
+        float: right;
+    }
+    .ul-dashed {
+        border-bottom: 1px dashed #dddddd;
+        padding-left: 12px;
+        line-height: 14px;
+        margin-right: 21px;
+    }
+
+    .notice-li {
+        margin-bottom: 6px;
+    }
+    .name {
+        color: #000;
+    }
+
+    .name:hover,
+    .name:active,
+    .name:focus {
+        color: #000;
+        text-decoration: underline
+    }
+    .baidu-maps label {
+        max-width: none;
+    }
+</style>
+<body>
+    <section class="content" style="padding-top: 5px">
+        <div class="row" style="height: 150px">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <i class="fa fa-th-list"></i>
+                    <h3 class="box-title">快捷菜单</h3>
+                </div>
+                <div class="box-body no-padding" style="height: 100px">
+
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-red-active"><i class="icon ion-briefcase"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text"><strong>日常操作功能</strong></span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box" >
+                            <span class="info-box-icon bg-teal-active"><i class="icon ion-android-notifications-none"></i></span>
+                            <div class="info-box-content" >
+                                <span class="info-box-text"><strong>公告信息管理</strong></span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-blue"><i class="icon ion-stats-bars"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text"><strong>统计报表</strong></span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-green"><i class="ion  ion-ios-gear-outline"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text"><strong>系统管理</strong></span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+
+                </div>
+            </div>
+        </div  >
+
+        <div class="row" style="height: 250px">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <i class="fa fa-pie-chart"></i>
+                    <h3 class="box-title">分析统计</h3>
+                </div>
+                <div class="box-body no-padding">
+                    <div class="col-md-4">
+                        <div id="yearChart" style="height: 200px"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div id="monthChart" style="height: 200px"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div id="dayChart" style="height: 200px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-7" style="padding-left: 0">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <i class="fa fa-pie-chart"></i>
+                        <h3 class="box-title">分析统计</h3>
+                    </div>
+                    <div class="box-body" >
+                        <div id="allmap" class="baidu-maps" style="height: 520px" ></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 no-padding">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <i class="fa fa-bell-o"></i>
+                        <h3 class="box-title">最新公告</h3>
+                        <a style="float:right" href="/credit/publicity/message/index">更多 </a>
+                    </div>
+                    <div class="box-body">
+                        <ul class="notice-list ul-dashed" th:each="notice,iter: ${notices}">
+                            <li class="notice-li">
+                                <strong><a class="name" th:href="${'/credit/home/page/notice/view?id='+ notice.id}" th:text="${notice.title}"></a></strong>
+                                <div class="right-tool">
+                                    <span th:text="${#dates.format(notice.publishTime, 'yyyy-MM-dd')}"></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<div th:include="/credit/footer" />
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    $(function () {
+        chartYear(yearChart);
+        chartMonth(monthChart);
+        chartDay(dayChart);
+    });
+    //图表自适应大小
+    window.addEventListener("resize", function () {
+        yearChart.resize();
+    });
+    var yearChart = echarts.init(document.getElementById('yearChart'));
+    var monthChart = echarts.init(document.getElementById('monthChart'));
+    var dayChart = echarts.init(document.getElementById('dayChart'));
+
+    function chartYear(yearChart) {
+      generatorChart(yearChart,'rgba(30,144,255,0.8)','年');
+    }
+    function chartMonth(monthChart) {
+        generatorChart(monthChart,'rgba(255,110,57,0.8)','月');
+    }
+    function chartDay(dayChart) {
+        generatorChart(dayChart,'rgba(11,255,255,0.8)','日');
+    }
+
+    function generatorChart(chart, colorstr, name) {
+        var dataStyle = {
+            normal: {
+                color: colorstr,
+                label: {show: true, fontSize: 30, position: 'center', formatter: '{c}条'},
+                labelLine: {show:false}
+            },
+            emphasis : {
+                color: colorstr
+            }
+
+        };
+        var placeHolderStyle = {
+            normal : {
+                color: 'rgba(0,0,0,0)',
+                label: {show:false},
+                labelLine: {show:false}
+            },
+            emphasis : {
+                color: 'rgba(0,0,0,0)'
+            }
+        };
+
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            title: {
+                text: name,
+                x:'center',
+                y: 'bottom',
+                textStyle : {
+                    color : colorstr,
+                    fontFamily : '微软雅黑',
+                    fontSize : 20,
+                    fontWeight : 'bolder'
+                }
+            },
+            series: [
+                {
+                    name:name,
+                    type:'pie',
+                    //clockWise:false,
+                    radius: [60, 65],
+                    itemStyle:dataStyle,
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:[
+                        {value:335, name:'直接访问'},
+                        {value:100,name:"kong",itemStyle:placeHolderStyle}
+                    ]
+                }
+            ]
+        };
+        chart.setOption(option,true);
+    }
+
+    var points = [
+         {"lng":120.967572,"lat":31.388136,"grade":"诚实守信(A级)","name":"昆山第一人民医院"},
+         {"lng":120.9659,"lat":31.409471,"grade":"诚实守信(A级)","name":"昆山第三人民医院"},
+         {"lng":120.916446,"lat":31.180644,"grade":"诚实守信(A级)","name":"昆山市锦溪人民医院"}
+    ];
+    //创建标注点并添加到地图中
+    function addMarker(points) {
+        if (points && points.length > 0) {
+            //循环建立标注点
+            for(var i=0, pointsLen = points.length; i<pointsLen; i++) {
+                var point = new BMap.Point(points[i].lng, points[i].lat); //将标注点转化成地图上的点
+                var marker = new BMap.Marker(point); //将点转化成标注点
+                map.addOverlay(marker);  //将标注点添加到地图上
+                //添加监听事件
+                marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                var label = setLabelStyle(points[i].name,point);
+                marker.setLabel(label);
+                (function() {
+                    var thePoint = points[i];
+                    marker.addEventListener("click",
+                        function() {
+                            showInfo(this,thePoint);
+                        });
+                })();
+                showInfo(marker, points[i])
+            }
+        }
+    }
+
+    function setLabelStyle(content,point) {
+        //左偏移  右偏移
+        var offsetSize = new BMap.Size(0, 0);
+        var labelStyle = {
+            color: "red",
+            fontSize: "10px",
+            backgroundColor: "0.05",
+            border: "0",
+            fontWeight: "bold",
+            fontFamily:"微软雅黑"
+        };
+        //不同数字长度需要设置不同的样式。
+        var num=parseInt(content.length/10);
+        switch(num) {
+            case 0:
+                offsetSize = new BMap.Size(-20, -40);
+                break;
+            case 1:
+                offsetSize = new BMap.Size(-20, -40);
+                break;
+            case 2:
+                offsetSize = new BMap.Size(-20, -60);
+                break;
+            case 3:
+                offsetSize = new BMap.Size(-20, -80);
+                break;
+            default:
+                break;
+        }
+
+        var label = new BMap.Label("<span class='angle'>"+content+"<span>", {
+            position : point,
+            offset: offsetSize
+        });
+        label.setStyle(labelStyle);
+        return label;
+    }
+
+    //根据原始数据计算中心坐标和缩放级别，并为地图设置中心坐标和缩放级别。
+    function setZoom(points){
+        if( points && points.length > 0){
+            var maxLng = points[0].lng;
+            var minLng = points[0].lng;
+            var maxLat = points[0].lat;
+            var minLat = points[0].lat;
+            var res;
+            for (var i = points.length - 1; i >= 0; i--) {
+                res = points[i];
+                if(res.lng > maxLng) maxLng =res.lng;
+                if(res.lng < minLng) minLng =res.lng;
+                if(res.lat > maxLat) maxLat =res.lat;
+                if(res.lat < minLat) minLat =res.lat;
+            };
+            var cenLng =(parseFloat(maxLng)+parseFloat(minLng))/2;
+            var cenLat = (parseFloat(maxLat)+parseFloat(minLat))/2;
+            var zoom = getZoom(maxLng, minLng, maxLat, minLat);
+            map.centerAndZoom(new BMap.Point(cenLng,cenLat), zoom);
+        }else{
+            map.centerAndZoom(new BMap.Point(120.987239,31.391653), 14);
+        }
+    }
+
+    //计算缩放级别的函数
+    function getZoom (maxLng, minLng, maxLat, minLat) {
+        var zoom = ["50","100","200","500","1000","2000","5000","10000","20000","25000","50000","100000","200000","500000","1000000","2000000"]//级别18到3。
+        //最大最小的坐标点
+        var pointA = new BMap.Point(maxLng,maxLat);  // 创建点坐标A
+        var pointB = new BMap.Point(minLng,minLat);  // 创建点坐标B
+        var distance = map.getDistance(pointA,pointB).toFixed(1);  //获取两点距离,保留小数点后两位
+        for(var i=0,zoomLen = zoom.length; i <zoomLen; i++) {
+            if(zoom[i] - distance > 0) {
+                return 18 -i + 3;
+                //地图范围常常是比例尺距离的10倍以上 所以加3
+            }
+        };
+    }
+
+    function showInfo(thisMarker,point) {
+        //获取点的信息
+        var sContent =
+            '<ul style="margin:0 0 5px 0;padding:0.2em 0">'
+            +'<li style="line-height: 26px;font-size: 15px">'
+            +'<span style="width: 70px;display: inline-block;">机构名称:</span>' + '<font style="color: #992f2d;font-weight: bold">'+point.name+'</font>' + '</li>'
+            +'<li style="line-height: 26px;font-size: 15px;">'
+            +'<span style="width: 100px;display: inline-block;">医疗信用等级:</span>' + point.grade + '</li>'
+            +'</ul>';
+        var infoWindow = new BMap.InfoWindow(sContent); //创建信息窗口对象
+        thisMarker.openInfoWindow(infoWindow); //图片加载完后重绘infoWindow
+    }
+
+    var map = new BMap.Map("allmap");
+    setZoom(points);               // 初始化地图,设置中心点坐标和地图级别。    map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
+    addMarker(points);
+    var bdary = new BMap.Boundary();
+    bdary.get('昆山', function (rs) {       //获取行政区域
+        // map.clearOverlays();        //清除地图覆盖物
+        //for循环都删除掉了，只剩下这个
+        //网上查了下，东西经南北纬的范围
+        var EN_JW = "180, 90;";         //东北角
+        var NW_JW = "-180,  90;";       //西北角
+        var WS_JW = "-180, -90;";       //西南角
+        var SE_JW = "180, -90;";        //东南角
+        //4.添加环形遮罩层
+        var ply1 = new BMap.Polygon(rs.boundaries[0] + SE_JW + SE_JW + WS_JW + NW_JW + EN_JW + SE_JW, { strokeColor: "none", fillColor: "rgb(246,246,246)", fillOpacity:1, strokeOpacity: 0.5 }); //建立多边形覆盖物
+        map.addOverlay(ply1);
+        //5. 给目标行政区划添加边框，其实就是给目标行政区划添加一个没有填充物的遮罩层
+        var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 2, strokeColor: "#00f",fillColor: "" });
+        map.addOverlay(ply);
+        //map.setViewport(ply.getPath());    //调整视野
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

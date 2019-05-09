@@ -8,6 +8,7 @@
     <section class="content-header">
         <h1>机构模板管理</h1>
     </section>
+    <input type="hidden" id="code" th:value="${code}">
     <section class="content">
         <div class="box box-solid">
             <div id="result" class="box-body">
@@ -54,17 +55,25 @@
     }
 
     function getTableDatas() {
-       let constantEnum = $.getConstantEnum("supervise-scope");
-       let data = [];
-        if ($.isArray(constantEnum)) {
-            $.each(constantEnum,function (index, kv) {
-                let row = {};
-                row["code"] = kv.key;
-                row["name"] = kv.value;
-                data.push(row);
-            })
+        let code = $("#code").val();
+        let data = [];
+        if (code.length > 0) {
+            let value = $.getConstantEnumValue("supervise-scope",code);
+            let row = {};
+            row["code"] = code;
+            row["name"] =value;
+            data.push(row);
+        } else {
+            let constantEnum = $.getConstantEnum("supervise-scope");
+            if ($.isArray(constantEnum)) {
+                $.each(constantEnum,function (index, kv) {
+                    let row = {};
+                    row["code"] = kv.key;
+                    row["name"] = kv.value;
+                    data.push(row);
+                })
+            }
         }
-
          return data;
     }
 

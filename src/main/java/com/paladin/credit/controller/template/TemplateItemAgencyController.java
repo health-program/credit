@@ -28,7 +28,12 @@ public class TemplateItemAgencyController extends ControllerSupport {
 
 	@GetMapping("/index")
 	@QueryInputMethod(queryClass = OrgAgencyQuery.class)
-	public String index() {
+	public String index(Model model) {
+		/*CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+		int roleLevel = userSession.getRoleLevel();
+		if (roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE) {
+			model.addAttribute("code",userSession.getCurrentSuperviseScope());
+		}*/
 		return "/credit/template/template_agencies";
 	}
 

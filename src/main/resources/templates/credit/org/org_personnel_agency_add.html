@@ -26,8 +26,8 @@
         url:"/credit/org/personnel/agency/save",
         columns: [
 				{ title: "名称", name: "name", required: "required", inputType: "TEXT" },
-				{ title: "管理机构名称", name: "agencyId",  inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower", multiple: false},
-				{ title: "账号", name: "account", required: "required", inputType: "TEXT" },
+				{ title: "管理机构名称", name: "agencyId",  inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower", multiple: false,dependency:["role","fbfbc399ec4a4a0c83c6a512f86c1037"]},
+				{ title: "账号(5~30位字符)", name: "account",  required: "required", inputType: "TEXT" },
 				{ title: "角色", name: "role", required: "required", inputType: "SELECT-SERVER", url: "/credit/permission/role/in", multiple: false }
 				]
     };

@@ -20,7 +20,7 @@
                         <sapn>发布时间：</sapn>
                         <span th:text="${#dates.format(object.publishTime, 'yyyy-MM-dd')}" class="form-control-static description"></span>
                     </div>
-                    <div th:if="${!#lists.isEmpty(object.attachmentFiles)}" th:each="attachment,iterStat: ${object.attachmentFiles}">
+                    <div th:if="${!#lists.isEmpty(object.explainAttachmentFile)}" th:each="attachment,iterStat: ${object.explainAttachmentFile}">
                         <a target="_blank" th:href="${'/file/'+attachment.pelativePath}">
                             <span th:text="${attachment.name + attachment.suffix}"></span>
                             <i class="fa fa-download"></i></a>
