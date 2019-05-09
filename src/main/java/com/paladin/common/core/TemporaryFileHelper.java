@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.paladin.framework.core.configuration.web.MyWebProperties;
+import com.paladin.framework.core.configuration.web.WebProperties;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 
 @Component
@@ -24,7 +24,7 @@ public class TemporaryFileHelper {
 	private static Logger logger = LoggerFactory.getLogger(TemporaryFileHelper.class);
 	
 	@Autowired
-	private MyWebProperties webProperties;
+	private WebProperties webProperties;
 
 	private String tempPath;
 	
@@ -118,7 +118,7 @@ public class TemporaryFileHelper {
 			logger.error("遍历删除临时文件失败");
 		}
 	}
-	
+
 	// 0 0 2 * * ? 每天凌晨2点执行
 	@Scheduled(cron = "0 0 2 * * ?")
 	public void scheduledClean() {

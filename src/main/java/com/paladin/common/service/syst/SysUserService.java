@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 
 import com.paladin.common.mapper.syst.SysUserMapper;
 import com.paladin.common.model.syst.SysUser;
-import com.paladin.credit.core.CreditProperties;
 import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.GeneralCriteriaBuilder;
 import com.paladin.framework.common.QueryType;
 import com.paladin.framework.core.ServiceSupport;
+import com.paladin.framework.core.configuration.PaladinProperties;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.core.session.UserSession;
 import com.paladin.framework.utils.secure.SecureUtil;
@@ -31,7 +31,7 @@ public class SysUserService extends ServiceSupport<SysUser> {
 	private SysUserMapper sysUserMapper;
 
 	@Resource
-	private CreditProperties creditProperties;
+	private PaladinProperties paladinProperties;
 
 	/**
 	 * 创建一个账号
@@ -47,7 +47,7 @@ public class SysUserService extends ServiceSupport<SysUser> {
 			throw new BusinessException("账号不符合规则或者已经存在该账号");
 
 		String salt = SecureUtil.createSalte();
-		String password = creditProperties.getDefaultPassword();
+		String password = paladinProperties.getDefaultPassword();
 		password = SecureUtil.createPassword(password, salt);
 
 		SysUser user = new SysUser();
