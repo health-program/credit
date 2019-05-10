@@ -41,15 +41,15 @@
                                 <option value="">请选择审核状态</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
-                            <input name="bgTime" placeholder="请选择开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.bgTime}" >
-                        </div>
-                        <div class="col-md-2">
-                            <input name="endTime" placeholder="请选择结束时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.endTime}" >
-                        </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-md-12">
+                        <div class="col-md-3">
+                            <input name="bgTime" placeholder="请选择监察开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.bgTime}" >
+                        </div>
+                        <div class="col-md-3">
+                            <input name="endTime" placeholder="请选择监察结束时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.endTime}" >
+                        </div>
+                        <div class="col-md-6">
                             <div class="pull-right">
                                 <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+    
+    <section class="content-header">
+        <h1 th:text="|不良行为准则管理-${type == '1' ? '机构' : '从业人员'}|"></h1>
+        <ol class="breadcrumb">
+            <li><a  th:href="@{'/credit/org/rule/management/index/'+${type}}" ><i class="fa fa-table"></i>准则列表</a></li>
+            <li class="active">添加准则</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a th:href="@{'/credit/org/rule/management/index/'+${type}}" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="type" name="type" th:value="${type}">
+    <div th:include="/credit/footer" />
+    <script type="text/javascript">
+    var options = {
+        id: "model",
+        cancelBtn: false,
+        name: "添加准则",
+        url:"/credit/org/rule/management/save",
+        columns: [
+				{ title: "准则名称", name: "name", inputType: "TEXT" },
+				{ title: "分值", name: "score", inputType: "NUMBER" },
+				{ title: "备注", name: "remarks", inputType: "TEXTAREA" }
+				]
+    };
+    var type;
+    $(function() {
+        type = $("#type").val();
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+       	$.initComponment($(".content"));
+        
+        var model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            extraParam:{
+                'type':type
+            },
+            successCallback:function(){
+                $.successAlert("保存成功",function(){
+                    window.location = "/credit/org/rule/management/index/"+type;
+                });
+            }
+        });
+        model.setData(null);
+    });
+    </script>
+</body>
+
+</html>

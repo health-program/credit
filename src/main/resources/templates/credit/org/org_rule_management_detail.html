@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+    
+    <section class="content-header">
+        <h1 th:text="|不良行为准则管理-${type == '1' ? '机构' : '从业人员'}|"></h1>
+        <ol class="breadcrumb">
+            <li><a  th:href="@{'/credit/org/rule/management/index/'+${type}}" ><i class="fa fa-table"></i>准则列表</a></li>
+            <li class="active">准则详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a th:href="@{'/credit/org/rule/management/index/'+${type}}" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <input type="hidden" id="type" name="type" th:value="${type}">
+    <div th:include="/credit/footer" />
+    <script type="text/javascript">
+    var type;
+    $(function() {
+        type = $("#type").val();
+    	var options = {
+	        id: "model",
+	        name: "准则详情",
+	        url:"/credit/org/rule/management/update?id="+$("#id").val(),
+	        columns: [
+                { title: "准则名称", name: "name", inputType: "TEXT" },
+                { title: "分值", name: "score", inputType: "NUMBER" },
+                { title: "备注", name: "remarks", inputType: "TEXTAREA" }
+				]
+	    }
+    
+        $.getAjax("/credit/org/rule/management/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns,{
+                extraParam:{
+                    'type':type
+                }
+            });
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>
