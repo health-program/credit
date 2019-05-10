@@ -47,7 +47,9 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     public int saveRecords(SuperviseRecordDTO superviseRecordDTO) {
     int i = 0;
     int roleLevel = CreditUserSession.getCurrentUserSession().getRoleLevel();
-    Preconditions.checkState(roleLevel >= CreditUserSession.ROLE_LEVEL_AGENCY,"您没有操作该功能权限");
+    if ( ! (roleLevel >= CreditUserSession.ROLE_LEVEL_AGENCY)){
+        throw new BusinessException("您没有操作该功能权限");
+    }
     String itemId = superviseRecordDTO.getItemId();
     if (StringUtil.isEmpty(itemId)) {
       throw new BusinessException("找不到对应模板项目");

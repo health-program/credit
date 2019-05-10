@@ -90,8 +90,8 @@ public class OrgPersonnelAgencyController extends ControllerSupport {
 
     @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Object delete(@RequestParam String id,@RequestParam String account) {
-        return CommonResponse.getResponse(orgPersonnelAgencyService.removeAgencyPeopleById(id,account));
+    public Object delete(@RequestParam String id) {
+        return CommonResponse.getResponse(orgPersonnelAgencyService.removeAgencyPeopleById(id));
     }
 
     @PostMapping(value = "/export")
