@@ -56,6 +56,22 @@ public class SuperviseRecordVO {
 
 	private Integer status;
 
+	private Integer isWjs;
+
+	private Integer score;
+
+	private String scoreNo;
+
+	private String scoreAttachment;
+
+	private Date scoreTime;
+
+	private String punishNo;
+
+	private String punishAttachment;
+
+	private Date punishTime;
+
 	// 获取附件文件
 	public List<SysAttachment> getExplainAttachmentFile() {
 		if (explainAttachment != null && explainAttachment.length() != 0) {
@@ -63,6 +79,21 @@ public class SuperviseRecordVO {
 		}
 		return null;
 	}
+
+	public List<SysAttachment> getScoreAttachmentFile() {
+		if (scoreAttachment != null && scoreAttachment.length() != 0) {
+			return AttachmentContainer.getAttachments(scoreAttachment.split(","));
+		}
+		return null;
+	}
+
+	public List<SysAttachment> getPunishAttachmentFile() {
+		if (punishAttachment != null && punishAttachment.length() != 0) {
+			return AttachmentContainer.getAttachments(punishAttachment.split(","));
+		}
+		return null;
+	}
+
 
 	public String getId() {
 		return id;
@@ -198,5 +229,69 @@ public class SuperviseRecordVO {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+
+	public String getScoreNo() {
+		return scoreNo;
+	}
+
+	public void setScoreNo(String scoreNo) {
+		this.scoreNo = scoreNo;
+	}
+
+	public String getScoreAttachment() {
+		return scoreAttachment;
+	}
+
+	public void setScoreAttachment(String scoreAttachment) {
+		this.scoreAttachment = scoreAttachment;
+	}
+
+	public Date getScoreTime() {
+		return scoreTime;
+	}
+
+	public void setScoreTime(Date scoreTime) {
+		this.scoreTime = scoreTime;
+	}
+
+	public String getPunishNo() {
+		return punishNo;
+	}
+
+	public void setPunishNo(String punishNo) {
+		this.punishNo = punishNo;
+	}
+
+	public String getPunishAttachment() {
+		return punishAttachment;
+	}
+
+	public void setPunishAttachment(String punishAttachment) {
+		this.punishAttachment = punishAttachment;
+	}
+
+	public Date getPunishTime() {
+		return punishTime;
+	}
+
+	public void setPunishTime(Date punishTime) {
+		this.punishTime = punishTime;
+	}
+
+	public Integer getIsWjs() {
+		return isWjs;
+	}
+
+	public void setIsWjs(Integer isWjs) {
+		this.isWjs = isWjs;
 	}
 }

@@ -243,6 +243,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         record.setStatus(0);
         record.setId(UUIDUtil.createUUID());
         record.setResultGrade(0);
+        record.setIsWjs(1);
         i = save(record);
         return i;
       }

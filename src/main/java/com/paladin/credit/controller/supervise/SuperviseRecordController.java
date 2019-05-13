@@ -78,6 +78,13 @@ public class SuperviseRecordController extends ControllerSupport {
         return "/credit/supervise/supervise_record_detail";
     }
 
+    @GetMapping("/wjs/detail")
+    public String detailInput(@RequestParam String id,@RequestParam String targetType,Model model) {
+        model.addAttribute("id", id);
+        model.addAttribute("targetType", targetType);
+        return "/credit/supervise/supervise_record_wjs_detail";
+    }
+
     @PostMapping("/save")
     @ResponseBody
     public Object save(

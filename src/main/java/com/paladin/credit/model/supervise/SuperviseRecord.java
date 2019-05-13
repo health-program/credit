@@ -62,7 +62,7 @@ public class SuperviseRecord extends BaseModel {
 
 	private Date punishTime;
 
-	private Integer isWjs = 0;
+	private Integer isWjs = 2;
 
 	private String illustrate;
 
