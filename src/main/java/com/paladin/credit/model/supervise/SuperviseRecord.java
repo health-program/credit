@@ -3,6 +3,7 @@ package com.paladin.credit.model.supervise;
 import com.paladin.framework.common.BaseModel;
 
 import javax.persistence.Id;
+import java.util.Date;
 
 public class SuperviseRecord extends BaseModel {
 
@@ -46,6 +47,22 @@ public class SuperviseRecord extends BaseModel {
 
 	// 监察结果名称
 	private String explainAttachment;
+
+	private Integer score;
+
+	private String scoreNo;
+
+	private String scoreAttachment;
+
+	private Date scoreTime;
+
+	private String punishNo;
+
+	private String punishAttachment;
+
+	private Date punishTime;
+
+	private Integer isWjs = 0;
 
 	private String illustrate;
 
@@ -169,5 +186,69 @@ public class SuperviseRecord extends BaseModel {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+
+	public String getScoreNo() {
+		return scoreNo;
+	}
+
+	public void setScoreNo(String scoreNo) {
+		this.scoreNo = scoreNo;
+	}
+
+	public String getScoreAttachment() {
+		return scoreAttachment;
+	}
+
+	public void setScoreAttachment(String scoreAttachment) {
+		this.scoreAttachment = scoreAttachment;
+	}
+
+	public Date getScoreTime() {
+		return scoreTime;
+	}
+
+	public void setScoreTime(Date scoreTime) {
+		this.scoreTime = scoreTime;
+	}
+
+	public String getPunishNo() {
+		return punishNo;
+	}
+
+	public void setPunishNo(String punishNo) {
+		this.punishNo = punishNo;
+	}
+
+	public String getPunishAttachment() {
+		return punishAttachment;
+	}
+
+	public void setPunishAttachment(String punishAttachment) {
+		this.punishAttachment = punishAttachment;
+	}
+
+	public Date getPunishTime() {
+		return punishTime;
+	}
+
+	public void setPunishTime(Date punishTime) {
+		this.punishTime = punishTime;
+	}
+
+	public Integer getIsWjs() {
+		return isWjs;
+	}
+
+	public void setIsWjs(Integer isWjs) {
+		this.isWjs = isWjs;
 	}
 }

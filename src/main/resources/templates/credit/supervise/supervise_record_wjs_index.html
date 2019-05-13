@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="selection-grade-type,item-target-type,supervise-check-status,boolean-type" />
+<section class="content-header" th:switch="${type}">
+    <h1 th:case="'1'">医疗机构-卫监所</h1>
+    <h1 th:case="'2'">医疗人员-卫监所</h1>
+    <h1 th:case="'3'">医疗活动相关人员-卫监所</h1>
+</section>
+<section class="content">
+    <div class="box box-solid">
+        <div class="box-body">
+            <form id="searchbar" class="form-horizontal form-search">
+                <input type="hidden" id="targetType" name="targetType" th:value="${type}">
+                <div class="form-group">
+                    <div class="col-md-2" id="orgDiv">
+                        <input name="agencyName" class="form-control" placeholder="请输入机构名称" th:value="${query?.agencyName}" />
+                    </div>
+                    <div class="col-md-2" id="personnelDiv">
+                        <input name="personnelName" class="form-control" placeholder="请输入医疗人员姓名" th:value="${query?.personnelName}" />
+                    </div>
+                    <div class="col-md-2" id="relatedPersonnelDiv">
+                        <input name="relatedPersonnelName" class="form-control" placeholder="请输入医疗相关人员姓名" th:value="${query?.relatedPersonnelName}" />
+                    </div>
+                    <div class="col-md-2">
+                        <input name="item" class="form-control" placeholder="请输入项目名称" th:value="${query?.item}" />
+                    </div>
+                    <div class="col-md-2">
+                        <select name="resultGrade" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.resultGrade}" enumcode="selection-grade-type">
+                            <option value="">请选择监察结果等级</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="status" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.status}" enumcode="supervise-check-status">
+                            <option value="">请选择审核状态</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <input name="bgTime" placeholder="请选择监察开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.bgTime}" >
+                    </div>
+                    <div class="col-md-3">
+                        <input name="endTime" placeholder="请选择监察结束时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.endTime}" >
+                    </div>
+                    <div class="col-md-6">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+            <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+            <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+        </div>
+    </div>
+    <div class="box box-solid" style="margin-top:20px">
+        <div id="result" class="box-body">
+            <table id="dataGrid"></table>
+            <div id="toolbar">
+                <a onclick="add()" class="btn btn-default"><i class="fa fa-pencil"></i>分值录入</a>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/credit/footer" />
+<script type="text/javascript">
+    var table,type;
+    $(function() {
+        type = $("#targetType").val();
+        initDataGrid();
+        hideColumn();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+
+                    { title: "医疗机构名称", field: "agencyName" ,width: "150px" },
+                    { title: "医疗人员姓名", field: "personnelName" },
+                    { title: "医疗相关人员姓名", field: "relatedPersonnelName" },
+                    { title: "监察项目", field: "item" },
+                    { title: "监察结果等级", field: "resultGrade", enumcode: "selection-grade-type" },
+                    { title: "是否为卫监所", field: "isWjs", formatter:function (value, row, index) {
+                            if (value === 1) {
+                                return '是';
+                            } else {
+                                return  '否'
+                            }
+                    } },
+                    { title: "审核状态", field: "status", formatter:function (value, row, index) {
+                            if (value === 0) {
+                                return "<span  class='label label-warning'>未审核</span>"
+                            }else if (value === 1) {
+                                return "<span class='label label-success'>审核通过</span>"
+                            } else {
+                                return "<span  class='label label-danger'>审核不通过</span>"
+                            }
+                        } },
+                    {
+                        title: "操作",
+                        width: "150px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            },
+                            'click .check': function(e, value, row, index) {
+                                check(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            if (row.status === 0) {
+                                return '<button class="check btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-check-square-o"></i>审核</button>' +
+                                    '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                            } else {
+                                return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>'
+
+                            }
+
+                        }
+                    }
+                ]
+            ],
+            url: '/credit/supervise/record/find/page',
+            searchbar: '#searchbar',
+            exportUrl: '/credit/supervise/record/export',
+            showExport: true,
+            showColumns: true,
+            pagination: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+    function add() {
+        if (type == 1) {
+            window.location = '/credit/supervise/record/wjs/org/input';
+        }else if (type == 2) {
+            window.location = '/credit/supervise/record/wjs/people/input';
+        } else {
+            window.location = '/credit/supervise/record/wjs/rpeople/input';
+        }
+    }
+
+    function detail(row) {
+        window.location = '/credit/supervise/record/detail' + (row ? ('?id=' + row.id+"&targetType="+type+"&name="+name) : '');
+    }
+
+    function remove(row) {
+        if (row) {
+            layer.confirm('确定删除吗?', function() {
+                $.getAjax('/credit/supervise/record/delete?id=' + row.id, function() {
+                    $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+
+    function check(row) {
+        window.location = '/credit/supervise/record/check' + (row ? ('?id=' + row.id+"&targetType="+type+"&name="+name) : '');
+    }
+
+    function hideColumn() {
+        if (type == 1) {
+            table.hideColumn("personnelName");
+            table.hideColumn("relatedPersonnelName");
+            $("#relatedPersonnelDiv").hide();
+            $("#personnelDiv").hide();
+        }else if (type == 2) {
+            table.hideColumn("agencyName");
+            table.hideColumn("relatedPersonnelName");
+            $("#relatedPersonnelDiv").hide();
+            $("#orgDiv").hide();
+        } else {
+            table.hideColumn("agencyName");
+            table.hideColumn("personnelName");
+            $("#orgDiv").hide();
+            $("#personnelDiv").hide();
+        }
+    }
+</script>
+</body>
+
+</html>

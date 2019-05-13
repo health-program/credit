@@ -11,7 +11,7 @@ public class SuperviseRecordDTO {
 	private Integer targetType;
 
 	// 机构ID
-	private String[] agencyId;
+	private String agencyId;
 
 	// 人员ID
 	private String[] personnelId;
@@ -60,14 +60,6 @@ public class SuperviseRecordDTO {
 		this.personnels = personnels;
 	}
 
-	public String[] getAgencyId() {
-		return agencyId;
-	}
-
-	public void setAgencyId(String[] agencyId) {
-		this.agencyId = agencyId;
-	}
-
 	public String[] getPersonnelId() {
 		return personnelId;
 	}
@@ -90,5 +82,13 @@ public class SuperviseRecordDTO {
 
 	public void setItemId(String itemId) {
 		this.itemId = itemId;
+	}
+
+	public String getAgencyId() {
+		return agencyId;
+	}
+
+	public void setAgencyId(String agencyId) {
+		this.agencyId = agencyId;
 	}
 }

@@ -66,4 +66,10 @@ public class DailyOperationController extends ControllerSupport {
         return "/credit/daily/daily_operation_write";
     }
 
+    @GetMapping("/wjs/{targetType}")
+    public String wjsIndex( @PathVariable String targetType,Model model) {
+        model.addAttribute("type",targetType);
+        return "/credit/supervise/supervise_record_wjs_index";
+    }
+
 }

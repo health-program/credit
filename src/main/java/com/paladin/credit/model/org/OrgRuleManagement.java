@@ -8,6 +8,8 @@ public class OrgRuleManagement extends BaseModel {
 	public static final int  TYPE_AGENCY = 1;
 	public static final int  TYPE_PEOPLE = 2;
 
+	public static final String COLUMN_FIELD_TYPE = "type";
+
 	// 
 	@Id
 	private String id;

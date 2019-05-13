@@ -2,7 +2,6 @@ package com.paladin.credit.service.supervise;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.mapper.supervise.SuperviseRecordMapper;
@@ -12,6 +11,7 @@ import com.paladin.credit.model.template.TemplateItemSelection;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordPersonnelDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
+import com.paladin.credit.service.supervise.dto.SuperviseRecordWjsDTO;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordReportOrgVO;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO;
@@ -20,6 +20,7 @@ import com.paladin.credit.service.template.TemplateItemSelectionService;
 import com.paladin.credit.service.template.TemplateItemService;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
+import com.paladin.framework.core.copy.SimpleBeanCopier;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.uuid.UUIDUtil;
@@ -99,14 +100,13 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         record.setResultGrade(templateItemSelection.getSelectionGrade());
         record.setResultName(templateItemSelection.getSelectionName());
         if (itemTargetType == TemplateItem.ITEM_TARGET_TYPE_AGENCY ){
-            String[] agencyId = superviseRecordDTO.getAgencyId();
-            if ( agencyId != null && agencyId.length>0) {
-                for (String id :agencyId ) {
-                    record.setAgencyId(id);
-                    record.setId(UUIDUtil.createUUID());
-                    i += save(record);
-                }
+            String agencyId = superviseRecordDTO.getAgencyId();
+            if (Strings.isNullOrEmpty(agencyId)) {
+                throw new BusinessException("机构不能为空");
             }
+            record.setAgencyId(agencyId);
+            record.setId(UUIDUtil.createUUID());
+            i += save(record);
         }else if ( itemTargetType == TemplateItem.ITEM_TARGET_TYPE_PERSONNEL){
             String[] personnelId = superviseRecordDTO.getPersonnelId();
             if ( personnelId != null && personnelId.length > 0) {
@@ -193,7 +193,9 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         }
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
         int roleLevel = userSession.getRoleLevel();
-        Preconditions.checkState(roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN, "您没有操作该功能权限");
+        if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN) {
+            throw  new BusinessException("您没有操作该功能权限");
+        }
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 hh:mm a");
         String checkTime = now.format(formatter);
@@ -223,4 +225,25 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     }
 
 
+    /**
+     * 功能描述: <卫监所监察项目保存>
+     * @param superviseRecordWjsDTO
+     * @return  int
+     * @date  2019/5/13
+     */
+    public int saveWjsRecords(SuperviseRecordWjsDTO superviseRecordWjsDTO) {
+        int i;
+        CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+        int roleLevel = userSession.getRoleLevel();
+        if (roleLevel < CreditUserSession.ROLE_LEVEL_ADMIN) {
+          throw new BusinessException("您没有操作该功能权限");
+        }
+        SuperviseRecord record = new SuperviseRecord();
+        SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(superviseRecordWjsDTO,record);
+        record.setStatus(0);
+        record.setId(UUIDUtil.createUUID());
+        record.setResultGrade(0);
+        i = save(record);
+        return i;
+      }
 }

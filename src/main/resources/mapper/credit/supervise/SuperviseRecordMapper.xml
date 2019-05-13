@@ -121,6 +121,7 @@
         r.personnel_name AS relatedPersonnelName,
         r.item,
         r.status,
+        r.is_wjs AS isWjs,
         r.result_name AS resultName,
         r.result_grade AS resultGrade,
         a.`name` AS agencyName,

@@ -96,6 +96,12 @@ public class OrgRuleManagementController extends ControllerSupport {
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(orgRuleManagementService.removeByPrimaryKey(id));
     }
+
+	@RequestMapping(value = "/lower/{type}", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object lower(@PathVariable String type) {
+		return CommonResponse.getSuccessResponse(orgRuleManagementService.findRuleLowerByType(type));
+	}
     
     @PostMapping(value = "/export")
 	@ResponseBody

@@ -968,7 +968,7 @@ var _numberFieldBuilder = new _FieldBuilder("NUMBER", {
             }
             html += '</div>';
         } else {
-            html += '<input name="' + column.name + '" type="number"></input>\n';
+            html += '<input name="' + column.name + '" type="number" class="form-control" >\n';
         }
 
         html += '</div>\n';

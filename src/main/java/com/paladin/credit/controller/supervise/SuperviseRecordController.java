@@ -6,6 +6,7 @@ import com.paladin.credit.model.supervise.SuperviseRecord;
 import com.paladin.credit.service.supervise.SuperviseRecordService;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
+import com.paladin.credit.service.supervise.dto.SuperviseRecordWjsDTO;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordVO;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
@@ -88,6 +89,16 @@ public class SuperviseRecordController extends ControllerSupport {
         return CommonResponse.getResponse(superviseRecordService.saveRecords(superviseRecordDTO));
     }
 
+
+    @PostMapping("/wjs/save")
+    @ResponseBody
+    public Object wjsSave(@Valid SuperviseRecordWjsDTO superviseRecordWjsDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return validErrorHandler(bindingResult);
+        }
+        return CommonResponse.getResponse(superviseRecordService.saveWjsRecords(superviseRecordWjsDTO));
+    }
+
     @GetMapping("/report/org/index")
     public String reportOrgIndex() {
         return "/credit/supervise/supervise_record_report_org_index";
@@ -125,24 +136,28 @@ public class SuperviseRecordController extends ControllerSupport {
                 superviseRecordService.searchReportDetailByQuery(agencyId, grade));
     }
 
-/*    @PostMapping("/update")
-	@ResponseBody
-    public Object update(@Valid SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return validErrorHandler(bindingResult);
-		}
-		String id = superviseRecordDTO.getId();
-		SuperviseRecord model = beanCopy(superviseRecordDTO, superviseRecordService.get(id));
-		if (superviseRecordService.update(model) > 0) {
-			return CommonResponse.getSuccessResponse(beanCopy(superviseRecordService.get(id), new SuperviseRecordVO()));
-		}
-		return CommonResponse.getFailResponse();
-	}*/
-
     @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(superviseRecordService.removeByPrimaryKey(id));
+    }
+
+    @GetMapping("/wjs/org/input")
+    public String reportOrgInput(Model model) {
+        model.addAttribute("type", 1);
+        return "/credit/supervise/supervise_record_wjs_org_input";
+    }
+
+    @GetMapping("/wjs/people/input")
+    public String reportPeopleInput(Model model) {
+        model.addAttribute("type", 2);
+        return "/credit/supervise/supervise_record_wjs_people_input";
+    }
+
+    @GetMapping("/wjs/rpeople/input")
+    public String reportRpeopleInput(Model model) {
+        model.addAttribute("type", 3);
+        return "/credit/supervise/supervise_record_wjs_rpeople_input";
     }
 
     @PostMapping(value = "/export")
