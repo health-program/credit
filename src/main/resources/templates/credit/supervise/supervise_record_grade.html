@@ -51,11 +51,22 @@
         { title: "机构", name: "agencyId",  multiple: false,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" },
         { title: "扣分条例依据", name: "item", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/1"},
         { title: "扣除分值", name: "score", inputType: "NUMBER" },
-        { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFiles", maxFileCount: 5 },
+        { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 },
         { title: "行政处罚决定书编号",name:"punishNo",inputType: "TEXT" },
         { title: "处罚时间",name: "punishTime", inputType: "DATE"},
-        { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFiles", maxFileCount: 5 }
+        { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5 }
     ];
+    var personnelInSystemColumns = [
+        { title: "人员姓名", name: "personnelId",  multiple: false,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" },
+        { title: "记分时间",name: "scoreTime", inputType: "DATE"},
+        { title: "违法事实选择", name: "item", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/2"},
+        { title: "扣除分值", name: "score", inputType: "NUMBER" },
+        { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 },
+        { title: "行政处罚决定书编号",name:"punishNo",inputType: "TEXT" },
+        { title: "处罚时间",name: "punishTime", inputType: "DATE"},
+        { title: "违法事实照片上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5 }
+    ];
+
     var personnelOutSystemColumns = [
         { title: "人员姓名", name: "personnelName", inputType: "TEXT" },
         { title: "人员性别", name: "personnelSex", inputType: "RADIO", enum: "sex-type" },
@@ -65,10 +76,10 @@
         { title: "扣除分值", name: "score", inputType: "NUMBER" },
         { title: "决定书编号",name:"scoreNo",inputType: "TEXT" },
         { title: "记分时间",name: "scoreTime", inputType: "DATE"},
-        { title: "记分决定书上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFiles", maxFileCount: 5 },
+        { title: "记分决定书上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 },
         { title: "处罚文件编号",name:"punishNo",inputType: "TEXT" },
         { title: "处罚时间",name: "punishTime", inputType: "DATE"},
-        { title: "违法事实拍照上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFiles", maxFileCount: 5 }
+        { title: "违法事实拍照上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5 }
     ];
     $(function () {
         recordId = $("#id").val();
