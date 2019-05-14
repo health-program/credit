@@ -11,7 +11,6 @@ import com.paladin.credit.model.template.TemplateItemSelection;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordPersonnelDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
-import com.paladin.credit.service.supervise.dto.SuperviseRecordWjsDTO;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordReportOrgVO;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO;
@@ -97,8 +96,10 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
 
     public int getSaveResult(SuperviseRecord record, Integer itemTargetType, SuperviseRecordDTO superviseRecordDTO, TemplateItemSelection templateItemSelection) {
         int i = 0;
-        record.setResultGrade(templateItemSelection.getSelectionGrade());
-        record.setResultName(templateItemSelection.getSelectionName());
+        if (templateItemSelection != null) {
+            record.setResultGrade(templateItemSelection.getSelectionGrade());
+            record.setResultName(templateItemSelection.getSelectionName());
+        }
         if (itemTargetType == TemplateItem.ITEM_TARGET_TYPE_AGENCY ){
             String agencyId = superviseRecordDTO.getAgencyId();
             if (Strings.isNullOrEmpty(agencyId)) {
@@ -227,11 +228,11 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
 
     /**
      * 功能描述: <卫监所监察项目保存>
-     * @param superviseRecordWjsDTO
+     * @param superviseRecordDTO
      * @return  int
      * @date  2019/5/13
      */
-    public int saveWjsRecords(SuperviseRecordWjsDTO superviseRecordWjsDTO) {
+    public int saveWjsRecords(SuperviseRecordDTO superviseRecordDTO) {
         int i;
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
         int roleLevel = userSession.getRoleLevel();
@@ -239,12 +240,11 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
           throw new BusinessException("您没有操作该功能权限");
         }
         SuperviseRecord record = new SuperviseRecord();
-        SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(superviseRecordWjsDTO,record);
+        SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(superviseRecordDTO,record);
         record.setStatus(0);
-        record.setId(UUIDUtil.createUUID());
         record.setResultGrade(0);
         record.setIsWjs(1);
-        i = save(record);
+        i = getSaveResult(record,superviseRecordDTO.getTargetType(),superviseRecordDTO,null);
         return i;
       }
 }

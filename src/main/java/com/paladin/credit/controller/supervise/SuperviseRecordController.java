@@ -6,7 +6,6 @@ import com.paladin.credit.model.supervise.SuperviseRecord;
 import com.paladin.credit.service.supervise.SuperviseRecordService;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
-import com.paladin.credit.service.supervise.dto.SuperviseRecordWjsDTO;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordVO;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
@@ -99,11 +98,20 @@ public class SuperviseRecordController extends ControllerSupport {
 
     @PostMapping("/wjs/save")
     @ResponseBody
-    public Object wjsSave(@Valid SuperviseRecordWjsDTO superviseRecordWjsDTO, BindingResult bindingResult) {
+    public Object wjsSave(@Valid SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
         }
-        return CommonResponse.getResponse(superviseRecordService.saveWjsRecords(superviseRecordWjsDTO));
+        return CommonResponse.getResponse(superviseRecordService.saveWjsRecords(superviseRecordDTO));
+    }
+
+    @PostMapping("/wjs/json/save")
+    @ResponseBody
+    public Object wjsJsonSave(@Valid @RequestBody SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return validErrorHandler(bindingResult);
+        }
+        return CommonResponse.getResponse(superviseRecordService.saveWjsRecords(superviseRecordDTO));
     }
 
     @GetMapping("/report/org/index")

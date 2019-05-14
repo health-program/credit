@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="selection-grade-type,item-target-type,supervise-check-status,boolean-type,sex-type" />
+<section class="content-header" th:switch="${type}">
+    <h1 th:case="'1'">医疗机构-卫监所</h1>
+    <h1 th:case="'2'">医疗人员-卫监所</h1>
+    <h1 th:case="'3'">医疗活动相关人员-卫监所</h1>
+    <ol class="breadcrumb">
+        <li><a  th:href="@{'/credit/daily/operation/wjs/'+${type}}" ><i class="fa fa-table"></i>监察记录列表</a></li>
+        <li class="active">添加监察记录</li>
+    </ol>
+</section>
+<section class="content">
+    <div id="model_container" class="box box-widget" >
+        <div class="box-header no-border" >
+            <h3 class="box-title">添加监察记录</h3>
+            <div class="box-tools pull-right">
+                <a class="btn tonto-model-tool-view-btn" id="model_edit_btn" href="javascript:void(0)"><i class="fa fa-edit"></i>编辑</a>
+            </div>
+        </div>
+        <div id="model_edit" class="box-body" >
+            <form id="model_form" action="" method="post" class="form-horizontal false" style="padding-left:100px">
+                <div class="form-group">
+                    <label for="personnels" class="col-sm-2 control-label">人员：</label>
+                    <div name="personnels" class="col-sm-8"></div>
+                </div>
+                <div class="form-group">
+                    <label for="ruleName" class="col-sm-2 control-label">违法事实项选择：</label>
+                    <div class="col-sm-3">
+                        <select name="ruleName" class="form-control" id="scoreItem" onchange="changeScoreInput()">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="item" name="item">
+                    <label for="score" class="col-sm-2 control-label">扣除分值：</label>
+                    <div class="col-sm-3">
+                        <input name="score"  id="score" type="number" class="form-control" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="scoreNo" class="col-sm-2 control-label">决定书编号：</label>
+                    <div class="col-sm-3">
+                        <input name="scoreNo" placeholder="请输入决定书编号" type="text" class="form-control"></div>
+                    <label for="scoreTime" class="col-sm-2 control-label">记分时间：</label>
+                    <div class="col-sm-3">
+                        <input name="scoreTime" placeholder="请输入记分时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date"></div>
+                </div>
+                <div class="form-group">
+                    <label for="scoreAttachment" class="col-sm-2 control-label">记分决定书上传：</label>
+                    <div name="scoreAttachment" class="col-sm-8" >
+                        <input type="file" name="scoreAttachmentFiles" multiple>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="punishNo" class="col-sm-2 control-label">处罚文件编号：</label>
+                    <div class="col-sm-3">
+                        <input name="punishNo" placeholder="请输入处罚文件编号" type="text" class="form-control"></div>
+                    <label for="punishTime" class="col-sm-2 control-label">处罚时间：</label>
+                    <div class="col-sm-3">
+                        <input name="punishTime" placeholder="请输入处罚时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date"></div>
+                </div>
+                <div class="form-group">
+                    <label for="punishAttachment" class="col-sm-2 control-label">违法事实拍照上传：</label>
+                    <div name="punishAttachment" class="col-sm-8" >
+                        <input type="file" name="punishAttachmentFiles" multiple>
+                    </div>
+                </div>
+                <div class="form-group form-button-bar">
+                    <div class="col-sm-2 col-sm-offset-3">
+                        <button type="button" id="model_form_submit_btn" class="btn btn-primary btn-block">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<div class="col-sm-2 col-sm-offset-5 btn-back">
+    <a th:href="@{'/credit/daily/operation/wjs/'+${type}}" class="btn btn-primary btn-block">返回</a>
+</div>
+<input type="hidden" id="type" name="type" th:value="${type}">
+<div th:include="/credit/footer" />
+<script type="text/javascript">
+    var type;
+    var options = {
+        id: "model",
+        server: false,
+        cancelBtn: false,
+        name: "添加监察记录",
+        editFormClass: false,
+        columns: [
+            {        title: "人员",
+                name: "personnels",
+                inputType: "SUB-MODEL",
+                subViewField: "personnelName",
+                addSubModelBtnTitle: '添加人员',
+                subTitleViewHtmml: function(data) {
+                    var html = "<h3 style='display: inline-block;font-size: 18px;margin: 0;line-height: 1;'>" + data.personnelName + "</h3>";
+                    html += '<span class="text-muted text-center">' +
+                        '<span style="border-right:2px solid #f4f4f4;padding-right:20px;margin-left:20px;">' + $.getConstantEnumValue("sex-type", data.personnelSex) + '</span>' +
+                        '<span style="border-right:2px solid #f4f4f4;padding-right:20px;margin-left:20px;">' + hideIdentification(data.personnelIdentification) + '</span>' +
+                        '<span style="margin-left:20px;">' + omitString(data.personnelAddress, 30) + '</span>' +
+                        '</span>';
+                    return html;
+                },
+                subModelOptions: {
+                    headBorder: false,
+                    hearderBox: false,
+                    server: false,
+                    layerOption: {
+                        height: 400,
+                        width: 700
+                    },
+                    columns: [
+                        { title: "人员姓名", name: "personnelName", inputType: "TEXT" },
+                        { title: "人员性别", name: "personnelSex", inputType: "RADIO", enum: "sex-type" },
+                        { title: "人员身份证", name: "personnelIdentification", inputType: "TEXT" },
+                        { title: "人员地址", name: "personnelAddress", inputType: "TEXT" }
+                    ]
+                } },
+            { title: "违法事实项选择", name: "ruleName", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/2"},
+            { title: "扣除分值", name: "score", inputType: "NUMBER" },
+            { title: "决定书编号",name:"scoreNo",inputType: "TEXT" },
+            { title: "记分时间",name: "scoreTime", inputType: "DATE"},
+            { title: "记分决定书上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFiles", maxFileCount: 5 },
+            { title: "处罚文件编号",name:"punishNo",inputType: "TEXT" },
+            { title: "处罚时间",name: "punishTime", inputType: "DATE"},
+            { title: "违法事实拍照上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFiles", maxFileCount: 5 }
+        ]
+    };
+
+    $(function() {
+        type = $("#type").val();
+/*        var html = generateEditHtml(options);
+        console.log(html);*/
+        var model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            server: false,
+            submitClick: function() {
+                var param = model.getFormData();
+                param['targetType'] = type;
+                var punishFiles = param.punishAttachmentFiles;
+                var scoreFiles = param.scoreAttachmentFiles;
+                let punishFilesUploadSuccess = false;
+                let scoreFilesUploadSuccess = false;
+                if (scoreFiles && scoreFiles.length > 0) {
+                    ajaxUploadFile(scoreFiles, function (att) {
+                        let attachment = param.scoreAttachment;
+                        att.forEach(function (a) {
+                            attachment += a.id + ',';
+                        });
+                        param.scoreAttachment = attachment;
+                        scoreFilesUploadSuccess = true;
+                        if (punishFilesUploadSuccess && scoreFilesUploadSuccess) {
+                            $.postJsonAjax('/credit/supervise/record/wjs/json/save',param,function () {
+                                $.successAlert("录入成功",function () {
+                                    window.location = '/credit/daily/operation/wjs/json/save'+type
+                                })
+                            });
+                        }
+                    }, model.formSubmitBtn);
+                }else {
+                    scoreFilesUploadSuccess = true;
+                }
+
+                if (punishFiles && punishFiles.length > 0) {
+                    ajaxUploadFile(punishFiles, function (att) {
+                        let attachment = param.punishAttachment;
+                        att.forEach(function (a) {
+                            attachment += a.id + ',';
+                        });
+                        param.punishAttachment = attachment;
+                        punishFilesUploadSuccess = true;
+                        if (punishFilesUploadSuccess && scoreFilesUploadSuccess) {
+                            $.postJsonAjax('/credit/supervise/record/wjs/json/save',param,function () {
+                                $.successAlert("录入成功",function () {
+                                    window.location = '/credit/daily/operation/wjs/'+type
+                                })
+                            });
+                        }
+                    }, model.formSubmitBtn);
+
+                }else {
+                    punishFilesUploadSuccess = true;
+                }
+
+                if (punishFilesUploadSuccess && scoreFilesUploadSuccess) {
+                    $.postJsonAjax('/credit/supervise/record/wjs/json/save',param,function () {
+                        $.successAlert("录入成功",function () {
+                            window.location = '/credit/daily/operation/wjs/'+type
+                        })
+                    });
+                }
+            }
+        });
+        model.setData(null);
+        //$("#scoreItem").trigger("change")
+    });
+
+    function changeScoreInput() {
+        let $scoreItem = $("#scoreItem option:selected");
+        let item = $scoreItem.text();
+        let score = $scoreItem.val();
+        $("#score").val(score);
+        $("#item").val(item);
+    }
+</script>
+</body>
+
+</html>
