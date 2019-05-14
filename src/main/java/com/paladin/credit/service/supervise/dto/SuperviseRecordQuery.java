@@ -12,6 +12,8 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     private Integer targetType;
 
+    private Integer isWjs;
+
     private String agencyId;
 
     private Integer resultGrade;
@@ -110,5 +112,13 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getIsWjs() {
+        return isWjs;
+    }
+
+    public void setIsWjs(Integer isWjs) {
+        this.isWjs = isWjs;
     }
 }

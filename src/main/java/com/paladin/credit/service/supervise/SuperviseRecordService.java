@@ -247,4 +247,13 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         i = getSaveResult(record,superviseRecordDTO.getTargetType(),superviseRecordDTO,null);
         return i;
       }
+
+    public int grade(String id, Integer grade) {
+        CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+        int roleLevel = userSession.getRoleLevel();
+        if (roleLevel < CreditUserSession.ROLE_LEVEL_ADMIN) {
+            throw new BusinessException("您没有操作该功能权限");
+        }
+        return superviseRecordMapper.updateGradeById(id,grade);
+    }
 }

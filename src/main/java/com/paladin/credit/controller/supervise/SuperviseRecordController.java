@@ -28,11 +28,10 @@ public class SuperviseRecordController extends ControllerSupport {
     @Autowired
     private SuperviseRecordService superviseRecordService;
 
-    @GetMapping("/index/{type}/{name}")
+    @GetMapping("/index/{type}")
     @QueryInputMethod(queryClass = SuperviseRecordQuery.class)
-    public String index( @PathVariable String type, @PathVariable String name , Model model) {
+    public String index( @PathVariable String type, Model model) {
         model.addAttribute("type",type);
-        model.addAttribute("name",name);
         return "/credit/supervise/supervise_record_index";
     }
 
@@ -50,11 +49,17 @@ public class SuperviseRecordController extends ControllerSupport {
     }
 
     @GetMapping("/check")
-    public String check(@RequestParam String id,@RequestParam String targetType,@RequestParam String name, Model model) {
+    public String check(@RequestParam String id,@RequestParam String targetType, Model model) {
         model.addAttribute("id", id);
-        model.addAttribute("name", name);
         model.addAttribute("targetType", targetType);
         return "/credit/supervise/supervise_record_check";
+    }
+
+    @GetMapping("/wjs/check")
+    public String wjsCheck(@RequestParam String id,@RequestParam String targetType, Model model) {
+        model.addAttribute("id", id);
+        model.addAttribute("targetType", targetType);
+        return "/credit/supervise/supervise_record_wjs_check";
     }
 
     @PostMapping("/check/success")
@@ -68,6 +73,20 @@ public class SuperviseRecordController extends ControllerSupport {
     public Object checkFail(@RequestParam String id, @RequestParam String illustrate) {
         return CommonResponse.getResponse(superviseRecordService.check(id, illustrate, false));
     }
+
+    @GetMapping("/grade")
+    public String grade(@RequestParam String id,@RequestParam String targetType, Model model) {
+        model.addAttribute("id", id);
+        model.addAttribute("targetType", targetType);
+        return "/credit/supervise/supervise_record_grade";
+    }
+
+    @PostMapping("/grade/save")
+    @ResponseBody
+    public Object gradeSave(@RequestParam String id, Integer grade) {
+        return CommonResponse.getResponse(superviseRecordService.grade(id, grade));
+    }
+
 
     @GetMapping("/detail")
     public String detailInput(@RequestParam String id,@RequestParam String targetType,@RequestParam String name, Model model) {

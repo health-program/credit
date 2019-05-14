@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="selection-grade-type,item-target-type,sex-type"/>
+<section class="content-header">
+    <h1 th:text="|监察记录-${targetType == '1' ? '医疗机构' : (targetType == '2' ? '医疗人员' : '医疗活动相关人员')}|"></h1>
+    <ol class="breadcrumb">
+        <li><a  th:href="@{'/credit/daily/operation/' + ${targetType}}" ><i class="fa fa-list-alt"></i>项目列表</a></li>
+        <li><a  th:href="@{'/credit/supervise/record/index/' + ${targetType}}" ><i class="fa fa-list-alt"></i>监察记录列表</a></li>
+        <li class="active">评级</li>
+    </ol>
+</section>
+<section class="content">
+    <div id="gradeContent"></div>
+    <div id="gradeDiv">
+        <div id="grade_container" class="box box-widget">
+            <div class="box-header no-border">
+                <h3 class="box-title">请选择评级等级</h3>
+            </div>
+            <div id="grade_edit" class="box-body">
+                <form class="form-horizontal" style="padding-left:100px">
+                    <div class="form-group">
+                        <label for="resultGrade" class="col-sm-2 control-label">监察结果等级：</label>
+                        <div class="col-sm-8">
+                            <div name="resultGrade" id="resultGrade" class="tonto-radio-constant" enumcode="selection-grade-type"></div>
+                        </div>
+                    </div>
+                    <div class="form-group form-button-bar">
+                        <div class="col-sm-2 col-sm-offset-3">
+                            <button type="button" id="gradeBtn" onclick="gradeSave()" class="btn btn-primary btn-block">保存
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="col-sm-2 col-sm-offset-5 btn-back">
+    <a th:href="@{'/credit/supervise/record/index/' + ${targetType}}" class="btn btn-primary btn-block">返回</a>
+</div>
+<input type="hidden" id="id" th:value="${id}"/>
+<input type="hidden" id="targetType" th:value="${targetType}"/>
+<div th:include="/credit/footer" />
+<script type="text/javascript">
+    var recordId,type,name;
+    var agencyColumns = [
+        { title: "机构", name: "agencyId",  multiple: false,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" },
+        { title: "扣分条例依据", name: "item", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/1"},
+        { title: "扣除分值", name: "score", inputType: "NUMBER" },
+        { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFiles", maxFileCount: 5 },
+        { title: "行政处罚决定书编号",name:"punishNo",inputType: "TEXT" },
+        { title: "处罚时间",name: "punishTime", inputType: "DATE"},
+        { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFiles", maxFileCount: 5 }
+    ];
+    var personnelOutSystemColumns = [
+        { title: "人员姓名", name: "personnelName", inputType: "TEXT" },
+        { title: "人员性别", name: "personnelSex", inputType: "RADIO", enum: "sex-type" },
+        { title: "人员身份证", name: "personnelIdentification", inputType: "TEXT" },
+        { title: "人员地址", name: "personnelAddress", inputType: "TEXT" },
+        { title: "违法事实项选择", name: "item", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/2"},
+        { title: "扣除分值", name: "score", inputType: "NUMBER" },
+        { title: "决定书编号",name:"scoreNo",inputType: "TEXT" },
+        { title: "记分时间",name: "scoreTime", inputType: "DATE"},
+        { title: "记分决定书上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFiles", maxFileCount: 5 },
+        { title: "处罚文件编号",name:"punishNo",inputType: "TEXT" },
+        { title: "处罚时间",name: "punishTime", inputType: "DATE"},
+        { title: "违法事实拍照上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFiles", maxFileCount: 5 }
+    ];
+    $(function () {
+        recordId = $("#id").val();
+        type = $("#targetType").val();
+        name = $("#name").val();
+        var columns = type == 1 ? agencyColumns : (type == 2 ? personnelInSystemColumns : personnelOutSystemColumns);
+        var options = {
+            id: "model",
+            name: "监察详情",
+            columns: columns
+        };
+        var html = generateViewHtml(options);
+        $("#gradeContent").html(html);
+        $.initComponment($("#gradeContent"));
+        $.getAjax("/credit/supervise/record/get?id=" + recordId, function (data) {
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+
+    function gradeSave() {
+        let resultGrade = $("input:radio[name='resultGrade']:checked").val();
+        if (resultGrade == 0) {
+            $.errorMessage("请选择正确的评价等级")
+        }
+        $.postAjax("/credit/supervise/record/grade/save", {
+            id: recordId,
+            grade: resultGrade
+        }, function() {
+            $.successAlert("评价成功", function() {
+                window.location = '/credit/supervise/record/index/'+type;
+            });
+        });
+    }
+</script>
+</body>
+
+</html>

@@ -5,10 +5,8 @@
 
 <body>
 <tt:constant enumcode="selection-grade-type,item-target-type,supervise-check-status,boolean-type,sex-type" />
-<section class="content-header" th:switch="${type}">
-    <h1 th:case="'1'">医疗机构-卫监所</h1>
-    <h1 th:case="'2'">医疗人员-卫监所</h1>
-    <h1 th:case="'3'">医疗活动相关人员-卫监所</h1>
+<section class="content-header">
+    <h1 th:text="|${type == '1' ? '医疗机构' : (type == '2' ? '医疗人员' : '医疗活动相关人员')}-卫监所|"></h1>
     <ol class="breadcrumb">
         <li><a  th:href="@{'/credit/daily/operation/wjs/'+${type}}" ><i class="fa fa-table"></i>监察记录列表</a></li>
         <li class="active">添加监察记录</li>

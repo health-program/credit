@@ -158,8 +158,14 @@
         <if test="query.status != null">
             AND r.status = #{query.status}
         </if>
+        <if test="query.isWjs != null">
+            AND  r.is_wjs = #{query.isWjs}
+        </if>
     </select>
     <update id="updateRecordById">
         UPDATE supervise_record SET  status = #{status} , illustrate = #{illustrate}  WHERE  status = 0 AND  id = #{id}
+    </update>
+    <update id="updateGradeById">
+         UPDATE supervise_record SET  result_grade = #{grade} ,status = 1  WHERE  status = 0 AND  id = #{id} AND is_wjs = 1
     </update>
 </mapper>

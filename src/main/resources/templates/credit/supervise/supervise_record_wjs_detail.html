@@ -48,7 +48,9 @@
                 { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFiles", maxFileCount: 5 , dependency:["isWjs","1"]},
                 { title: "行政处罚决定书编号",name:"punishNo",inputType: "TEXT", dependency:["isWjs","1"] },
                 { title: "处罚时间",name: "punishTime", inputType: "DATE", dependency:["isWjs","1"]},
-                { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFiles", maxFileCount: 5, dependency:["isWjs","1"] }
+                { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFiles", maxFileCount: 5, dependency:["isWjs","1"] },
+                { title: "审核意见", name: "illustrate", colspan:2, inputType: "TEXT" },
+                { title: "审核状态", name: "status",colspan:2, inputType: "SELECT", enum: "supervise-check-status" }
             ]
         };
 

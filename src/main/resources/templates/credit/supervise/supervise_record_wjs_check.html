@@ -6,10 +6,9 @@
 <body>
 <tt:constant enumcode="selection-grade-type,item-target-type,sex-type"/>
 <section class="content-header">
-    <h1 th:text="|监察记录-${targetType == '1' ? '医疗机构' : (targetType == '2' ? '医疗人员' : '医疗活动相关人员')}|"></h1>
+    <h1 th:text="|${targetType == '1' ? '医疗机构' : (targetType == '2' ? '医疗人员' : '医疗活动相关人员')}-卫监所|"></h1>
     <ol class="breadcrumb">
-        <li><a  th:href="@{'/credit/daily/operation/' + ${targetType}}" ><i class="fa fa-list-alt"></i>项目列表</a></li>
-        <li><a  th:href="@{'/credit/supervise/record/index/' + ${targetType}}" ><i class="fa fa-list-alt"></i>监察记录列表</a></li>
+        <li><a  th:href="@{'/credit/daily/operation/wjs/'+${targetType}}" ><i class="fa fa-table"></i>监察记录列表</a></li>
         <li class="active">审核</li>
     </ol>
 </section>
@@ -103,7 +102,7 @@
     </div>
 </section>
 <div class="col-sm-2 col-sm-offset-5 btn-back">
-    <a th:href="@{'/credit/supervise/record/index/' + ${targetType}}" class="btn btn-primary btn-block">返回</a>
+    <a th:href="@{'/credit/daily/operation/wjs/' + ${targetType}}" class="btn btn-primary btn-block">返回</a>
 </div>
 <input type="hidden" id="id" th:value="${id}"/>
 <input type="hidden" id="targetType" th:value="${targetType}"/>
@@ -138,36 +137,36 @@
         });
     });
 
-        function checkSuccess() {
-            $.postAjax("/credit/supervise/record/check/success", {
-                id: recordId,
-                illustrate: $("input[name='illustrate']").val()
-            }, function(data) {
-                $.successAlert("审核成功", function() {
-                    window.location = '/credit/supervise/record/index/'+type;
-                });
+    function checkSuccess() {
+        $.postAjax("/credit/supervise/record/check/success", {
+            id: recordId,
+            illustrate: $("input[name='illustrate']").val()
+        }, function(data) {
+            $.successAlert("审核成功", function() {
+                window.location = '/credit/daily/operation/wjs/'+type;
             });
-        }
+        });
+    }
 
-        function checkFail() {
-            var ill = $("#illustrate").val();
-            if (!ill) {
-                $.errorMessage("请填写审核意见");
-                return;
-            }
-            if (ill.length > 20) {
-                $.errorMessage("审核意见不应大于30个字符");
-                return;
-            }
-            $.postAjax("/credit/supervise/record/check/fail", {
-                id: recordId,
-                illustrate: ill
-            }, function(data) {
-                $.successAlert("审核成功", function() {
-                    window.location = '/credit/supervise/record/index/'+type;
-                });
-            });
+    function checkFail() {
+        var ill = $("#illustrate").val();
+        if (!ill) {
+            $.errorMessage("请填写审核意见");
+            return;
         }
+        if (ill.length > 20) {
+            $.errorMessage("审核意见不应大于30个字符");
+            return;
+        }
+        $.postAjax("/credit/supervise/record/check/fail", {
+            id: recordId,
+            illustrate: ill
+        }, function(data) {
+            $.successAlert("审核成功", function() {
+                window.location = '/credit/daily/operation/wjs/'+type;
+            });
+        });
+    }
 </script>
 </body>
 

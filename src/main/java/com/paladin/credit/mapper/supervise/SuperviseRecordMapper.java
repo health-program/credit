@@ -22,4 +22,6 @@ public interface SuperviseRecordMapper extends CustomMapper<SuperviseRecord> {
     List<SuperviseRecordSimpleVO> searchSuperviseRecordsPageByQuery(@Param("query") SuperviseRecordQuery query);
 
     int updateRecordById(@Param("id") String id, @Param("illustrate") String newIllustrate, @Param("status") int i);
+
+    int updateGradeById(@Param("id") String id, @Param("grade") Integer grade);
 }
