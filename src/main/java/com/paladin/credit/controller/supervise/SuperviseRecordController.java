@@ -1,6 +1,8 @@
 package com.paladin.credit.controller.supervise;
 
 import com.paladin.common.core.export.ExportUtil;
+import com.paladin.common.model.syst.SysAttachment;
+import com.paladin.common.service.syst.SysAttachmentService;
 import com.paladin.credit.controller.supervise.dto.SuperviseRecordExportCondition;
 import com.paladin.credit.model.supervise.SuperviseRecord;
 import com.paladin.credit.service.supervise.SuperviseRecordService;
@@ -17,9 +19,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/credit/supervise/record")
@@ -27,6 +31,9 @@ public class SuperviseRecordController extends ControllerSupport {
 
     @Autowired
     private SuperviseRecordService superviseRecordService;
+
+    @Autowired
+    private SysAttachmentService sysAttachmentService;
 
     @GetMapping("/index/{type}")
     @QueryInputMethod(queryClass = SuperviseRecordQuery.class)
@@ -117,10 +124,20 @@ public class SuperviseRecordController extends ControllerSupport {
 
     @PostMapping("/wjs/save")
     @ResponseBody
-    public Object wjsSave(@Valid SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
+    public Object wjsSave(@Valid SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult,@RequestParam(required = false) MultipartFile[] scoreAttachmentFiles,@RequestParam(required = false) MultipartFile[] punishAttachmentFiles) {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
         }
+        List<SysAttachment> scoreAttachments = sysAttachmentService.checkOrCreateAttachment(superviseRecordDTO.getScoreAttachment(), scoreAttachmentFiles);
+        if (scoreAttachments != null && scoreAttachments.size() > 4) {
+            return CommonResponse.getErrorResponse("记分附件数量不能超过4张");
+        }
+        List<SysAttachment> punishAttachments = sysAttachmentService.checkOrCreateAttachment(superviseRecordDTO.getPunishAttachment(), punishAttachmentFiles);
+        if (punishAttachments != null && punishAttachments.size() > 4) {
+            return CommonResponse.getErrorResponse("处罚附件数量不能超过4张");
+        }
+        superviseRecordDTO.setScoreAttachment(sysAttachmentService.splicingAttachmentId(scoreAttachments));
+        superviseRecordDTO.setPunishAttachment(sysAttachmentService.splicingAttachmentId(punishAttachments));
         return CommonResponse.getResponse(superviseRecordService.saveWjsRecords(superviseRecordDTO));
     }
 

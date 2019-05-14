@@ -88,6 +88,7 @@
                     { title: "医疗相关人员姓名", field: "relatedPersonnelName" },
                     { title: "监察项目", field: "item" },
                     { title: "监察结果等级", field: "resultGrade", enumcode: "selection-grade-type" },
+                    { title: "是否为卫监所", field: "isWjs",enumcode: "boolean-type" },
                     { title: "审核状态", field: "status", formatter:function (value, row, index) {
                             if (value === 0) {
                                 return "<span  class='label label-warning'>未审核</span>"
