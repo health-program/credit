@@ -43,6 +43,7 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
     private OrgRoleService orgRoleService;
 
 
+
     /**
      * 功能描述: <新增机构用户>
      * @param dto
@@ -120,7 +121,7 @@ public class OrgPersonnelAgencyService extends ServiceSupport<OrgPersonnelAgency
         return i;
     }
 
-    private String checkRole(String roleIdString) {
+    public String checkRole(String roleIdString) {
         if (Strings.isNullOrEmpty(roleIdString)) {
             throw new BusinessException("角色不能为空");
         }

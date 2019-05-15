@@ -68,7 +68,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     record.setExplainText(superviseRecordDTO.getExplain());
     record.setExplainAttachment(superviseRecordDTO.getExplainAttachment());
     record.setTargetType(itemTargetType);
-    if (roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY){
+    if (roleLevel == CreditUserSession.ROLE_LEVEL_SUPERVISE){
         record.setStatus(0);
     } else if (roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN ) {
         record.setStatus(1);

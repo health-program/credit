@@ -30,6 +30,10 @@ public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 	@Autowired
 	private PermissionContainer permissionContainer;
 
+
+	@Autowired
+	private OrgPersonnelAgencyService orgPersonnelAgencyService;
+
 	@Transactional
 	public boolean saveAdmin(OrgSuperviserDTO orgSuperviserDTO) {
 		String id = orgSuperviserDTO.getId();
@@ -44,7 +48,7 @@ public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 
 		String role = checkWjsScope(orgSuperviserDTO);
 		String scope = checkScope(orgSuperviserDTO.getSuperviseScope());
-		String roleIds = checkRole(role);
+		String roleIds = orgPersonnelAgencyService.checkRole(role);
 		String account = orgSuperviserDTO.getAccount();
 
 		if (sysUserService.validateAccount(account)) {
@@ -141,7 +145,7 @@ public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 			throw new BusinessException("角色不能为空");
 		}
 
-		if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN) {
+		if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE) {
 			throw new BusinessException("角色等级不能低于监督人员");
 		}
 
@@ -178,7 +182,7 @@ public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 			containsWjsRole = ArrayUtils.contains(roles, "3e02b94b39f7417fad7df7b729032ce1");
 		}
 		if ( containsWjsScope && !containsWjsRole){
-			role = role + ",3e02b94b39f7417fad7df7b729032ce1";
+			role = "3e02b94b39f7417fad7df7b729032ce1";
 		}
 		return  role;
 	}

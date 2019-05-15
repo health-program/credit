@@ -22,7 +22,7 @@
     <script type="text/javascript">
     var options = {
         id: "item_model",
-        name: "添加项目",
+        name: "项目详情",
         server: false,
         editFormClass: false,
         columns: [
@@ -59,7 +59,7 @@
         ]
     }
 
-    var itemModel;
+    var itemModel,itemId;
 
     function save(confirm) {
         var data = itemModel.getFormData();
@@ -67,9 +67,7 @@
             $.errorMessage("请输入并保存项目内容！");
             return;
         }
-
         var selections = data.selections;
-
         if (selections && selections.length > 0) {
             var isOne = selections.length == 1;
 
@@ -81,7 +79,7 @@
                     return;
                 }
             }
-
+            data['id'] = itemId;
             $.postJsonAjax("/credit/template/item/update", data, function(result) {
                 $.successAlert("保存成功", function() {
                     itemModel.toView();

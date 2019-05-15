@@ -33,12 +33,14 @@ public class PermissionController extends ControllerSupport {
 
 		List<Map<String, Object>> result = new ArrayList<>(roles.size());
 		if (userSession.isAdminRoleLevel()) {
-			for (Role role : roles) {
-				HashMap<String, Object> map = new HashMap<>();
-				map.put("id", role.getId());
-				map.put("name", role.getRoleName());
-				result.add(map);
-			}
+			result = roles.stream()
+					.filter(role -> role.getRoleLevel() >= CreditUserSession.ROLE_LEVEL_SUPERVISE )
+					.collect(ArrayList::new, (lists, role) -> {
+						HashMap<String, Object> map = new HashMap<>(2);
+						map.put("id", role.getId());
+						map.put("name", role.getRoleName());
+						lists.add(map);
+					}, List::addAll);
 		} else if (userSession.getRoleLevel() == CreditUserSession.ROLE_LEVEL_AGENCY) {
 			int level = userSession.getRoleLevel();
 			for (Role role : roles) {

@@ -12,6 +12,7 @@
             <li class="active">监察记录列表</li>
         </ol>
     </section>
+    <input type="hidden" id="roleLevel" name="roleLevel" th:value="${roleLevel}">
     <section class="content">
         <div class="box box-solid">
             <div class="box-body">
@@ -72,10 +73,11 @@
     </section>
     <div th:include="/credit/footer" />
     <script type="text/javascript">
-    var table,type,name;
+    var table,type,name,roleLevel;
     $(function() {
         type = $("#targetType").val();
         name = $("#name").val();
+        roleLevel = $("#roleLevel").val();
         initDataGrid();
         hideColumn();
     });
@@ -120,17 +122,26 @@
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
-                            if (row.status === 0 && row.isWjs === 2) {
-                                return '<button class="check btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-check-square-o"></i>审核</button>' +
-                                    '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
-                            }else if (row.status === 0 && row.isWjs === 1){
-                                return '<button class="grade btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-file-text-o"></i>评级</button>' +
-                                    '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
-                            } else {
-                                return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>'
+                            if (roleLevel >= 5) {
+                                if (row.status === 0 && row.isWjs === 2) {
+                                    return '<button class="check btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-check-square-o"></i>审核</button>' +
+                                        '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                                }else if (row.status === 0 && row.isWjs === 1){
+                                    return '<button class="grade btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-file-text-o"></i>评级</button>' +
+                                        '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                                } else {
+                                    return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>'
 
+                                }
+                            }else {
+                                if (row.status === 0) {
+                                    return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                        '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                                } else {
+                                    return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>'
+
+                                }
                             }
-
                         }
                     }
                 ]

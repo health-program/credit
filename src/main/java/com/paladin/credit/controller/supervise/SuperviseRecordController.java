@@ -4,6 +4,7 @@ import com.paladin.common.core.export.ExportUtil;
 import com.paladin.common.model.syst.SysAttachment;
 import com.paladin.common.service.syst.SysAttachmentService;
 import com.paladin.credit.controller.supervise.dto.SuperviseRecordExportCondition;
+import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.model.supervise.SuperviseRecord;
 import com.paladin.credit.service.supervise.SuperviseRecordService;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
@@ -38,7 +39,9 @@ public class SuperviseRecordController extends ControllerSupport {
     @GetMapping("/index/{type}")
     @QueryInputMethod(queryClass = SuperviseRecordQuery.class)
     public String index( @PathVariable String type, Model model) {
+        CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
         model.addAttribute("type",type);
+        model.addAttribute("roleLevel",userSession.getRoleLevel());
         return "/credit/supervise/supervise_record_index";
     }
 
