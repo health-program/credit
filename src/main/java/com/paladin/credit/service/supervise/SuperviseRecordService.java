@@ -236,7 +236,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         int i;
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
         int roleLevel = userSession.getRoleLevel();
-        if (roleLevel < CreditUserSession.ROLE_LEVEL_ADMIN) {
+        if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN) {
           throw new BusinessException("您没有操作该功能权限");
         }
         SuperviseRecord record = new SuperviseRecord();
