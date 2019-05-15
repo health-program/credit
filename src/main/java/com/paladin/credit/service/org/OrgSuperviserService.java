@@ -46,9 +46,8 @@ public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 			throw new BusinessException("没有权限新增机构管理账号");
 		}
 
-		String role = checkWjsScope(orgSuperviserDTO);
 		String scope = checkScope(orgSuperviserDTO.getSuperviseScope());
-		String roleIds = orgPersonnelAgencyService.checkRole(role);
+		String roleIds = orgPersonnelAgencyService.checkRole(orgSuperviserDTO.getRole());
 		String account = orgSuperviserDTO.getAccount();
 
 		if (sysUserService.validateAccount(account)) {
@@ -86,7 +85,7 @@ public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 		}
 
 		String scope = checkScope(orgSuperviserDTO.getSuperviseScope());
-		String roleIds = checkRole(orgSuperviserDTO.getRole());
+		String roleIds = orgPersonnelAgencyService.checkRole(orgSuperviserDTO.getRole());
 		String account = orgSuperviserDTO.getAccount();
 		String originAccount = superviser.getAccount();
 
