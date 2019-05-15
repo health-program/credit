@@ -155,7 +155,7 @@
                         if (punishFilesUploadSuccess && scoreFilesUploadSuccess) {
                             $.postJsonAjax('/credit/supervise/record/wjs/json/save',param,function () {
                                 $.successAlert("录入成功",function () {
-                                    window.location = '/credit/daily/operation/wjs/json/save'+type
+                                    window.location = '/credit/daily/operation/wjs/'+type
                                 })
                             });
                         }
