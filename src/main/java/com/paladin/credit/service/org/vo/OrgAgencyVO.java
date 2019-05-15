@@ -1,6 +1,10 @@
 package com.paladin.credit.service.org.vo;
 
+import com.paladin.common.core.AttachmentContainer;
+import com.paladin.common.model.syst.SysAttachment;
+
 import java.util.Date;
+import java.util.List;
 
 public class OrgAgencyVO {
 
@@ -44,6 +48,14 @@ public class OrgAgencyVO {
 	private String personnelInformation;
 
 	private  String agencyCoordinate;
+
+	// 获取附件文件
+	public List<SysAttachment> getLicenseFile() {
+		if (license != null && license.length() != 0) {
+			return AttachmentContainer.getAttachments(license.split(","));
+		}
+		return null;
+	}
 
 
 	public String getId() {

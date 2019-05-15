@@ -1,15 +1,14 @@
 package com.paladin.framework.common;
 
-import java.util.Date;
-
 import javax.persistence.OrderBy;
+import java.util.Date;
 
 public abstract class BaseModel {
 	
 	public final static String COLUMN_FIELD_CREATE_TIME = "createTime";
 	
 	public final static int BOOLEAN_YES = 1;
-	public final static int BOOLEAN_NO = 0;
+	public final static int BOOLEAN_NO = 2;
 
 
 	@OrderBy("DESC")

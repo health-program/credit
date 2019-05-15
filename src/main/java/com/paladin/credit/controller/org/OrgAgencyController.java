@@ -1,6 +1,8 @@
 package com.paladin.credit.controller.org;
 
 import com.paladin.common.core.export.ExportUtil;
+import com.paladin.common.model.syst.SysAttachment;
+import com.paladin.common.service.syst.SysAttachmentService;
 import com.paladin.credit.controller.org.dto.OrgAgencyExportCondition;
 import com.paladin.credit.core.CreditAgencyContainer;
 import com.paladin.credit.model.org.OrgAgency;
@@ -19,9 +21,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/credit/org/agency")
@@ -31,6 +35,9 @@ public class OrgAgencyController extends ControllerSupport {
 	private OrgAgencyService orgAgencyService;
 	@Autowired
 	private CreditAgencyContainer creditAgencyContainer;
+
+	@Autowired
+	private SysAttachmentService sysAttachmentService;
 
 	@GetMapping("/index")
 	@QueryInputMethod(queryClass = OrgAgencyQuery.class)
@@ -70,10 +77,15 @@ public class OrgAgencyController extends ControllerSupport {
 
 	@PostMapping("/save")
 	@ResponseBody
-	public Object save(@Valid OrgAgencyDTO orgAgencyDTO, BindingResult bindingResult) {
+	public Object save(@Valid OrgAgencyDTO orgAgencyDTO, @RequestParam(required = false) MultipartFile[] licenseFile ,BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
+		List<SysAttachment> license = sysAttachmentService.checkOrCreateAttachment(orgAgencyDTO.getLicense(), licenseFile);
+		if (license != null && license.size() > 4) {
+			return CommonResponse.getErrorResponse("执业许可证照片数量不能超过4张");
+		}
+		orgAgencyDTO.setLicense(sysAttachmentService.splicingAttachmentId(license));
 		OrgAgency model = beanCopy(orgAgencyDTO, new OrgAgency());
 		String id = UUIDUtil.createUUID();
 		model.setId(id);

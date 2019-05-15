@@ -1,5 +1,6 @@
 package com.paladin.credit.service.org;
 
+import com.google.common.base.Strings;
 import com.paladin.common.core.permission.PermissionContainer;
 import com.paladin.common.core.permission.Role;
 import com.paladin.common.model.syst.SysUser;
@@ -16,6 +17,7 @@ import com.paladin.framework.utils.uuid.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.ArrayUtils;
 
 import java.util.List;
 
@@ -40,8 +42,9 @@ public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 			throw new BusinessException("没有权限新增机构管理账号");
 		}
 
+		String role = checkWjsScope(orgSuperviserDTO);
 		String scope = checkScope(orgSuperviserDTO.getSuperviseScope());
-		String roleIds = checkRole(orgSuperviserDTO.getRole());
+		String roleIds = checkRole(role);
 		String account = orgSuperviserDTO.getAccount();
 
 		if (sysUserService.validateAccount(account)) {
@@ -159,5 +162,24 @@ public class OrgSuperviserService extends ServiceSupport<OrgSuperviser> {
 		}
 
 		return result;
+	}
+
+	private String checkWjsScope(OrgSuperviserDTO orgSuperviserDTO) {
+		String role = orgSuperviserDTO.getRole();
+		String superviseScope = orgSuperviserDTO.getSuperviseScope();
+		boolean  containsWjsScope = false;
+		boolean  containsWjsRole = false;
+		if (!Strings.isNullOrEmpty(superviseScope)) {
+			String[] scopes = superviseScope.split(",");
+			containsWjsScope = ArrayUtils.contains(scopes, "6");
+		}
+		if (!Strings.isNullOrEmpty(role)) {
+			String[] roles = role.split(",");
+			containsWjsRole = ArrayUtils.contains(roles, "3e02b94b39f7417fad7df7b729032ce1");
+		}
+		if ( containsWjsScope && !containsWjsRole){
+			role = role + ",3e02b94b39f7417fad7df7b729032ce1";
+		}
+		return  role;
 	}
 }

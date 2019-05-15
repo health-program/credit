@@ -27,13 +27,13 @@
                 <div class="form-group">
                     <label for="personnelId" class="col-sm-2 control-label">人员姓名：</label>
                     <div class="col-sm-3">
-                        <select name="personnelId" class="form-control">
-                            <option value="">请选择</option>
+                        <select name="personnelId" class="form-control" multiple="multiple">
                         </select>
                     </div>
                     <label for="scoreTime" class="col-sm-2 control-label">记分时间：</label>
                     <div class="col-sm-3">
-                        <input name="scoreTime" placeholder="请输入记分时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date"></div>
+                        <input name="scoreTime" placeholder="请输入记分时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="item" class="col-sm-2 control-label">违法事实选择：</label>
@@ -90,7 +90,7 @@
         name: "添加监察记录",
         url:"/credit/supervise/record/save",
         columns: [
-            { title: "人员姓名", name: "personnelId",  multiple: false,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" },
+            { title: "人员姓名", name: "personnelId",  multiple: true,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" },
             { title: "记分时间",name: "scoreTime", inputType: "DATE"},
             { title: "违法事实选择", name: "ruleName", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/2"},
             { title: "扣除分值", name: "score", inputType: "NUMBER" },
