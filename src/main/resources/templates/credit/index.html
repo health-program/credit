@@ -190,7 +190,7 @@
                 } else if (confirmNewPassword != newPassword) {
                     layer.msg('两次新密码输入不一致！');
                 } else {
-                    $.post("/update/password", {
+                    $.post("/credit/update/password", {
                         'oldPassword': oldPassword,
                         'newPassword': newPassword
                     }, function(response) {
