@@ -112,7 +112,8 @@
                 </form>
             </div>
             <div id="model_edit" class="box-body" style="display: none">
-                <form id="model_form" action="/credit/org/agency/update?id=043c524895d44e0d9ba33e81b543c7b6" method="post" class="form-horizontal null" style="padding-left:100px">
+                <form id="model_form" action="/credit/org/agency/update" method="post" class="form-horizontal null" style="padding-left:100px">
+                    <input type="hidden" id="id" name="id" th:value="${id}" />
                     <div class="form-group">
                         <label for="name" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>机构名称：</label>
                         <div class="col-sm-3">
@@ -193,7 +194,6 @@
     <div class="col-sm-2 col-sm-offset-5 btn-back">
         <a th:href="${callBackUrl}" class="btn btn-primary btn-block">返回</a>
     </div>
-    <input type="hidden" id="id" th:value="${id}" />
     <input type="hidden" id="isTemplatePage" th:value="${isTemplatePage}" />
     <div th:include="/credit/footer" />
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW"></script>
@@ -201,7 +201,6 @@
         var options = {
             id: "model",
             name: "机构详情",
-            url: "/credit/org/agency/update?id=" + $("#id").val(),
             columns: [
                 { title: "机构名称", name: "name", required: "required", inputType: "TEXT" },
                 { title: "机构类型", name: "agencyType", enum: "agency-type", inputType: "SELECT" },

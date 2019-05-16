@@ -120,7 +120,7 @@
                 { title: "监察项目", name: "item", required: "required",colspan:2, inputType: "TEXT" },
                 { title: "目标类型", name: "targetType", enum: "item-target-type",colspan:2, required: "required", inputType: "SELECT" },
                 { title: "机构", name: "agencyId", required: "required",inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower", dependency:["targetType","1"] },
-                { title: "人员", name: "personnelId", required: "required", inputType: "TEXT" ,dependency:["targetType","2"]},
+                { title: "人员", name: "personnelId",required: "required",inputType: "SELECT-SERVER", url: "/credit/permission/people/lower" ,dependency:["targetType","2"]},
                 { title: "人员姓名", name: "personnelName", required: "required", inputType: "TEXT",dependency:["targetType","3"] },
                 { title: "人员性别", name: "personnelSex", required: "required", inputType: "RADIO", enum: "sex-type",dependency:["targetType","3"] },
                 { title: "人员身份证", name: "personnelIdentification", required: "required", inputType: "TEXT",dependency:["targetType","3"] },
