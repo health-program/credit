@@ -25,7 +25,7 @@
         <div id="model_edit" class="box-body" >
             <form id="model_form" action="/credit/supervise/record/wjs/save" method="post" class="form-horizontal null" style="padding-left:100px">
                 <div class="form-group">
-                    <label for="personnelId" class="col-sm-2 control-label">人员姓名：</label>
+                    <label for="id" class="col-sm-2 control-label">人员姓名：</label>
                     <div class="col-sm-3">
                         <select name="personnelId" class="form-control" multiple="multiple">
                         </select>
@@ -90,7 +90,7 @@
         name: "添加监察记录",
         url:"/credit/supervise/record/save",
         columns: [
-            { title: "人员姓名", name: "personnelId",  multiple: true,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" },
+            { title: "人员姓名", name: "personnelId",  multiple: true,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/people/lower" },
             { title: "记分时间",name: "scoreTime", inputType: "DATE"},
             { title: "违法事实选择", name: "ruleName", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/2"},
             { title: "扣除分值", name: "score", inputType: "NUMBER" },

@@ -4,6 +4,7 @@ import com.paladin.common.core.permission.PermissionContainer;
 import com.paladin.common.core.permission.Role;
 import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.core.DataPermissionUtil;
+import com.paladin.credit.service.org.OrgPersonnelService;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.web.response.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class PermissionController extends ControllerSupport {
 
 	@Autowired
 	private PermissionContainer permissionContainer;
+	@Autowired
+	private OrgPersonnelService personnelService;
 
 	@RequestMapping("/role/lower")
 	@ResponseBody
@@ -89,6 +92,12 @@ public class PermissionController extends ControllerSupport {
 	@ResponseBody
 	public Object findLowerAgency() {
 		return CommonResponse.getSuccessResponse(DataPermissionUtil.getManageAgency());
+	}
+
+	@RequestMapping("/people/lower")
+	@ResponseBody
+	public Object findLowerPeople() {
+		return CommonResponse.getSuccessResponse(personnelService.searchName());
 	}
 
 }
