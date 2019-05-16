@@ -159,7 +159,10 @@
             AND r.status = #{query.status}
         </if>
         <if test="query.isWjs != null">
-            AND  r.is_wjs = #{query.isWjs}
+            AND r.is_wjs = #{query.isWjs}
+        </if>
+        <if test="query.code != null">
+            AND r.code = #{query.code}
         </if>
     </select>
     <update id="updateRecordById">

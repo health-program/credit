@@ -18,6 +18,8 @@ public class SuperviseRecord extends BaseModel {
 	// 机构ID
 	private String agencyId;
 
+	private Integer code;
+
 	// 人员ID
 	private String personnelId;
 
@@ -67,6 +69,14 @@ public class SuperviseRecord extends BaseModel {
 	private String illustrate;
 
 	private Integer status;
+
+	public Integer getCode() {
+		return code;
+	}
+
+	public void setCode(Integer code) {
+		this.code = code;
+	}
 
 	public String getId() {
 		return id;

@@ -42,6 +42,7 @@ public class SuperviseRecordController extends ControllerSupport {
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
         model.addAttribute("type",type);
         model.addAttribute("roleLevel",userSession.getRoleLevel());
+        model.addAttribute("code",userSession.getCurrentSuperviseScope());
         return "/credit/supervise/supervise_record_index";
     }
 

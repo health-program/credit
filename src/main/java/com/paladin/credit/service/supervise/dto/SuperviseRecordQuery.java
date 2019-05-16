@@ -30,6 +30,8 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     private Integer status;
 
+    private Integer code;
+
     @QueryCondition(type = QueryType.LIKE)
     public String getItem() {
         return item;
@@ -120,5 +122,13 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     public void setIsWjs(Integer isWjs) {
         this.isWjs = isWjs;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
     }
 }

@@ -18,6 +18,7 @@
             <div class="box-body">
                 <form id="searchbar" class="form-horizontal form-search">
                     <input type="hidden" id="targetType" name="targetType" th:value="${type}">
+                    <input type="hidden" id="code" name="code" th:value="${code}">
                     <div class="form-group">
                         <div class="col-md-2" id="orgDiv">
                             <input name="agencyName" class="form-control" placeholder="请输入机构名称" th:value="${query?.agencyName}" />
