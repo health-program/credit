@@ -44,6 +44,8 @@ public class SuperviseRecordDTO {
 
 	private Date punishTime;
 
+	private Integer code;
+
 
 	public Integer getTargetType() {
 		return targetType;
@@ -171,5 +173,13 @@ public class SuperviseRecordDTO {
 
 	public void setPunishTime(Date punishTime) {
 		this.punishTime = punishTime;
+	}
+
+	public Integer getCode() {
+		return code;
+	}
+
+	public void setCode(Integer code) {
+		this.code = code;
 	}
 }

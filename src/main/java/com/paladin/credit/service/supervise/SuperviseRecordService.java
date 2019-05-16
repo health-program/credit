@@ -46,7 +46,8 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     @Transactional
     public int saveRecords(SuperviseRecordDTO superviseRecordDTO) {
     int i = 0;
-    int roleLevel = CreditUserSession.getCurrentUserSession().getRoleLevel();
+    CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+    int roleLevel = userSession.getRoleLevel();
     if ( ! (roleLevel >= CreditUserSession.ROLE_LEVEL_AGENCY)){
         throw new BusinessException("您没有操作该功能权限");
     }
@@ -65,6 +66,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     SuperviseRecord record = new SuperviseRecord();
     Integer itemTargetType = templateItem.getItemTargetType();
     record.setItem(templateItem.getItemName());
+    record.setCode(Integer.valueOf(userSession.getCurrentSuperviseScope()));
     record.setExplainText(superviseRecordDTO.getExplain());
     record.setExplainAttachment(superviseRecordDTO.getExplainAttachment());
     record.setTargetType(itemTargetType);
@@ -235,6 +237,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     public int saveWjsRecords(SuperviseRecordDTO superviseRecordDTO) {
         int i;
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+        superviseRecordDTO.setCode(Integer.valueOf(userSession.getCurrentSuperviseScope()));
         int roleLevel = userSession.getRoleLevel();
         if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN) {
           throw new BusinessException("您没有操作该功能权限");
