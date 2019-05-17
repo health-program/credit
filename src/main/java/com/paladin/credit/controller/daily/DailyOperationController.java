@@ -70,7 +70,7 @@ public class DailyOperationController extends ControllerSupport {
     public String wjsIndex( @PathVariable String targetType,Model model) {
         model.addAttribute("type",targetType);
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
-        model.addAttribute("code",userSession.getCurrentSuperviseScope());
+        model.addAttribute("isWjs",1);
         model.addAttribute("roleLevel",userSession.getRoleLevel());
         return "/credit/supervise/supervise_record_wjs_index";
     }

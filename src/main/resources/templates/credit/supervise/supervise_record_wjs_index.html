@@ -14,7 +14,7 @@
         <div class="box-body">
             <form id="searchbar" class="form-horizontal form-search">
                 <input type="hidden" id="targetType" name="targetType" th:value="${type}">
-                <input type="hidden" id="code" name="code" th:value="${code}">
+                <input type="hidden" id="isWjs" name="isWjs" th:value="${isWjs}">
                 <div class="form-group">
                     <div class="col-md-2" id="orgDiv">
                         <input name="agencyName" class="form-control" placeholder="请输入机构名称" th:value="${query?.agencyName}" />
@@ -121,10 +121,11 @@
                                 if (row.status === 0  && row.isWjs === 1){
                                     return '<button class="grade btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-file-text-o"></i>评级</button>' +
                                         '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
-                                } else {
+                                } else if (row.status !== 0 && row.isWjs === 1) {
                                     return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
                                         '<button class="reply btn btn-xs btn-danger"><i class="fa fa-mail-reply"></i>撤销</button>';
-
+                                } else {
+                                    return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>';
                                 }
                             }else {
                                 if (row.status === 0) {
