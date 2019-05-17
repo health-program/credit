@@ -24,4 +24,6 @@ public interface SuperviseRecordMapper extends CustomMapper<SuperviseRecord> {
     int updateRecordById(@Param("id") String id, @Param("illustrate") String newIllustrate, @Param("status") int i);
 
     int updateGradeById(@Param("id") String id, @Param("grade") Integer grade);
+
+    int updateRecordCheckStatusById(@Param("id") String id);
 }

@@ -70,7 +70,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     record.setExplainText(superviseRecordDTO.getExplain());
     record.setExplainAttachment(superviseRecordDTO.getExplainAttachment());
     record.setTargetType(itemTargetType);
-    if (roleLevel == CreditUserSession.ROLE_LEVEL_SUPERVISE){
+    if (roleLevel == CreditUserSession.ROLE_LEVEL_SUPERVISE || roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY ){
         record.setStatus(0);
     } else if (roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN ) {
         record.setStatus(1);
@@ -239,7 +239,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
         superviseRecordDTO.setCode(Integer.valueOf(userSession.getCurrentSuperviseScope()));
         int roleLevel = userSession.getRoleLevel();
-        if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN) {
+        if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE) {
           throw new BusinessException("您没有操作该功能权限");
         }
         SuperviseRecord record = new SuperviseRecord();
@@ -251,12 +251,34 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         return i;
       }
 
+    /**
+     * 功能描述: <卫监所保存记录评级>
+     * @param id
+     * @param grade
+     * @return  int
+     * @date  2019/5/17
+     */
     public int grade(String id, Integer grade) {
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
         int roleLevel = userSession.getRoleLevel();
-        if (roleLevel < CreditUserSession.ROLE_LEVEL_ADMIN) {
+        if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN) {
             throw new BusinessException("您没有操作该功能权限");
         }
         return superviseRecordMapper.updateGradeById(id,grade);
+    }
+
+    /**
+     * 功能描述: <撤销已审核记录>
+     * @param id
+     * @return  int
+     * @date  2019/5/17
+     */
+    public int repealSuperviseRecordById(String id) {
+        CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+        int roleLevel = userSession.getRoleLevel();
+        if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN) {
+            throw new BusinessException("您没有操作该功能权限");
+        }
+        return  superviseRecordMapper.updateRecordCheckStatusById(id);
     }
 }

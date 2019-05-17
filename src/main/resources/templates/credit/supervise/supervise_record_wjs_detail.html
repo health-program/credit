@@ -31,7 +31,8 @@
             name: "监察详情",
             columns: [
                 { title: "监察项目", name: "item", required: "required",colspan:2, inputType: "TEXT"},
-                { title: "目标类型", name: "targetType", enum: "item-target-type",colspan:2, required: "required", inputType: "SELECT" },
+                { title: "目标类型", name: "targetType", enum: "item-target-type", required: "required", inputType: "SELECT" },
+                { title: "是否为卫监所", name: "isWjs", inputType: "SELECT",enum: "boolean-type" },
                 { title: "机构", name: "agencyId", required: "required",inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower", dependency:["targetType","1"] },
                 { title: "人员", name: "personnelId", required: "required",inputType: "SELECT-SERVER", url: "/credit/permission/people/lower" ,dependency:["targetType","2"]},
                 { title: "人员姓名", name: "personnelName", required: "required", inputType: "TEXT",dependency:["targetType","3"] },
@@ -40,7 +41,6 @@
                 { title: "人员地址", name: "personnelAddress", inputType: "TEXT",dependency:["targetType","3"] },
                 { title: "监察结果名称", name: "resultName", required: "required", inputType: "TEXT" , dependency:["isWjs","2"]},
                 { title: "监察结果等级", name: "resultGrade", enum: "selection-grade-type", required: "required", inputType: "SELECT" },
-                { title: "是否为卫监所", name: "isWjs", inputType: "SELECT",enum: "boolean-type" },
                 { title: "说明", name: "explainText", required: "required", inputType: "TEXTAREA" , dependency:["isWjs","2"]},
                 { title: "附件", name: "explainAttachment", fileName: "explainAttachmentFile", maxFileCount: 5, required: "required", inputType: "ATTACHMENT" , dependency:["isWjs","2"]},
                 { title: "扣除分值", name: "score", inputType: "NUMBER" , dependency:["isWjs","1"]},

@@ -197,6 +197,14 @@ public class SuperviseRecordController extends ControllerSupport {
         return CommonResponse.getResponse(superviseRecordService.removeByPrimaryKey(id));
     }
 
+
+    @RequestMapping(value = "/reply", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object reply(@RequestParam String id) {
+        return CommonResponse.getResponse(superviseRecordService.repealSuperviseRecordById(id));
+    }
+
+
     @GetMapping("/wjs/org/input")
     public String reportOrgInput(Model model) {
         model.addAttribute("type", 1);

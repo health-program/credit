@@ -50,10 +50,10 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            <input name="bgTime" placeholder="请选择监察开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.bgTime}" >
+                            <input name="bgTime" placeholder="请选择监察开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date"  >
                         </div>
                         <div class="col-md-3">
-                            <input name="endTime" placeholder="请选择监察结束时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" th:value="${query?.endTime}" >
+                            <input name="endTime" placeholder="请选择监察结束时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date"  >
                         </div>
                         <div class="col-md-6">
                             <div class="pull-right">
@@ -123,8 +123,8 @@
                             'click .check': function(e, value, row, index) {
                                 check(row);
                             },
-                            'click .grade': function(e, value, row, index) {
-                                grade(row);
+                            'click .reply': function(e, value, row, index) {
+                                reply(row);
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
@@ -132,12 +132,11 @@
                                 if (row.status === 0 && row.isWjs === 2) {
                                     return '<button class="check btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-check-square-o"></i>审核</button>' +
                                         '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
-                                }else if (row.status === 0 && row.isWjs === 1){
-                                    return '<button class="grade btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-file-text-o"></i>评级</button>' +
-                                        '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                                } else if (row.status !== 0 && row.isWjs === 2) {
+                                    return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                        '<button class="reply btn btn-xs btn-danger"><i class="fa fa-mail-reply"></i>撤销</button>';
                                 } else {
-                                    return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>'
-
+                                    return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>';
                                 }
                             }else {
                                 if (row.status === 0) {
@@ -169,9 +168,20 @@
 
     function remove(row) {
         if (row) {
-            layer.confirm('确定删除吗?', function() {
+            layer.confirm('确定删除吗?',{ icon : 3}, function() {
                 $.getAjax('/credit/supervise/record/delete?id=' + row.id, function() {
                     $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+
+    function reply(row) {
+        if (row) {
+            layer.confirm('确定撤销吗?',{ icon : 3}, function() {
+                $.getAjax('/credit/supervise/record/reply?id=' + row.id, function() {
+                    $.successMessage("撤销成功");
                     table.refresh();
                 });
             });
@@ -182,9 +192,6 @@
         window.location = '/credit/supervise/record/check' + (row ? ('?id=' + row.id+"&targetType="+type+"&name="+name) : '');
     }
 
-    function grade(row) {
-        window.location = '/credit/supervise/record/grade' + (row ? ('?id=' + row.id+"&targetType="+type) : '');
-    }
 
     function hideColumn() {
         if (type == 1) {

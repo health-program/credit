@@ -69,6 +69,9 @@ public class DailyOperationController extends ControllerSupport {
     @GetMapping("/wjs/{targetType}")
     public String wjsIndex( @PathVariable String targetType,Model model) {
         model.addAttribute("type",targetType);
+        CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+        model.addAttribute("code",userSession.getCurrentSuperviseScope());
+        model.addAttribute("roleLevel",userSession.getRoleLevel());
         return "/credit/supervise/supervise_record_wjs_index";
     }
 

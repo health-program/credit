@@ -171,4 +171,7 @@
     <update id="updateGradeById">
          UPDATE supervise_record SET  result_grade = #{grade} ,status = 1  WHERE  status = 0 AND  id = #{id} AND is_wjs = 1
     </update>
+    <update id="updateRecordCheckStatusById">
+        UPDATE supervise_record SET status = 0 WHERE  status > 0 AND  id = #{id}
+    </update>
 </mapper>
