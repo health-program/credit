@@ -98,10 +98,15 @@ public class OrgAgencyController extends ControllerSupport {
 
 	@PostMapping("/update")
 	@ResponseBody
-	public Object update(@Valid OrgAgencyDTO orgAgencyDTO, BindingResult bindingResult) {
+	public Object update(@Valid OrgAgencyDTO orgAgencyDTO, BindingResult bindingResult,@RequestParam(required = false) MultipartFile[] licenseFile ) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
+		List<SysAttachment> license = sysAttachmentService.checkOrCreateAttachment(orgAgencyDTO.getLicense(), licenseFile);
+		if (license != null && license.size() > 4) {
+			return CommonResponse.getErrorResponse("执业许可证照片数量不能超过4张");
+		}
+		orgAgencyDTO.setLicense(sysAttachmentService.splicingAttachmentId(license));
 		String id = orgAgencyDTO.getId();
 		OrgAgency model = beanCopy(orgAgencyDTO, orgAgencyService.get(id));
 		if (orgAgencyService.update(model) > 0) {

@@ -39,7 +39,7 @@ public class PublicityMessageVO {
 	private String examineUserId;
 
 	// 获取附件文件
-	public List<SysAttachment> getExplainAttachmentFile() {
+	public List<SysAttachment> getAttachmentFiles() {
 		if (attachments != null && attachments.length() != 0) {
 			return AttachmentContainer.getAttachments(attachments.split(","));
 		}

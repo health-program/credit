@@ -279,6 +279,10 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN) {
             throw new BusinessException("您没有操作该功能权限");
         }
-        return  superviseRecordMapper.updateRecordCheckStatusById(id);
+        int i = superviseRecordMapper.updateRecordCheckStatusById(id);
+        if (i<=0){
+            throw new BusinessException("已超过时间无法撤销");
+        }
+        return i ;
     }
 }

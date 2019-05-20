@@ -51,7 +51,7 @@ public class PublicityMessageController extends ControllerSupport {
     
     @GetMapping("/get")
     @ResponseBody
-    public Object getDetail(@RequestParam String id, Model model) {   	
+    public Object getDetail(@RequestParam String id, Model model) {
         return CommonResponse.getSuccessResponse(beanCopy(publicityMessageService.get(id), new PublicityMessageVO()));
     }
     

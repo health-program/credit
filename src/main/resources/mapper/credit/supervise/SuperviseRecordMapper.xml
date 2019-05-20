@@ -166,12 +166,12 @@
         </if>
     </select>
     <update id="updateRecordById">
-        UPDATE supervise_record SET  status = #{status} , illustrate = #{illustrate}  WHERE  status = 0 AND  id = #{id}
+        UPDATE supervise_record SET  status = #{status} , update_time = now(),illustrate = #{illustrate}  WHERE  status = 0 AND  id = #{id}
     </update>
     <update id="updateGradeById">
-         UPDATE supervise_record SET  result_grade = #{grade} ,status = 1  WHERE  status = 0 AND  id = #{id} AND is_wjs = 1
+         UPDATE supervise_record SET  result_grade = #{grade} ,update_time = now() ,status = 1  WHERE  status = 0 AND  id = #{id} AND is_wjs = 1
     </update>
     <update id="updateRecordCheckStatusById">
-        UPDATE supervise_record SET status = 0 WHERE  status > 0 AND  id = #{id}
+        UPDATE supervise_record SET status = 0 WHERE  status > 0 AND  id = #{id} and CURDATE() &lt; DATE_FORMAT((date_add(update_time, interval 1 day)),'%Y-%m-%d')
     </update>
 </mapper>
