@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -284,5 +285,23 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
             throw new BusinessException("已超过时间无法撤销");
         }
         return i ;
+    }
+
+    /**
+     * 功能描述: <按事件等级统计监察记录>
+     * @param searchTime
+     * @return  com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO
+     */
+  public SuperviseRecordReportVO countRecordEventGradeByDate(Date searchTime) {
+    return superviseRecordMapper.countRecordEventGradeByDate(searchTime);
+  }
+
+    /**
+     * 功能描述: <按机构信用等级统计监察记录>
+     * @param searchTime
+     * @return  com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO
+     */
+    public SuperviseRecordReportVO countRecordOrgCreditByDate(Date searchTime) {
+        return superviseRecordMapper.countRecordOrgCreditByDate(searchTime);
     }
 }

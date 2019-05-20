@@ -9,6 +9,7 @@ import com.paladin.credit.service.supervise.vo.SuperviseRecordVO;
 import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface SuperviseRecordMapper extends CustomMapper<SuperviseRecord> {
@@ -26,4 +27,8 @@ public interface SuperviseRecordMapper extends CustomMapper<SuperviseRecord> {
     int updateGradeById(@Param("id") String id, @Param("grade") Integer grade);
 
     int updateRecordCheckStatusById(@Param("id") String id);
+
+    SuperviseRecordReportVO countRecordEventGradeByDate(@Param("searchTime") Date searchTime);
+
+    SuperviseRecordReportVO countRecordOrgCreditByDate(@Param("searchTime") Date searchTime);
 }

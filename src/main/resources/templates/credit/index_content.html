@@ -37,200 +37,307 @@
     }
 </style>
 <body>
-    <section class="content" style="padding-top: 5px">
-        <div class="row" style="height: 150px">
+<section class="content" style="padding-top: 5px">
+    <div class="row" style="height: 250px" id="countDiv">
+        <div class="col-md-6" style="padding-left: 0">
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <i class="fa fa-th-list"></i>
-                    <h3 class="box-title">快捷菜单</h3>
+                    <i class="fa fa-pie-chart"></i>
+                    <h3 class="box-title">分析统计(事件等级)</h3>
+                    <div class="box-tools pull-right">
+                        <form action="/credit/home/page/count/event" method="get"  class="navbar-form navbar-right  no-margin" style="padding-right: 0;" role="search">
+                            <div class="input-group" >
+                                <input type="text" name="searchTime" id="searchTime" class="form-control datepicker-date" th:placeholder="|查询日期(${time})|">
+                                <span class="input-group-btn" >
+                                     <button type="button"  class="btn btn-flat tonto-btn-search" onclick="query()" ><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="box-body no-padding" style="height: 100px">
-
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-red-active"><i class="icon ion-briefcase"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text"><strong>日常操作</strong></span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
+                <div class="box-body no-padding">
+                    <div class="col-md-12">
+                        <div id="eventChart" style="height: 350px"></div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <div class="info-box" >
-                            <span class="info-box-icon bg-teal-active"><i class="icon ion-android-notifications-none"></i></span>
-                            <div class="info-box-content" >
-                                <span class="info-box-text"><strong>公告信息</strong></span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-blue"><i class="icon ion-stats-bars"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text"><strong>统计报表</strong></span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-green"><i class="ion  ion-ios-gear-outline"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text"><strong>系统管理</strong></span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                    </div>
-
                 </div>
             </div>
-        </div  >
+        </div>
+        <div class="col-md-6 no-padding">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <i class="fa fa-pie-chart"></i>
+                    <h3 class="box-title">分析统计(机构信誉等级)</h3>
+                    <div class="box-tools pull-right">
+                        <form action="/credit/home/page/count/event" method="get"  class="navbar-form navbar-right  no-margin" style="padding-right: 0;" role="search">
+                            <div class="input-group">
+                                <input type="text" name="searchTime" id="searchTime1" class="form-control datepicker-date"  th:placeholder="|查询日期(${time})|">
+                                <span class="input-group-btn" >
+                                     <button type="button"  class="btn btn-flat tonto-btn-search" onclick="query1()" ><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="box-body no-padding">
+                    <div class="col-md-12">
+                        <div id="orgChart" style="height: 350px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <div class="row" style="height: 250px">
+    <div class="row">
+        <div class="col-md-8" style="padding-left: 0">
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <i class="fa fa-pie-chart"></i>
                     <h3 class="box-title">分析统计</h3>
-                </div>
-                <div class="box-body no-padding">
-                    <div class="col-md-4">
-                        <div id="yearChart" style="height: 200px"></div>
-                    </div>
-                    <div class="col-md-4">
-                        <div id="monthChart" style="height: 200px"></div>
-                    </div>
-                    <div class="col-md-4">
-                        <div id="dayChart" style="height: 200px"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    <div class="box-tools pull-right">
+                        <form action="/credit/home/page/count/event" method="get"  class="navbar-form navbar-right  no-margin" style="padding-right: 0;" role="search">
+                            <div class="input-group">
+                                <input type="text" name="orgName" id="orgName" class="form-control datepicker-date"  placeholder="请输入机构名称">
+                                <span class="input-group-btn" >
+                                     <button type="button"  class="btn btn-flat tonto-btn-search" onclick="query2()" ><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
 
-        <div class="row">
-            <div class="col-md-7" style="padding-left: 0">
-                <div class="box box-solid">
-                    <div class="box-header with-border">
-                        <i class="fa fa-pie-chart"></i>
-                        <h3 class="box-title">分析统计</h3>
-                    </div>
-                    <div class="box-body" >
-                        <div id="allmap" class="baidu-maps" style="height: 520px" ></div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-5 no-padding">
-                <div class="box box-solid">
-                    <div class="box-header with-border">
-                        <i class="fa fa-bell-o"></i>
-                        <h3 class="box-title">最新公告</h3>
-                        <a style="float:right" href="/credit/publicity/message/index">更多 </a>
-                    </div>
-                    <div class="box-body">
-                        <ul class="notice-list ul-dashed" th:each="notice,iter: ${notices}">
-                            <li class="notice-li">
-                                <strong><a class="name" th:href="${'/credit/home/page/notice/view?id='+ notice.id}" th:text="${notice.title}"></a></strong>
-                                <div class="right-tool">
-                                    <span th:text="${#dates.format(notice.publishTime, 'yyyy-MM-dd')}"></span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="box-body">
+                    <div id="allmap" class="baidu-maps" style="height: 520px"></div>
                 </div>
             </div>
         </div>
-    </section>
+        <div class="col-md-4 no-padding">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <i class="fa fa-bell-o"></i>
+                    <h3 class="box-title">最新公告</h3>
+                    <a style="float:right" href="/credit/publicity/message/index">更多 </a>
+                </div>
+                <div class="box-body">
+                    <ul class="notice-list ul-dashed" th:each="notice,iter: ${notices}">
+                        <li class="notice-li">
+                            <strong><a class="name" th:href="${'/credit/home/page/notice/view?id='+ notice.id}"
+                                       th:text="${notice.title}"></a></strong>
+                            <div class="right-tool">
+                                <span th:text="${#dates.format(notice.publishTime, 'yyyy-MM-dd')}"></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <div th:include="/credit/footer" />
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW"></script>
 <script type="text/javascript">
     /*<![CDATA[*/
     $(function () {
-        chartYear(yearChart);
-        chartMonth(monthChart);
-        chartDay(dayChart);
+        $("#countDiv").find('.datepicker-date').each(function () {
+            laydate.render({
+                elem: this,
+                type: "date",
+                calendar: true, //开启公历节日
+                theme: 'molv', //墨绿主题
+                showBottom: true, //是否出现底部栏
+                trigger: 'click' //绑定多个
+            });
+        });
+        generatorEventChart(eventChart);
+        generatorOrgChart(orgChart);
     });
     //图表自适应大小
     window.addEventListener("resize", function () {
-        yearChart.resize();
+        eventChart.resize();
+        orgChart.resize();
     });
-    var yearChart = echarts.init(document.getElementById('yearChart'));
-    var monthChart = echarts.init(document.getElementById('monthChart'));
-    var dayChart = echarts.init(document.getElementById('dayChart'));
 
-    function chartYear(yearChart) {
-      generatorChart(yearChart,'rgba(30,144,255,0.8)','年');
-    }
-    function chartMonth(monthChart) {
-        generatorChart(monthChart,'rgba(255,110,57,0.8)','月');
-    }
-    function chartDay(dayChart) {
-        generatorChart(dayChart,'rgba(11,255,255,0.8)','日');
+    var eventChart = echarts.init(document.getElementById('eventChart'));
+    var orgChart = echarts.init(document.getElementById('orgChart'));
+
+    function query(){
+        generatorEventChart(eventChart);
     }
 
-    function generatorChart(chart, colorstr, name) {
-        var dataStyle = {
-            normal: {
-                color: colorstr,
-                label: {show: true, fontSize: 30, position: 'center', formatter: '{c}条'},
-                labelLine: {show:false}
-            },
-            emphasis : {
-                color: colorstr
-            }
-
-        };
-        var placeHolderStyle = {
-            normal : {
-                color: 'rgba(0,0,0,0)',
-                label: {show:false},
-                labelLine: {show:false}
-            },
-            emphasis : {
-                color: 'rgba(0,0,0,0)'
-            }
-        };
-
-        option = {
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b}: {c} ({d}%)"
-            },
-            title: {
-                text: name,
-                x:'center',
-                y: 'bottom',
-                textStyle : {
-                    color : colorstr,
-                    fontFamily : '微软雅黑',
-                    fontSize : 20,
-                    fontWeight : 'bolder'
+    function query1(){
+        generatorOrgChart(orgChart);
+    }
+    function generatorEventChart(chart) {
+        let searchTime = $("#searchTime").val();
+        $.postAjax("/credit/home/page/count/event",{'searchTime':searchTime}, function(result) {
+            var chartValue = [];
+            $.each(result,function (name, value) {
+                if (name === 'grade1') {
+                    chartValue[0] = value
+                }else if (name === 'grade2') {
+                    chartValue[1] = value
+                }else if (name === 'grade3') {
+                    chartValue[2] = value
+                }else if (name === 'grade4') {
+                    chartValue[3] = value
+                }else if (name === 'grade5') {
+                    chartValue[4] = value
                 }
-            },
-            series: [
-                {
-                    name:name,
-                    type:'pie',
-                    //clockWise:false,
-                    radius: [60, 65],
-                    itemStyle:dataStyle,
-                    labelLine: {
-                        normal: {
-                            show: false
+            });
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{name|{a}}	 {c}个',
+                    fontSize: 12,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
                         }
-                    },
-                    data:[
-                        {value:335, name:'直接访问'},
-                        {value:100,name:"kong",itemStyle:placeHolderStyle}
-                    ]
+                    }
                 }
-            ]
-        };
-        chart.setOption(option,true);
+            };
+            option = {
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        return params[0].name + '发生的总量: '
+                            + params[0].data + '(个)<br/>'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['事件A类','事件B类','事件C类','事件D类','事件E类'],
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name:'事件发生总量'
+                    }
+                ],
+                series: [
+                    {
+                        name: '事件量',
+                        type: 'bar',
+                        barWidth: '60%',
+                        label: labelOption,
+                        barGap: 0,
+                        data: chartValue,
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        });
+    };
+
+    function generatorOrgChart(chart) {
+        let searchTime = $("#searchTime1").val();
+        $.postAjax("/credit/home/page/count/org",{'searchTime':searchTime}, function(result) {
+            var chartValue = [];
+            $.each(result,function (name, value) {
+                if (name === 'grade1') {
+                    chartValue[0] = value
+                }else if (name === 'grade2') {
+                    chartValue[1] = value
+                }else if (name === 'grade3') {
+                    chartValue[2] = value
+                }else if (name === 'grade4') {
+                    chartValue[3] = value
+                }else if (name === 'grade5') {
+                    chartValue[4] = value
+                }
+            });
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{name|{a}}	 {c}个',
+                    fontSize: 12,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+            option = {
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        return params[0].name + '的机构数量: '
+                            + params[0].data + '(个)<br/>'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['诚实守信','信用良好','一般失信','较重失信','严重失信'],
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name:'机构数量'
+                    }
+                ],
+                series: [
+                    {
+                        name: '机构数量',
+                        type: 'bar',
+                        barWidth: '60%',
+                        label: labelOption,
+                        barGap: 0,
+                        data: chartValue,
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        });
+    };
+
+    function loadJScript() {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW&callback=initMap";
+        document.body.appendChild(script);
     }
+
+    window.onload = loadJScript;  //异步加载地图
 
     var points = [
          {"lng":120.967572,"lat":31.388136,"grade":"诚实守信(A级)","name":"昆山第一人民医院"},
@@ -238,7 +345,7 @@
          {"lng":120.916446,"lat":31.180644,"grade":"诚实守信(A级)","name":"昆山市锦溪人民医院"}
     ];
     //创建标注点并添加到地图中
-    function addMarker(points) {
+    function addMarker(map,points) {
         if (points && points.length > 0) {
             //循环建立标注点
             for(var i=0, pointsLen = points.length; i<pointsLen; i++) {
@@ -246,7 +353,7 @@
                 var marker = new BMap.Marker(point); //将点转化成标注点
                 map.addOverlay(marker);  //将标注点添加到地图上
                 //添加监听事件
-                marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+               // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
                 var label = setLabelStyle(points[i].name,point);
                 marker.setLabel(label);
                 (function() {
@@ -300,7 +407,7 @@
     }
 
     //根据原始数据计算中心坐标和缩放级别，并为地图设置中心坐标和缩放级别。
-    function setZoom(points){
+    function setZoom(map,points){
         if( points && points.length > 0){
             var maxLng = points[0].lng;
             var minLng = points[0].lng;
@@ -316,7 +423,7 @@
             };
             var cenLng =(parseFloat(maxLng)+parseFloat(minLng))/2;
             var cenLat = (parseFloat(maxLat)+parseFloat(minLat))/2;
-            var zoom = getZoom(maxLng, minLng, maxLat, minLat);
+            var zoom = getZoom(map,maxLng, minLng, maxLat, minLat);
             map.centerAndZoom(new BMap.Point(cenLng,cenLat), zoom);
         }else{
             map.centerAndZoom(new BMap.Point(120.987239,31.391653), 14);
@@ -324,7 +431,7 @@
     }
 
     //计算缩放级别的函数
-    function getZoom (maxLng, minLng, maxLat, minLat) {
+    function getZoom (map,maxLng, minLng, maxLat, minLat) {
         var zoom = ["50","100","200","500","1000","2000","5000","10000","20000","25000","50000","100000","200000","500000","1000000","2000000"]//级别18到3。
         //最大最小的坐标点
         var pointA = new BMap.Point(maxLng,maxLat);  // 创建点坐标A
@@ -351,28 +458,32 @@
         thisMarker.openInfoWindow(infoWindow); //图片加载完后重绘infoWindow
     }
 
-    var map = new BMap.Map("allmap");
-    setZoom(points);               // 初始化地图,设置中心点坐标和地图级别。    map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
-    addMarker(points);
-    map.disableDragging();
-    var bdary = new BMap.Boundary();
-    bdary.get('昆山', function (rs) {       //获取行政区域
-        // map.clearOverlays();        //清除地图覆盖物
-        //for循环都删除掉了，只剩下这个
-        //网上查了下，东西经南北纬的范围
-        var EN_JW = "180, 90;";         //东北角
-        var NW_JW = "-180,  90;";       //西北角
-        var WS_JW = "-180, -90;";       //西南角
-        var SE_JW = "180, -90;";        //东南角
-        //4.添加环形遮罩层
-        var ply1 = new BMap.Polygon(rs.boundaries[0] + SE_JW + SE_JW + WS_JW + NW_JW + EN_JW + SE_JW, { strokeColor: "none", fillColor: "rgb(246,246,246)", fillOpacity:1, strokeOpacity: 0.5 }); //建立多边形覆盖物
-        map.addOverlay(ply1);
-        //5. 给目标行政区划添加边框，其实就是给目标行政区划添加一个没有填充物的遮罩层
-        var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 2, strokeColor: "#00f",fillColor: "" });
-        map.addOverlay(ply);
-        map.e
-        //map.setViewport(ply.getPath());    //调整视野
-    });
+    function initMap() {
+        var map = new BMap.Map("allmap");
+        setZoom(map,points);               // 初始化地图,设置中心点坐标和地图级别。    map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
+        addMarker(map,points);
+        //map.disableDragging();禁止拖动地图
+        map.addControl(new BMap.OverviewMapControl());              //添加缩略地图控件
+        map.enableScrollWheelZoom(true);
+        map.addControl(new BMap.NavigationControl({ type: BMAP_NAVIGATION_CONTROL_LARGE ,anchor: BMAP_ANCHOR_TOP_LEFT, offset: new BMap.Size(40, 250)}));
+        var bdary = new BMap.Boundary();
+        bdary.get('昆山', function (rs) {       //获取行政区域
+                                              // map.clearOverlays();        //清除地图覆盖物
+                                              //for循环都删除掉了，只剩下这个
+                                              //网上查了下，东西经南北纬的范围
+            var EN_JW = "180, 90;";         //东北角
+            var NW_JW = "-180,  90;";       //西北角
+            var WS_JW = "-180, -90;";       //西南角
+            var SE_JW = "180, -90;";        //东南角
+            //4.添加环形遮罩层
+            var ply1 = new BMap.Polygon(rs.boundaries[0] + SE_JW + SE_JW + WS_JW + NW_JW + EN_JW + SE_JW, { strokeColor: "none", fillColor: "rgb(246,246,246)", fillOpacity:1, strokeOpacity: 0.5 }); //建立多边形覆盖物
+            map.addOverlay(ply1);
+            //5. 给目标行政区划添加边框，其实就是给目标行政区划添加一个没有填充物的遮罩层
+            var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 2, strokeColor: "#00f",fillColor: "" });
+            map.addOverlay(ply);
+            map.setViewport(ply.getPath());    //调整视野
+        });
+    }
     /*]]>*/
 </script>
 </body>

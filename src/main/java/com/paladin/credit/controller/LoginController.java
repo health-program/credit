@@ -124,7 +124,7 @@ public class LoginController {
 		if (subject.isAuthenticated()) {
 			return main(request);
 		}
-		return "/credit/login";
+		return "/credit/login1";
 	}
 
 	@ApiOperation(value = "用户认证")
@@ -143,7 +143,7 @@ public class LoginController {
 			return main(request);
 		} else {
 			model.addAttribute("isError", true);
-			return "/credit/login";
+			return "/credit/login1";
 		}
 	}
 
