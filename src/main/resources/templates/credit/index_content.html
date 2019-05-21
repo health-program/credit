@@ -35,6 +35,46 @@
     .baidu-maps label {
         max-width: none;
     }
+
+
+    .tabLabel {
+        height: 24px;
+        text-align: center;
+        font-weight: bold;
+        padding-right: 5px;
+    }
+
+    .tabText {
+        padding-left: 5px;
+        text-align: center;
+    }
+
+    .alarmPic {
+        width: 80px;
+        height: 80px;
+    }
+
+    .childTab {
+        width: 100%;
+        height: 100%;
+    }
+
+    .childTab th {
+        text-align: center;
+        height:5px;
+    }
+
+    .alarmDiv {
+        width: 400px;
+        height: 275px;
+    }
+    .BMap_bubble_title{
+        text-align: center;
+        font-weight: bold;
+        color:green;
+        font-size: 15pt;
+    }
+
 </style>
 <body>
 <section class="content" style="padding-top: 5px">
@@ -94,14 +134,14 @@
                     <i class="fa fa-pie-chart"></i>
                     <h3 class="box-title">分析统计</h3>
                     <div class="box-tools pull-right">
-                        <form action="/credit/home/page/count/event" method="get"  class="navbar-form navbar-right  no-margin" style="padding-right: 0;" role="search">
+                        <form class="navbar-form navbar-right no-margin" style="padding-right: 0;" id="searchbar" role="search">
                             <div class="input-group">
                                 <input type="text" name="orgName" id="orgName" class="form-control datepicker-date"  placeholder="请输入机构名称">
                                 <span class="input-group-btn" >
                                      <button type="button"  class="btn btn-flat tonto-btn-search" onclick="query2()" ><i class="fa fa-search"></i></button>
                                 </span>
                             </div>
-
+                        </form>
                     </div>
                 </div>
                 <div class="box-body">
@@ -132,8 +172,11 @@
     </div>
 </section>
 <div th:include="/credit/footer" />
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW"></script>
 <script type="text/javascript">
+
     /*<![CDATA[*/
+    var  points;
     $(function () {
         $("#countDiv").find('.datepicker-date').each(function () {
             laydate.render({
@@ -145,21 +188,12 @@
                 trigger: 'click' //绑定多个
             });
         });
-        $.postAjax("/credit/home/page/org/map", function (result) {
-            // {"lng":120.967572,"lat":31.388136,"grade":"诚实守信(A级)","name":"昆山第一人民医院"},
-            // console.log(result);
-            for (var i in points){
-                points[i].lng=result[i].leftAgencyCoordinate;
-                points[i].lat=result[i].rightAgencyCoordinate;
-                points[i].grade=result[i].resultGrade;
-                points[i].name=result[i].agencyName;
-                console.log(points[i]);
-            }
-
-
-        });
         generatorEventChart(eventChart);
         generatorOrgChart(orgChart);
+        $.postAjax("/credit/home/page/map/org", function (result) {
+            points = result.filter((point, index, array) => point.lng && point.lat);
+            initMap()
+        });
     });
     //图表自适应大小
     window.addEventListener("resize", function () {
@@ -343,22 +377,40 @@
         });
     };
 
-    function loadJScript() {
+/*    function loadJScript() {
         var script = document.createElement("script");
         script.type = "text/javascript";
         script.src = "http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW&callback=initMap";
         document.body.appendChild(script);
+        $.postAjax("/credit/home/page/map/org", function (result) {
+            points = result;
+        });
+    }*/
+
+    function query2(){
+        let orgname = $("#orgName").val();
+        if (orgname) {
+            var newPoints = points.filter((point, index, array) => point.agencyName.indexOf(orgname) > -1);
+            if (newPoints.length === 0) {
+                $.errorMessage("查询不到要搜索的机构");
+                initMap();
+            }
+        } else {
+            $.errorMessage("请输入正确的机构名称");
+            return;
+        }
+        initMap(newPoints);
     }
 
-    window.onload = loadJScript;  //异步加载地图
 
-    var points = [
+/*    var points = [
          {"lng":120.967572,"lat":31.388136,"grade":"诚实守信(A级)","name":"昆山第一人民医院"},
          {"lng":120.9659,"lat":31.409471,"grade":"诚实守信(A级)","name":"昆山第三人民医院"},
          {"lng":120.916446,"lat":31.180644,"grade":"诚实守信(A级)","name":"昆山市锦溪人民医院"},
          {"lng":120.916446,"lat":31.180644,"grade":"诚实守信(A级)","name":"昆山市锦溪人民医院"},
          {"lng":120.916446,"lat":31.180644,"grade":"诚实守信(A级)","name":"昆山市锦溪人民医院"}
-    ];
+    ];*/
+
     //创建标注点并添加到地图中
     function addMarker(map,points) {
         if (points && points.length > 0) {
@@ -369,7 +421,7 @@
                 map.addOverlay(marker);  //将标注点添加到地图上
                 //添加监听事件
                // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-                var label = setLabelStyle(points[i].name,point);
+                var label = setLabelStyle(points[i].agencyName,point);
                 marker.setLabel(label);
                 (function() {
                     var thePoint = points[i];
@@ -378,11 +430,11 @@
                             showInfo(this,thePoint);
                         });
                 })();
-                showInfo(marker, points[i])
             }
         }
     }
 
+    //设置标签样式
     function setLabelStyle(content,point) {
         //左偏移  右偏移
         var offsetSize = new BMap.Size(0, 0);
@@ -423,27 +475,48 @@
 
     //根据原始数据计算中心坐标和缩放级别，并为地图设置中心坐标和缩放级别。
     function setZoom(map,points){
-        if( points && points.length > 0){
-            var maxLng = points[0].lng;
-            var minLng = points[0].lng;
-            var maxLat = points[0].lat;
-            var minLat = points[0].lat;
+        if (points && points.length > 0) {
+            let newPoints =points;
+            var maxLng = newPoints[0].lng;
+            var minLng = newPoints[0].lng;
+            var maxLat = newPoints[0].lat;
+            var minLat = newPoints[0].lat;
             var res;
-            for (var i = points.length - 1; i >= 0; i--) {
-                res = points[i];
-                if(res.lng > maxLng) maxLng =res.lng;
-                if(res.lng < minLng) minLng =res.lng;
-                if(res.lat > maxLat) maxLat =res.lat;
-                if(res.lat < minLat) minLat =res.lat;
-            };
-            var cenLng =(parseFloat(maxLng)+parseFloat(minLng))/2;
-            var cenLat = (parseFloat(maxLat)+parseFloat(minLat))/2;
-            var zoom = getZoom(map,maxLng, minLng, maxLat, minLat);
-            map.centerAndZoom(new BMap.Point(cenLng,cenLat), zoom);
-        }else{
-            map.centerAndZoom(new BMap.Point(120.987239,31.391653), 14);
+            for (var i = newPoints.length - 1; i >= 0; i--) {
+                res = newPoints[i];
+                if (res.lng > maxLng) maxLng = res.lng;
+                if (res.lng < minLng) minLng = res.lng;
+                if (res.lat > maxLat) maxLat = res.lat;
+                if (res.lat < minLat) minLat = res.lat;
+            }
+            ;
+            var cenLng = (parseFloat(maxLng) + parseFloat(minLng)) / 2;
+            var cenLat = (parseFloat(maxLat) + parseFloat(minLat)) / 2;
+            var zoom = getZoom(map, maxLng, minLng, maxLat, minLat);
+            map.centerAndZoom(new BMap.Point(cenLng, cenLat), zoom);
+        } else {
+            map.centerAndZoom(new BMap.Point(120.987239, 31.391653), 14);
         }
     }
+    
+    function updatePoints(points) {
+        var geoc = new BMap.Geocoder();
+
+        var noCoordinatePoints = points.filter((point, index, array) => !point.lng && !point.lat);
+        var coordinatePoints = points.filter((point, index, array) => point.lng && point.lat);
+        if (noCoordinatePoints &&  noCoordinatePoints.length > 0) {
+            noCoordinatePoints.forEach(function (point) {
+                geoc.getPoint(point.agencyName, function (point1) {
+                    if (point1) {
+                        point.lng = point1.lng;
+                        point.lat = point1.lat;
+                    }
+                }, "昆山市");
+            });
+        }
+        return coordinatePoints.concat(noCoordinatePoints);
+    }
+
 
     //计算缩放级别的函数
     function getZoom (map,maxLng, minLng, maxLat, minLat) {
@@ -461,22 +534,49 @@
     }
 
     function showInfo(thisMarker,point) {
-        //获取点的信息
-        var sContent =
-            '<ul style="margin:0 0 5px 0;padding:0.2em 0">'
-            +'<li style="line-height: 26px;font-size: 15px">'
-            +'<span style="width: 70px;display: inline-block;">机构名称:</span>' + '<font style="color: #992f2d;font-weight: bold">'+point.name+'</font>' + '</li>'
-            +'<li style="line-height: 26px;font-size: 15px;">'
-            +'<span style="width: 100px;display: inline-block;">医疗信用等级:</span>' + point.grade + '</li>'
-            +'</ul>';
-        var infoWindow = new BMap.InfoWindow(sContent); //创建信息窗口对象
-        thisMarker.openInfoWindow(infoWindow); //图片加载完后重绘infoWindow
+         $.postAjax('/credit/home/page/map/org/info',{'agencyId':point.agencyId},function (data) {
+             point['events'] = data;
+             var opts = {
+                 width : 400,     // 信息窗口宽度
+                 height: 300,     // 信息窗口高度
+                 title : '机构信息'  // 信息窗口标题
+             };
+             //获取点的信息
+             /*        var sContent =
+                         '<ul style="margin:0 0 5px 0;padding:0.2em 0">'
+                         +'<li style="line-height: 26px;font-size: 15px">'
+                         +'<span style="width: 70px;display: inline-block;">机构名称:</span>' + '<font style="color: #992f2d;font-weight: bold">'+point.agencyName+'</font>' + '</li>'
+                         +'<li style="line-height: 26px;font-size: 15px;">'
+                         +'<span style="width: 100px;display: inline-block;">医疗信用等级:</span>' + point.grade + '</li>'
+                         +'</ul>';*/
+             var content='<div class="alarmDiv">';
+             content+='<table style="width:100%;height:100%;" border="1" cellpadding="0" cellspacing="0">';
+             content+='<tr><td class="tabLabel">机构名称</td><td class="tabText">'+point.agencyName+'</td></tr><tr><td class="tabLabel">医疗信用等级</td>';
+             content+='<td class="tabText">'+point.gradeName+'</td></tr> <tr> <td colspan="3">';
+             content+='<table border="1" class="childTab"><tr><th colspan="2">近期事件</th></tr>' ;
+             if (point.events && point.events.length > 0) {
+                 point.events.forEach(function (event) {
+                     content += '<tr><td class="tabText">' + event.item + '</td><td class="tabLabel">' + event.resultGradeName + '</td></tr>';
+                 });
+             } else {
+                 content += '<tr><td colspan="2" class="tabLabel">暂无数据</td></tr>';
+             }
+             content+=  '</table></td></tr></table></div>';
+             var infoWindow = new BMap.InfoWindow(content,opts); //创建信息窗口对象
+             thisMarker.openInfoWindow(infoWindow); //图片加载完后重绘infoWindow
+         });
+
     }
 
-    function initMap() {
+    function initMap(data) {
         var map = new BMap.Map("allmap");
-        setZoom(map,points);               // 初始化地图,设置中心点坐标和地图级别。    map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
-        addMarker(map,points);
+        if ($.isArray(data) && data.length > 0) {
+            setZoom(map, data);
+            addMarker(map, data);
+        } else {
+            setZoom(map,points);               // 初始化地图,设置中心点坐标和地图级别。    map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
+            addMarker(map,points);
+        }
         //map.disableDragging();禁止拖动地图
         map.addControl(new BMap.OverviewMapControl());              //添加缩略地图控件
         map.enableScrollWheelZoom(true);
@@ -496,9 +596,10 @@
             //5. 给目标行政区划添加边框，其实就是给目标行政区划添加一个没有填充物的遮罩层
             var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 2, strokeColor: "#00f",fillColor: "" });
             map.addOverlay(ply);
-            map.setViewport(ply.getPath());    //调整视野
+            //map.setViewport(ply.getPath());    //调整视野
         });
     }
+    //window.onload = loadJScript;  //异步加载地图
     /*]]>*/
 </script>
 </body>

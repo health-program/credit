@@ -307,31 +307,24 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         return superviseRecordMapper.countRecordOrgCreditByDate(searchTime);
     }
     /**
-     * 功能描述: <查询机构等级>
+     * 功能描述: <首页地图查询所有机构>
      * @return  com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO
      */
     public List<SuperviseRecordOrgMapVO> findAllOrgMap() {
         List<SuperviseRecordOrgMapVO> orgMap = superviseRecordMapper.findAllOrgMap();
-        for (SuperviseRecordOrgMapVO orgMapVO : orgMap) {
-            if (orgMapVO.getAgencyCoordinate()!=null) {
-                String[] arr = orgMapVO.getAgencyCoordinate().split(",");
-                orgMapVO.setLeftAgencyCoordinate(arr[0]);
-                orgMapVO.setRightAgencyCoordinate(arr[1]);
-            }
-        }
         return orgMap;
     }
     /**
-     * 功能描述 :<根据机构id查询该机构最新创建的五条数据>
+     * 功能描述 :<首页地图根据机构id查询机构事件>
      * @Date 13:01 2019/5/21
      * @Param  * @param agencyId
      * @return java.util.List<com.paladin.credit.service.supervise.vo.SuperviseRecordOrgMapVO>
      **/
-    public List<SuperviseRecordOrgMapVO> findNewOrgMap(String agencyId){
+    public List<SuperviseRecordOrgMapVO> findMapOrgInfoById(String agencyId){
 
-        if (agencyId==null) {
+        if (Strings.isNullOrEmpty(agencyId)) {
             throw new BusinessException("机构id不能为空");
         }
-        return superviseRecordMapper.findNewOrgMap(agencyId);
+        return superviseRecordMapper.findMapOrgInfoById(agencyId);
     }
 }

@@ -4,7 +4,6 @@ import com.paladin.credit.model.publicity.PublicityMessage;
 import com.paladin.credit.service.publicity.PublicityMessageService;
 import com.paladin.credit.service.publicity.vo.PublicityMessageVO;
 import com.paladin.credit.service.supervise.SuperviseRecordService;
-import com.paladin.credit.service.supervise.vo.SuperviseRecordOrgMapVO;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.web.response.CommonResponse;
@@ -68,15 +67,17 @@ public class HomePageController extends ControllerSupport {
         return CommonResponse.getSuccessResponse( superviseRecordService.countRecordOrgCreditByDate(searchTime)) ;
     }
 
-    @PostMapping("/org/map")
+    @PostMapping("/map/org")
     @ResponseBody
     public Object findOrgMap() {
         return CommonResponse.getSuccessResponse(superviseRecordService.findAllOrgMap());
     }
-    @PostMapping("/org/new/map")
+
+
+    @PostMapping("/map/org/info")
     @ResponseBody
-    public Object findNewOrgMap(@RequestParam(required = false)String agencyId,Model model) {
-        return CommonResponse.getSuccessResponse(superviseRecordService.findNewOrgMap(agencyId)) ;
+    public Object findNewOrgMap(String agencyId) {
+        return CommonResponse.getSuccessResponse(superviseRecordService.findMapOrgInfoById(agencyId)) ;
     }
 }
 

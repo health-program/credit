@@ -48,7 +48,7 @@
     <select id="searchReportDetailByQuery" resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordVO">
         SELECT
         a.`name` AS agencyName,
-        s.result_name AS resultName,
+        s.result_name AS item,
         s.result_grade AS resultGrade,
         s.item,
         s.create_time AS createTime
@@ -124,7 +124,7 @@
         r.item,
         r.status,
         r.is_wjs AS isWjs,
-        r.result_name AS resultName,
+        r.result_name AS item,
         r.result_grade AS resultGrade,
         a.`name` AS agencyName,
         p.`name` AS personnelName
@@ -177,7 +177,7 @@
         UPDATE supervise_record
         SET
         status = 0
-        <if test="resultName==null">
+        <if test="item==null">
             ,result_grade = 0
         </if>
         WHERE status > 0 AND id = #{id} and CURDATE() &lt; DATE_FORMAT((date_add(update_time, interval 1
@@ -250,13 +250,13 @@
             resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordOrgMapVO">
         SELECT
         r.eId AS agencyId,
-        resultGrade,
+        grade,
         a. NAME AS agencyName,
         a.agency_coordinate AS agencyCoordinate
         FROM
         (
         SELECT
-        MAX(result_grade) AS resultGrade,
+        MAX(result_grade) AS grade,
         agency_id AS eId
         FROM
         supervise_record AS e
@@ -288,12 +288,12 @@
         WHERE
         a.is_delete = 0
         ORDER BY
-        resultGrade
+        grade
     </select>
-    <select id="findNewOrgMap"
+    <select id="findMapOrgInfoById"
             resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordOrgMapVO">
         SELECT
-        result_name AS resultName,
+        item,
         result_grade AS resultGrade
         FROM
         supervise_record
