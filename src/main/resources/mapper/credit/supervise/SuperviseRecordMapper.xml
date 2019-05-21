@@ -25,7 +25,8 @@
         Count( a.result_grade = 5 OR NULL ) AS grade5
         FROM
         supervise_record a
-        INNER JOIN ( SELECT MIN(create_time)  AS time  , agency_id AS b_agencyId  FROM supervise_record WHERE `status` = 1 AND target_type = 1 GROUP BY agency_id ) b ON a.agency_id = b.b_agencyId
+        INNER JOIN ( SELECT MIN(create_time) AS time , agency_id AS b_agencyId FROM supervise_record WHERE `status` = 1
+        AND target_type = 1 GROUP BY agency_id ) b ON a.agency_id = b.b_agencyId
         WHERE a.`status` = 1 AND
         a.create_time  <![CDATA[<]]> current_date() AND a.create_time >=
         IF
@@ -41,26 +42,26 @@
         WHERE
         d.is_delete = 0
         <if test="query.agencyName != null and query.agencyName != ''">
-            AND   d.name LIKE  CONCAT('%',#{query.agencyName},'%')
+            AND d.name LIKE CONCAT('%',#{query.agencyName},'%')
         </if>
     </select>
     <select id="searchReportDetailByQuery" resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordVO">
-		SELECT
-		a.`name` AS agencyName,
-		s.result_name AS resultName,
-		s.result_grade AS resultGrade,
-		s.item,
-		s.create_time AS createTime
-		FROM
-		supervise_record AS s
-		LEFT JOIN org_agency AS a ON s.agency_id = a.id
-		WHERE a.is_delete = 0
-		<if test="agencyId != null">
-			AND a.id = #{agencyId}
-		</if>
-		<if test="grade != null">
-			AND s.result_grade = #{grade}
-		</if>
+        SELECT
+        a.`name` AS agencyName,
+        s.result_name AS resultName,
+        s.result_grade AS resultGrade,
+        s.item,
+        s.create_time AS createTime
+        FROM
+        supervise_record AS s
+        LEFT JOIN org_agency AS a ON s.agency_id = a.id
+        WHERE a.is_delete = 0
+        <if test="agencyId != null">
+            AND a.id = #{agencyId}
+        </if>
+        <if test="grade != null">
+            AND s.result_grade = #{grade}
+        </if>
     </select>
     <select id="searchAgencyReportsOrgByQuery"
             resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordReportOrgVO">
@@ -173,7 +174,14 @@
          UPDATE supervise_record SET  result_grade = #{grade} ,update_time = now() ,status = 1  WHERE  status = 0 AND  id = #{id} AND is_wjs = 1
     </update>
     <update id="updateRecordCheckStatusById">
-        UPDATE supervise_record SET status = 0 WHERE  status > 0 AND  id = #{id} and CURDATE() &lt; DATE_FORMAT((date_add(update_time, interval 1 day)),'%Y-%m-%d')
+        UPDATE supervise_record
+        SET
+        status = 0
+        <if test="resultName==null">
+            ,result_grade = 0
+        </if>
+        WHERE status > 0 AND id = #{id} and CURDATE() &lt; DATE_FORMAT((date_add(update_time, interval 1
+        day)),'%Y-%m-%d')
     </update>
     <select id="countRecordEventGradeByDate"
             resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO">
@@ -185,7 +193,8 @@
         Count( a.result_grade = 5 OR NULL ) AS grade5
         FROM
         supervise_record a
-        INNER JOIN ( SELECT MIN( create_time ) AS time, agency_id AS b_agencyId FROM supervise_record WHERE `status` = 1 AND target_type = 1 GROUP BY agency_id ) b ON a.agency_id = b.b_agencyId
+        INNER JOIN ( SELECT MIN( create_time ) AS time, agency_id AS b_agencyId FROM supervise_record WHERE `status` = 1
+        AND target_type = 1 GROUP BY agency_id ) b ON a.agency_id = b.b_agencyId
         WHERE
         a.`status` = 1
         AND a.create_time <![CDATA[<]]> CURRENT_DATE ( ) AND a.create_time >=
@@ -196,7 +205,7 @@
         DATE_SUB( CURRENT_DATE ( ), INTERVAL 1 YEAR )
         )
         <if test="searchTime != null">
-            AND  TIMESTAMPDIFF( DAY, a.create_time, #{searchTime} ) = 0
+            AND TIMESTAMPDIFF( DAY, a.create_time, #{searchTime} ) = 0
         </if>
     </select>
     <select id="countRecordOrgCreditByDate"
@@ -219,7 +228,8 @@
         ) AS bgtime
         FROM
         supervise_record a
-        INNER JOIN ( SELECT MIN( create_time ) AS time, agency_id AS b_agencyId FROM supervise_record WHERE `status` = 1 AND target_type = 1 GROUP BY agency_id ) b ON a.agency_id = b.b_agencyId
+        INNER JOIN ( SELECT MIN( create_time ) AS time, agency_id AS b_agencyId FROM supervise_record WHERE `status` = 1
+        AND target_type = 1 GROUP BY agency_id ) b ON a.agency_id = b.b_agencyId
         WHERE
         a.`status` = 1
         AND a.create_time <![CDATA[<]]> CURRENT_DATE ( ) AND a.create_time >=
@@ -230,10 +240,69 @@
         DATE_SUB( CURRENT_DATE ( ), INTERVAL 1 YEAR )
         )
         <if test="searchTime != null">
-            AND  TIMESTAMPDIFF( DAY, a.create_time, #{searchTime}) = 0
+            AND TIMESTAMPDIFF( DAY, a.create_time, #{searchTime}) = 0
         </if>
         GROUP BY
         a.agency_id
         ) c
+    </select>
+    <select id="findAllOrgMap"
+            resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordOrgMapVO">
+        SELECT
+        r.eId AS agencyId,
+        resultGrade,
+        a. NAME AS agencyName,
+        a.agency_coordinate AS agencyCoordinate
+        FROM
+        (
+        SELECT
+        MAX(result_grade) AS resultGrade,
+        agency_id AS eId
+        FROM
+        supervise_record AS e
+        INNER JOIN (
+        SELECT
+        MIN(create_time) AS min_time,
+        agency_id AS cId
+        FROM
+        supervise_record c
+        WHERE
+        `status` = 1
+        AND target_type = 1
+        GROUP BY
+        agency_id
+        ) AS b ON e.agency_id = b.cId
+        WHERE
+        `status` = 1
+        AND create_time >=
+        IF (
+        b.min_time &lt; DATE_SUB(CURDATE(), INTERVAL 1 YEAR),
+        DATE_SUB(CURDATE(), INTERVAL 1 YEAR),
+        b.min_time
+        )
+        AND create_time &lt; CURDATE()
+        GROUP BY
+        e.agency_id
+        ) AS r
+        LEFT JOIN org_agency AS a ON r.eId = a.id
+        WHERE
+        a.is_delete = 0
+        ORDER BY
+        resultGrade
+    </select>
+    <select id="findNewOrgMap"
+            resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordOrgMapVO">
+        SELECT
+        result_name AS resultName,
+        result_grade AS resultGrade
+        FROM
+        supervise_record
+        WHERE
+        agency_id IS NOT NULL
+        AND `status` = 1
+        AND agency_id = #{agencyId}
+        ORDER BY
+        create_time DESC
+        LIMIT 5
     </select>
 </mapper>

@@ -226,7 +226,13 @@
             console.log(html)
         }
         $.getAjax("/credit/org/agency/get?id=" + $("#id").val(), function(data) {
-            var model = new tonto.Model("model", options.columns,options);
+            var model = new tonto.Model("model", options.columns, {
+                successCallback: function() {
+                    $.successAlert("保存成功", function() {
+                        window.location = "/credit/org/agency/index";
+                    });
+                }
+            });
             model.setData(data);
         });
         $("#confirm").click(function(){

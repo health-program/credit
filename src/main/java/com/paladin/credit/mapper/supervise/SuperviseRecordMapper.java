@@ -2,10 +2,7 @@ package com.paladin.credit.mapper.supervise;
 
 import com.paladin.credit.model.supervise.SuperviseRecord;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
-import com.paladin.credit.service.supervise.vo.SuperviseRecordReportOrgVO;
-import com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO;
-import com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO;
-import com.paladin.credit.service.supervise.vo.SuperviseRecordVO;
+import com.paladin.credit.service.supervise.vo.*;
 import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,9 +23,13 @@ public interface SuperviseRecordMapper extends CustomMapper<SuperviseRecord> {
 
     int updateGradeById(@Param("id") String id, @Param("grade") Integer grade);
 
-    int updateRecordCheckStatusById(@Param("id") String id);
-
     SuperviseRecordReportVO countRecordEventGradeByDate(@Param("searchTime") Date searchTime);
 
     SuperviseRecordReportVO countRecordOrgCreditByDate(@Param("searchTime") Date searchTime);
+
+    int updateRecordCheckStatusById(@Param("id") String id ,@Param("resultName")String resultName);
+
+    List<SuperviseRecordOrgMapVO>  findAllOrgMap();
+
+    List<SuperviseRecordOrgMapVO>  findNewOrgMap(@Param("agencyId")String agencyId);
 }

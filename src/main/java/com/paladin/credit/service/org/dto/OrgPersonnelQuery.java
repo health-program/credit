@@ -8,7 +8,7 @@ public class OrgPersonnelQuery extends OffsetPage {
 	
 	private String name;
 
-	@QueryCondition(type = QueryType.EQUAL)
+	@QueryCondition(type=QueryType.LIKE)
 	public String getName() {
 		return name;
 	}

@@ -11,10 +11,7 @@ import com.paladin.credit.model.template.TemplateItemSelection;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordPersonnelDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
-import com.paladin.credit.service.supervise.vo.SuperviseRecordReportOrgVO;
-import com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO;
-import com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO;
-import com.paladin.credit.service.supervise.vo.SuperviseRecordVO;
+import com.paladin.credit.service.supervise.vo.*;
 import com.paladin.credit.service.template.TemplateItemSelectionService;
 import com.paladin.credit.service.template.TemplateItemService;
 import com.paladin.framework.common.PageResult;
@@ -280,7 +277,12 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN) {
             throw new BusinessException("您没有操作该功能权限");
         }
-        int i = superviseRecordMapper.updateRecordCheckStatusById(id);
+
+        SuperviseRecord superviseRecord = superviseRecordMapper.selectByPrimaryKey(id);
+
+        String resultName = superviseRecord.getResultName();
+
+        int i = superviseRecordMapper.updateRecordCheckStatusById(id ,resultName);
         if (i<=0){
             throw new BusinessException("已超过时间无法撤销");
         }
@@ -303,5 +305,33 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
      */
     public SuperviseRecordReportVO countRecordOrgCreditByDate(Date searchTime) {
         return superviseRecordMapper.countRecordOrgCreditByDate(searchTime);
+    }
+    /**
+     * 功能描述: <查询机构等级>
+     * @return  com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO
+     */
+    public List<SuperviseRecordOrgMapVO> findAllOrgMap() {
+        List<SuperviseRecordOrgMapVO> orgMap = superviseRecordMapper.findAllOrgMap();
+        for (SuperviseRecordOrgMapVO orgMapVO : orgMap) {
+            if (orgMapVO.getAgencyCoordinate()!=null) {
+                String[] arr = orgMapVO.getAgencyCoordinate().split(",");
+                orgMapVO.setLeftAgencyCoordinate(arr[0]);
+                orgMapVO.setRightAgencyCoordinate(arr[1]);
+            }
+        }
+        return orgMap;
+    }
+    /**
+     * 功能描述 :<根据机构id查询该机构最新创建的五条数据>
+     * @Date 13:01 2019/5/21
+     * @Param  * @param agencyId
+     * @return java.util.List<com.paladin.credit.service.supervise.vo.SuperviseRecordOrgMapVO>
+     **/
+    public List<SuperviseRecordOrgMapVO> findNewOrgMap(String agencyId){
+
+        if (agencyId==null) {
+            throw new BusinessException("机构id不能为空");
+        }
+        return superviseRecordMapper.findNewOrgMap(agencyId);
     }
 }

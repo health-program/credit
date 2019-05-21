@@ -145,6 +145,19 @@
                 trigger: 'click' //绑定多个
             });
         });
+        $.postAjax("/credit/home/page/org/map", function (result) {
+            // {"lng":120.967572,"lat":31.388136,"grade":"诚实守信(A级)","name":"昆山第一人民医院"},
+            // console.log(result);
+            for (var i in points){
+                points[i].lng=result[i].leftAgencyCoordinate;
+                points[i].lat=result[i].rightAgencyCoordinate;
+                points[i].grade=result[i].resultGrade;
+                points[i].name=result[i].agencyName;
+                console.log(points[i]);
+            }
+
+
+        });
         generatorEventChart(eventChart);
         generatorOrgChart(orgChart);
     });
@@ -342,6 +355,8 @@
     var points = [
          {"lng":120.967572,"lat":31.388136,"grade":"诚实守信(A级)","name":"昆山第一人民医院"},
          {"lng":120.9659,"lat":31.409471,"grade":"诚实守信(A级)","name":"昆山第三人民医院"},
+         {"lng":120.916446,"lat":31.180644,"grade":"诚实守信(A级)","name":"昆山市锦溪人民医院"},
+         {"lng":120.916446,"lat":31.180644,"grade":"诚实守信(A级)","name":"昆山市锦溪人民医院"},
          {"lng":120.916446,"lat":31.180644,"grade":"诚实守信(A级)","name":"昆山市锦溪人民医院"}
     ];
     //创建标注点并添加到地图中
