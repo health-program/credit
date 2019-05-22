@@ -11,7 +11,6 @@ import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
-import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,32 +47,14 @@ public class DepartmentPersonCreditController extends ControllerSupport {
     public Object getDetail(@RequestParam String id, Model model) {   	
         return CommonResponse.getSuccessResponse(beanCopy(departmentPersonCreditService.get(id), new DepartmentPersonCreditVO()));
     }
-    
-    @GetMapping("/add")
-    public String addInput() {
-        return "/credit/department/department_person_credit_add";
-    }
 
     @GetMapping("/detail")
-    public String detailInput(@RequestParam String id, Model model) {
+    public String detailInput(@RequestParam String id,@RequestParam String type, Model model) {
     	model.addAttribute("id", id);
+    	model.addAttribute("type", type);
         return "/credit/department/department_person_credit_detail";
     }
     
-    @PostMapping("/save")
-	@ResponseBody
-    public Object save(@Valid DepartmentPersonCreditDTO departmentPersonCreditDTO, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return validErrorHandler(bindingResult);
-		}
-        DepartmentPersonCredit model = beanCopy(departmentPersonCreditDTO, new DepartmentPersonCredit());
-		String id = UUIDUtil.createUUID();
-		model.setId(id);
-		if (departmentPersonCreditService.save(model) > 0) {
-			return CommonResponse.getSuccessResponse(beanCopy(departmentPersonCreditService.get(id), new DepartmentPersonCreditVO()));
-		}
-		return CommonResponse.getFailResponse();
-	}
 
     @PostMapping("/update")
 	@ResponseBody

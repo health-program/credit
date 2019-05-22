@@ -78,7 +78,6 @@
                     { title: "荣誉名称", field: "honorName" },
                     { title: "认定日期", field: "affirmTime" ,formatter: "date" },
                     { title: "主要失信事实", field: "losePromiseTruth" },
-                    { title: "行政处理处罚或法院判决决定的主要内容", field: "punishText" },
                     { title: "确认严重失信时间", field: "losePromiseTime" ,formatter: "date" },
                     {
                         title: "操作",
@@ -116,14 +115,13 @@
     }
 
     function detail(row) {
-        window.location = '/credit/department/person/credit/detail' + (row ? ('?id=' + row.id) : '');
+        window.location = '/credit/department/person/credit/detail' + (row ? ('?id=' + row.id+'&type='+row.type) : '');
     }
 
     function hideColumn() {
         if (type == 1) {
             table.hideColumn("chargePersonName");
             table.hideColumn("losePromiseTruth");
-            table.hideColumn("punishText");
             table.hideColumn("losePromiseTime");
             $("#chargePersonNameDiv").hide();
         } else {

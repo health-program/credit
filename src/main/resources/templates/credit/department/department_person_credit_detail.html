@@ -4,18 +4,18 @@
 <head th:include="/credit/header" />
 
 <body>
-    
+<tt:constant enumcode="honor-level-type,department-credit-type" />
     <section class="content-header">
-        <h1>自然人名单上报</h1>
+        <h1 th:text="|自然人名单上报-${type == '1' ? '红榜' : (type == '2' ? '黑榜' : '')}|"></h1>
         <ol class="breadcrumb">
-            <li><a href="/credit/department/person/credit/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li><a th:href="@{'/credit/department/person/credit/index/'+${type}}"><i class="fa fa-list-alt"></i>名单列表</a></li>
             <li class="active">详情</li>
         </ol>
     </section>
     <section class="content">
     </section>
     <div class="col-sm-2 col-sm-offset-5 btn-back">
-    	<a href="/credit/department/person/credit/index" class="btn btn-primary btn-block">返回</a>
+    	<a th:href="@{'/credit/department/person/credit/index/'+${type}}" class="btn btn-primary btn-block">返回</a>
     </div>
     <input type="hidden" id="id" th:value="${id}"/>
     <div th:include="/credit/footer" />
@@ -27,24 +27,26 @@
 	        name: "详情",
 	        url:"/credit/department/person/credit/update?id="+$("#id").val(),
 	        columns: [
-				{ title: "name", name: "name", inputType: "TEXT" },
-				{ title: "类型", name: "type", required: "required", inputType: "TEXT" },
-				{ title: "身份号码", name: "identificationNo", inputType: "TEXT" },
-				{ title: "荣誉名称", name: "honorName", inputType: "TEXT" },
-				{ title: "认定文号", name: "affirmWrit", inputType: "TEXT" },
-				{ title: "荣誉等级", name: "honorLevel", inputType: "TEXT" },
-				{ title: "认定日期", name: "affirmTime", inputType: "DATE" },
-				{ title: "认定部门全称", name: "affirmDepartmentName", inputType: "TEXT" },
-				{ title: "荣誉内容", name: "honorText", inputType: "TEXT" },
-				{ title: "备注", name: "remark", inputType: "TEXT" },
-				{ title: "负责人名字", name: "chargePersonName", inputType: "TEXT" },
-				{ title: "行政处理处罚或法院判决决定的主要内容", name: "punishText", inputType: "TEXT" }
+                { title: "名单类型", name: "type",  inputType: "SELECT",enum:"department-credit-type"},
+                { title: "姓名", name: "name", required: "required",inputType: "TEXT" ,dependency:["type","1"]},
+                { title: "身份号码", name: "identificationNo",required: "required", inputType: "TEXT" },
+                { title: "认定文号", name: "affirmWrit",required: "required", inputType: "TEXT"},
+                { title: "认定部门(单位)全称", name: "affirmDepartmentName",required: "required", inputType: "TEXT" },
+                { title: "荣誉名称", name: "honorName",required: "required", inputType: "TEXT" ,dependency:["type","1"]},
+                { title: "荣誉等级", name: "honorLevel", inputType: "SELECT" ,dependency:["type","1"],enum:"honor-level-type"},
+                { title: "认定日期", name: "affirmTime",required: "required", inputType: "DATE" ,dependency:["type","1"]},
+                { title: "荣誉内容", name: "honorText", inputType: "TEXTAREA" ,dependency:["type","1"]},
+                { title: "负责人名字", name: "chargePersonName",required: "required", inputType: "TEXT" ,dependency:["type","2"]},
+                { title: "主要失信事实", name: "losePromiseTruth",required: "required", inputType: "TEXT" ,dependency:["type","2"]},
+                { title: "行政处理处罚或法院判决决定的主要内容", name: "punishText", inputType: "TEXTAREA" ,dependency:["type","2"]},
+                { title: "确认严重失信时间", name: "losePromiseTime",required: "required", inputType: "DATE",dependency:["type","2"] },
+                { title: "备注", name: "remark", inputType: "TEXTAREA" }
 				]
 	    }
     
         $.getAjax("/credit/department/person/credit/get?id="+$("#id").val(), function(data) {
             var html = generateHtml(options);
-            $(".content").html(html);、
+            $(".content").html(html);
             $.initComponment($(".content"));
            
             var model = new tonto.Model("model", options.columns);

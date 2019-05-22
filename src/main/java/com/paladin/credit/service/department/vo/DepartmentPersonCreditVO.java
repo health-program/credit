@@ -41,10 +41,10 @@ public class DepartmentPersonCreditVO {
 	private String chargePersonName;
 
 	// 确认严重失信时间
-	private Date breakPromiseTime;
+	private Date losePromiseTime;
 
 	// 主要失信事实
-	private String breakPromiseTruth;
+	private String losePromiseTruth;
 
 	// 行政处理处罚或法院判决决定的主要内容
 	private String punishText;
@@ -145,20 +145,20 @@ public class DepartmentPersonCreditVO {
 		this.chargePersonName = chargePersonName;
 	}
 
-	public Date getBreakPromiseTime() {
-		return breakPromiseTime;
+	public Date getLosePromiseTime() {
+		return losePromiseTime;
 	}
 
-	public void setBreakPromiseTime(Date breakPromiseTime) {
-		this.breakPromiseTime = breakPromiseTime;
+	public void setLosePromiseTime(Date losePromiseTime) {
+		this.losePromiseTime = losePromiseTime;
 	}
 
-	public String getBreakPromiseTruth() {
-		return breakPromiseTruth;
+	public String getLosePromiseTruth() {
+		return losePromiseTruth;
 	}
 
-	public void setBreakPromiseTruth(String breakPromiseTruth) {
-		this.breakPromiseTruth = breakPromiseTruth;
+	public void setLosePromiseTruth(String losePromiseTruth) {
+		this.losePromiseTruth = losePromiseTruth;
 	}
 
 	public String getPunishText() {
