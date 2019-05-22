@@ -3,7 +3,7 @@
 <head th:include="/credit/header" />
 <style>
     .row{
-        padding: 0 15px;
+        padding: 5px 10px  0 10px;
     }
     .notice-list {
         list-style: none;
@@ -61,7 +61,7 @@
 
     .childTab th {
         text-align: center;
-        height:5px;
+        height:15%;
     }
 
     .alarmDiv {
@@ -450,16 +450,16 @@
         var num=parseInt(content.length/10);
         switch(num) {
             case 0:
-                offsetSize = new BMap.Size(-20, -40);
+                offsetSize = new BMap.Size(-20, -20);
                 break;
             case 1:
-                offsetSize = new BMap.Size(-20, -40);
+                offsetSize = new BMap.Size(-20, -35);
                 break;
             case 2:
-                offsetSize = new BMap.Size(-20, -60);
+                offsetSize = new BMap.Size(-20, -50);
                 break;
             case 3:
-                offsetSize = new BMap.Size(-20, -80);
+                offsetSize = new BMap.Size(-20, -65);
                 break;
             default:
                 break;
@@ -556,10 +556,10 @@
              content+='<table border="1" class="childTab"><tr><th colspan="2">近期事件</th></tr>' ;
              if (point.events && point.events.length > 0) {
                  point.events.forEach(function (event) {
-                     content += '<tr><td class="tabText">' + event.item + '</td><td class="tabLabel">' + event.resultGradeName + '</td></tr>';
+                     content += '<tr><td style="text-align: center">' + event.item + '</td><td style="text-align: center">' + event.resultGradeName + '</td></tr>';
                  });
              } else {
-                 content += '<tr><td colspan="2" class="tabLabel">暂无数据</td></tr>';
+                 content += '<tr><td colspan="2">暂无数据</td></tr>';
              }
              content+=  '</table></td></tr></table></div>';
              var infoWindow = new BMap.InfoWindow(content,opts); //创建信息窗口对象

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+    
+    <section class="content-header">
+        <h1>法人名单上报</h1>
+        <ol class="breadcrumb">
+            <li><a href="/credit/department/credit/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/credit/department/credit/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <div th:include="/credit/footer" />
+    <script type="text/javascript">
+
+    $(function() {
+    	var options = {
+	        id: "model",
+	        name: "详情",
+	        url:"/credit/department/credit/update?id="+$("#id").val(),
+	        columns: [
+				{ title: "机构名称", name: "name", required: "required", inputType: "TEXT" },
+				{ title: "类型", name: "type", required: "required", inputType: "TEXT" },
+				{ title: "统一社会信用代码（三证必须选一填写）", name: "socialCreditCode", inputType: "TEXT" },
+				{ title: "工商注册号", name: "commercialRegistrationNumber", inputType: "TEXT" },
+				{ title: "组织机构代码", name: "organizationCode", inputType: "TEXT" },
+				{ title: "荣誉名称", name: "honorName", inputType: "TEXT" },
+				{ title: "认定文号", name: "affirmWrit", inputType: "TEXT" },
+				{ title: "荣誉等级", name: "honorLevel", inputType: "TEXT" },
+				{ title: "评定结果", name: "assessmentResult", inputType: "TEXT" },
+				{ title: "认定日期", name: "affirmTime", inputType: "DATE" },
+				{ title: "认定部门全称", name: "affirmDepartmentName", inputType: "TEXT" },
+				{ title: "荣誉内容", name: "honorText", inputType: "TEXT" },
+				{ title: "备注", name: "remark", inputType: "TEXT" },
+				{ title: "地址", name: "registeredAddress", inputType: "TEXT" },
+				{ title: "法定代表人或负责人", name: "chargePerson", inputType: "TEXT" },
+				{ title: "确认严重失信时间", name: "losePromiseTime", inputType: "DATE" },
+				{ title: "主要失信事实", name: "losePromiseTruth", inputType: "TEXT" },
+				{ title: "行政处理处罚或法院判决决定的主要内容", name: "punishText", inputType: "TEXT" }
+				]
+	    }
+    
+        $.getAjax("/credit/department/credit/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);、
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>

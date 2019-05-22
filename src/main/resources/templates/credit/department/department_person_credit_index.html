@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="honor-level-type" />
+    <section class="content-header">
+        <h1 th:text="|自然人名单上报-${type == '1' ? '红榜' : (type == '2' ? '黑榜' : '')}|"></h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                    <input type="hidden" id="type" name="type" th:value="${type}">
+                	<div class="form-group">
+                        <div class="col-md-2" id="nameDiv">
+                            <input name="name" class="form-control" placeholder="请输入姓名" th:value="${query?.name}" />
+                        </div>
+                        <div class="col-md-2" id="chargePersonNameDiv">
+                            <input name="chargePersonName" class="form-control" placeholder="请输入负责人姓名" th:value="${query?.chargePersonName}" />
+                        </div>
+                        <div class="col-md-2">
+                            <input name="identificationNo" class="form-control" placeholder="请输入证件号码" th:value="${query?.identificationNo}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <input name="bgTime" placeholder="请选择开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date"  >
+                        </div>
+                        <div class="col-md-3">
+                            <input name="endTime" placeholder="请选择结束时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date"  >
+                        </div>
+	                    <div class="col-md-6">
+		                    <div class="pull-right">
+		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+		                    </div>
+		                </div>
+	                </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+            </div>
+        </div>
+        <div class="box box-solid" style="margin-top:20px">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+                <div id="toolbar">
+                    <div class="btn-group">
+                        <!--<a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/credit/footer" />
+    <script type="text/javascript">
+    var table,type;
+    $(function() {
+        type = $("#type").val();
+        initDataGrid();
+        hideColumn();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "姓名", field: "name" },
+                    { title: "身份号码", field: "identificationNo" },
+                    { title: "负责人名字", field: "chargePersonName" },
+                    { title: "认定文号", field: "affirmWrit" },
+                    { title: "认定部门(单位)全称", field: "affirmDepartmentName" },
+                    { title: "荣誉名称", field: "honorName" },
+                    { title: "认定日期", field: "affirmTime" ,formatter: "date" },
+                    { title: "主要失信事实", field: "losePromiseTruth" },
+                    { title: "行政处理处罚或法院判决决定的主要内容", field: "punishText" },
+                    { title: "确认严重失信时间", field: "losePromiseTime" ,formatter: "date" },
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "150px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+
+                        }
+                    }
+                ]
+            ],
+            url: '/credit/department/person/credit/find/page',
+            searchbar: '#searchbar',
+            exportUrl: '/credit/department/person/credit/export',
+            showExport: true,
+            showColumns: true,
+            pagination: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+    function add() {
+        window.location = '/credit/department/person/credit/add';
+    }
+
+    function detail(row) {
+        window.location = '/credit/department/person/credit/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function hideColumn() {
+        if (type == 1) {
+            table.hideColumn("chargePersonName");
+            table.hideColumn("losePromiseTruth");
+            table.hideColumn("punishText");
+            table.hideColumn("losePromiseTime");
+            $("#chargePersonNameDiv").hide();
+        } else {
+            table.hideColumn("name");
+            table.hideColumn("honorName");
+            table.hideColumn("affirmTime");
+            $("#nameDiv").hide();
+        }
+    }
+
+    function remove(row) {
+        if (row) {
+            layer.confirm('确定删除吗?', function() {
+                $.getAjax('/credit/department/person/credit/delete?id=' + row.id, function() {
+                    $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+    </script>
+</body>
+
+</html>
