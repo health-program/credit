@@ -27,7 +27,7 @@
 	        name: "详情",
 	        url:"/credit/department/person/credit/update?id="+$("#id").val(),
 	        columns: [
-                { title: "名单类型", name: "type",  inputType: "SELECT",enum:"department-credit-type"},
+                { title: "名单类型", name: "type",  inputType: "SELECT",enum:"department-credit-type",editable:false},
                 { title: "姓名", name: "name", required: "required",inputType: "TEXT" ,dependency:["type","1"]},
                 { title: "身份号码", name: "identificationNo",required: "required", inputType: "TEXT" },
                 { title: "认定文号", name: "affirmWrit",required: "required", inputType: "TEXT"},
