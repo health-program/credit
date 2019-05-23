@@ -8,7 +8,7 @@ import java.util.Date;
  * 功能描述 :<法人黑榜上传模板>
  * @Date 13:12 2019/5/23
  **/
-public class DepartmentCreditblackUpdateDTO {
+public class DepartmentCreditBlackUploadDTO {
 
     // 统一社会信用代码（三证必须选一填写）
     @ReadProperty(cellIndex = 0,nullable = false)

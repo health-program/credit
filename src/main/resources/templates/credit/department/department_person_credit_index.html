@@ -50,10 +50,10 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">自然人名单模板导入</h4>
+                        <h4 class="modal-title" th:text="|${type == '1' ? '自然人红名单信息导入' : (type == '2' ? '自然人黑名单信息导入' : '')}|"></h4>
                     </div>
                     <div class="modal-body">
-                        <form id="uploadForm" enctype="multipart/form-data" method="post" class="form-horizontal">
+                        <form id="uploadForm" enctype="multipart/form-data" th:action="${type == '1' ? '/credit/department/person/credit/upload/red' : (type == '2' ? '/credit/department/person/credit/upload/black' : '')}" method="post" class="form-horizontal">
                             <div class="form-group" style="margin-bottom: 0">
                                 <div class="col-md-10">
                                     <input id="file" name="file" type="file">
@@ -77,11 +77,12 @@
                 <table id="dataGrid"></table>
                 <div id="toolbar">
                     <div class="btn-group">
-                        <a  th:href="@{'/static/excel/'+${type=='1' ? '信用办红名单自然人导入模板.xlsx':(type=='2' ? '信用办黑名单自然人导入模板.xlsx' : '')}}" class="btn btn-default" target="_blank"  download = "自然人名单导入模板" ><i class="glyphicon glyphicon-download-alt"></i>导入模板下载</a>
+                        <a  th:if="${type == '1'}" href="/static/excel/信用办红名单自然人导入模板.xlsx" class="btn bg-teal-active" target="_blank"  download = "自然人红名单导入模板" ><i class="glyphicon glyphicon-download-alt"></i>&nbsp;导入模板下载</a>
+                        <a  th:if="${type == '2'}" href="/static/excel/信用办黑名单自然人导入模板.xlsx" class="btn bg-teal-active" target="_blank"  download = "自然人黑名单导入模板" ><i class="glyphicon glyphicon-download-alt"></i>&nbsp;导入模板下载</a>
                     </div>
                     <div class="btn-group">
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
-                            <i class="fa  fa-upload"></i>模板导入
+                            <i class="fa  fa-file-excel-o"></i>&nbsp;模板导入
                         </button>
                     </div>
                 </div>
@@ -96,7 +97,6 @@
         initDataGrid();
         hideColumn();
         initUploadForm();
-        initUploadFormAction()
     });
 
     function initDataGrid() {
@@ -221,13 +221,6 @@
         }
     }
 
-    function initUploadFormAction() {
-        if (type == 1) {
-            $("#uploadForm").attr("action", '/credit/department/person/credit/upload/red');
-        }else if (type == 2) {
-            $("#uploadForm").attr("action", '/credit/department/person/credit/upload/black');
-        }
-    }
     </script>
 </body>
 

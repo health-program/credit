@@ -8,7 +8,7 @@ import java.util.Date;
  * 功能描述 :<行业上传模板>
  * @Date 13:13 2019/5/23
  **/
-public class DepartmentEnterpriseUpdateDTO {
+public class DepartmentEnterpriseUploadDTO {
     // 统一社会信用代码（三证必须选一填写）
     @ReadProperty(cellIndex = 0,nullable = false)
     private String socialCreditCode;

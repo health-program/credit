@@ -2,6 +2,7 @@ package com.paladin.credit.model.department;
 
 import com.paladin.framework.common.BaseModel;
 
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
 
@@ -9,6 +10,7 @@ public class DepartmentCredit extends BaseModel {
 
 	// 主键
 	@Id
+	@GeneratedValue(generator = "UUID")
 	private String id;
 
 	// 机构名称
