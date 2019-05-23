@@ -44,63 +44,15 @@ public class DepartmentCreditBlackUploadDTO {
 
     // 确认严重失信时间
     @ReadProperty(cellIndex = 8,nullable = false)
-    private Date breakPromiseTime;
+    private Date losePromiseTime;
 
     // 主要失信事实
     @ReadProperty(cellIndex = 9,nullable = false)
-    private String breakPromiseTruth;
+    private String losePromiseTruth;
 
     // 行政处理处罚或法院判决决定的主要内容
     @ReadProperty(cellIndex = 10)
     private String punishText;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getRegisteredAddress() {
-        return registeredAddress;
-    }
-
-    public void setRegisteredAddress(String registeredAddress) {
-        this.registeredAddress = registeredAddress;
-    }
-
-    public String getChargePerson() {
-        return chargePerson;
-    }
-
-    public void setChargePerson(String chargePerson) {
-        this.chargePerson = chargePerson;
-    }
-
-    public Date getBreakPromiseTime() {
-        return breakPromiseTime;
-    }
-
-    public void setBreakPromiseTime(Date breakPromiseTime) {
-        this.breakPromiseTime = breakPromiseTime;
-    }
-
-    public String getBreakPromiseTruth() {
-        return breakPromiseTruth;
-    }
-
-    public void setBreakPromiseTruth(String breakPromiseTruth) {
-        this.breakPromiseTruth = breakPromiseTruth;
-    }
-
-    public String getPunishText() {
-        return punishText;
-    }
-
-    public void setPunishText(String punishText) {
-        this.punishText = punishText;
-    }
 
     public String getSocialCreditCode() {
         return socialCreditCode;
@@ -140,5 +92,53 @@ public class DepartmentCreditBlackUploadDTO {
 
     public void setAffirmDepartmentName(String affirmDepartmentName) {
         this.affirmDepartmentName = affirmDepartmentName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getRegisteredAddress() {
+        return registeredAddress;
+    }
+
+    public void setRegisteredAddress(String registeredAddress) {
+        this.registeredAddress = registeredAddress;
+    }
+
+    public String getChargePerson() {
+        return chargePerson;
+    }
+
+    public void setChargePerson(String chargePerson) {
+        this.chargePerson = chargePerson;
+    }
+
+    public Date getLosePromiseTime() {
+        return losePromiseTime;
+    }
+
+    public void setLosePromiseTime(Date losePromiseTime) {
+        this.losePromiseTime = losePromiseTime;
+    }
+
+    public String getLosePromiseTruth() {
+        return losePromiseTruth;
+    }
+
+    public void setLosePromiseTruth(String losePromiseTruth) {
+        this.losePromiseTruth = losePromiseTruth;
+    }
+
+    public String getPunishText() {
+        return punishText;
+    }
+
+    public void setPunishText(String punishText) {
+        this.punishText = punishText;
     }
 }
