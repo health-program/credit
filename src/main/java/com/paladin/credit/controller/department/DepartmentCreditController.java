@@ -29,9 +29,10 @@ public class DepartmentCreditController extends ControllerSupport {
     @Autowired
     private DepartmentCreditService departmentCreditService;
 
-    @GetMapping("/index")
+    @GetMapping("/index/{type}")
     @QueryInputMethod(queryClass = DepartmentCreditQuery.class)
-    public String index() {
+    public String index(@PathVariable String type,Model model) {
+		model.addAttribute("type",type);
         return "/credit/department/department_credit_index";
     }
 
@@ -44,7 +45,7 @@ public class DepartmentCreditController extends ControllerSupport {
     
     @GetMapping("/get")
     @ResponseBody
-    public Object getDetail(@RequestParam String id, Model model) {   	
+    public Object getDetail(@RequestParam String id, Model model) {
         return CommonResponse.getSuccessResponse(beanCopy(departmentCreditService.get(id), new DepartmentCreditVO()));
     }
     
@@ -54,8 +55,9 @@ public class DepartmentCreditController extends ControllerSupport {
     }
 
     @GetMapping("/detail")
-    public String detailInput(@RequestParam String id, Model model) {
-    	model.addAttribute("id", id);
+    public String detailInput(@RequestParam String id,@RequestParam String type, Model model) {
+		model.addAttribute("id", id);
+		model.addAttribute("type", type);
         return "/credit/department/department_credit_detail";
     }
     

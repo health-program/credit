@@ -4,22 +4,37 @@
 <head th:include="/credit/header" />
 
 <body>
-    
+
     <section class="content-header">
-        <h1>法人名单上报</h1>
+        <h1 th:text="|${type == '1' ? '法人名单上报-红榜' : (type == '2' ? '法人名单上报-黑榜' : '行业评定信息上报')}|"></h1>
     </section>
     <section class="content">
         <div class="box box-solid">
             <div class="box-body">
                 <form id="searchbar" class="form-horizontal form-search">
-                	<div class="form-group">
-	                    <div class="col-md-12">
-		                    <div class="pull-right">
-		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
-		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
-		                    </div>
-		                </div>
-	                </div>
+                    <input type="hidden" id="type" name="type" th:value="${type}">
+                    <div class="form-group">
+                        <div class="col-md-2" id="name">
+                            <input name="name" class="form-control" placeholder="请输入机构名称" th:value="${query?.name}" />
+                        </div>
+                        <div class="col-md-2" id="socialCreditCode">
+                            <input name="socialCreditCode" class="form-control" placeholder="请输入统一社会信用代码" th:value="${query?.socialCreditCode}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <input name="bgTime" placeholder="请选择开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date"  >
+                        </div>
+                        <div class="col-md-3">
+                            <input name="endTime" placeholder="请选择结束时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date"  >
+                        </div>
+                        <div class="col-md-6">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
                     <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
                     <input type="text" style="display:none">
                 </form>
@@ -31,18 +46,17 @@
             <div id="result" class="box-body">
                 <table id="dataGrid"></table>
                 <div id="toolbar">
-                    <div class="btn-group">
-                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
     <div th:include="/credit/footer" />
     <script type="text/javascript">
-    var table;
+    var table,type;
     $(function() {
+        type=$("#type").val();
         initDataGrid();
+        hideColumn();
     });
 
     function initDataGrid() {
@@ -50,24 +64,45 @@
             idField: "id",
             columns: [
                 [
-                    					{ title: "荣誉等级", field: "honorLevel" },
-					{ title: "行政处理处罚或法院判决决定的主要内容", field: "punishText" },
-					{ title: "认定文号", field: "affirmWrit" },
-					{ title: "地址", field: "registeredAddress" },
-					{ title: "法定代表人或负责人", field: "chargePerson" },
-					{ title: "备注", field: "remark" },
-					{ title: "认定日期", field: "affirmTime" ,formatter: "date" },
-					{ title: "类型", field: "type" },
-					{ title: "确认严重失信时间", field: "losePromiseTime" ,formatter: "date" },
-					{ title: "荣誉名称", field: "honorName" },
-					{ title: "组织机构代码", field: "organizationCode" },
-					{ title: "荣誉内容", field: "honorText" },
-					{ title: "工商注册号", field: "commercialRegistrationNumber" },
-					{ title: "机构名称", field: "name" },
-					{ title: "统一社会信用代码（三证必须选一填写）", field: "socialCreditCode" },
-					{ title: "认定部门全称", field: "affirmDepartmentName" },
+                    { title: "机构名称", field: "name" },
+                    { title: "统一社会信用代码（三证必须选一填写）", field: "socialCreditCode" },
+                    { title: "备注", field: "remark" },
+                    { title: "认定部门全称", field: "affirmDepartmentName" },
+                    { title: "认定文号", field: "affirmWrit" },
+                    { title: "荣誉名称", field: "honorName" },
+                    { title: "认定（评定）日期", field: "affirmTime" ,formatter: "date" },
+                    { title: "荣誉等级", field: "honorLevel" },
+                    { title: "行政处理处罚或法院判决决定的主要内容", field: "punishText" },
+                    { title: "地址", field: "registeredAddress" },
+                    { title: "法定代表人或负责人", field: "chargePerson" },
+                    { title: "类型", field: "type" },
+                    { title: "确认严重失信时间", field: "losePromiseTime" ,formatter: "date" },
+                    { title: "组织机构代码", field: "organizationCode" },
+                    { title: "荣誉内容", field: "honorText" },
+                    { title: "工商注册号", field: "commercialRegistrationNumber" },
 					{ title: "主要失信事实", field: "losePromiseTruth" },
-					{ title: "评定结果", field: "assessmentResult" },
+					{ title: "评定名称", field: "assessmentResultName" },
+					{ title: "评定结果", field: "assessmentResult" ,formatter:function (value, row, index) {
+                            if (value == 0) {
+                                return "未评级"
+                            }
+                            if (value === 1) {
+                                return "A类";
+                            }
+                            if (value === 2) {
+                                return "B类";
+                            }
+                            if (value === 3) {
+                                return "C类";
+                            }
+                            if (value === 4) {
+                                return "D类";
+                            }
+                            if (value === 5) {
+                                return "E类";
+                            }
+                        }
+                    },
                     {
                         title: "操作",
                         align: "center",
@@ -99,12 +134,59 @@
         });
     }
 
+    function hideColumn() {
+        if (type == 1) {
+            table.hideColumn("remark");
+            table.hideColumn("honorLevel");
+            table.hideColumn("punishText");
+            table.hideColumn("registeredAddress");
+            table.hideColumn("chargePerson");
+            table.hideColumn("type");
+            table.hideColumn("losePromiseTime");
+            table.hideColumn("organizationCode");
+            table.hideColumn("honorText");
+            table.hideColumn("commercialRegistrationNumber");
+            table.hideColumn("assessmentResult");
+            table.hideColumn("losePromiseTruth");
+            table.hideColumn("assessmentResultName");
+            // $("#chargePersonNameDiv").hide();
+        }
+        if (type == 2) {
+            table.hideColumn("remark");
+            table.hideColumn("assessmentResult");
+            table.hideColumn("honorLevel");
+            table.hideColumn("honorName");
+            table.hideColumn("organizationCode");
+            table.hideColumn("honorText");
+            table.hideColumn("commercialRegistrationNumber");
+            table.hideColumn("affirmTime");
+            table.hideColumn("type");
+            table.hideColumn("assessmentResultName");
+            table.hideColumn("registeredAddress");
+            table.hideColumn("punishText");
+            // $("#nameDiv").hide();
+        }
+        if (type == 3) {
+            table.hideColumn("remark");
+            table.hideColumn("affirmWrit");
+            table.hideColumn("punishText");
+            table.hideColumn("registeredAddress");
+            table.hideColumn("chargePerson");
+            table.hideColumn("type");
+            table.hideColumn("losePromiseTime");
+            table.hideColumn("honorText");
+            table.hideColumn("losePromiseTruth");
+            table.hideColumn("honorText");
+            table.hideColumn("honorLevel");
+            table.hideColumn("honorName");
+        }
+    }
     function add() {
         window.location = '/credit/department/credit/add';
     }
 
     function detail(row) {
-        window.location = '/credit/department/credit/detail' + (row ? ('?id=' + row.id) : '');
+        window.location = '/credit/department/credit/detail' + (row ? ('?id=' + row.id+"&type="+row.type) : '');
     }
 
     function remove(row) {

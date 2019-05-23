@@ -34,6 +34,9 @@ public class DepartmentCreditDTO {
 	// 评定结果
 	private Integer assessmentResult;
 
+	// 评定名称
+	private String assessmentResultName;
+
 	// 认定日期
 	private Date affirmTime;
 
@@ -61,6 +64,13 @@ public class DepartmentCreditDTO {
 	// 行政处理处罚或法院判决决定的主要内容
 	private String punishText;
 
+	public String getAssessmentResultName() {
+		return assessmentResultName;
+	}
+
+	public void setAssessmentResultName(String assessmentResultName) {
+		this.assessmentResultName = assessmentResultName;
+	}
 	public String getId() {
 		return id;
 	}

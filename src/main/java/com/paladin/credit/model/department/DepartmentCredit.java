@@ -38,6 +38,17 @@ public class DepartmentCredit extends BaseModel {
 	// 评定结果
 	private Integer assessmentResult;
 
+	public String getAssessmentResultName() {
+		return assessmentResultName;
+	}
+
+	public void setAssessmentResultName(String assessmentResultName) {
+		this.assessmentResultName = assessmentResultName;
+	}
+
+	// 评定名称
+	private String assessmentResultName;
+
 	// 认定日期
 	private Date affirmTime;
 
