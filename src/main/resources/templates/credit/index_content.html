@@ -38,14 +38,12 @@
 
 
     .tabLabel {
-        height: 24px;
-        text-align: center;
+        width: 30%;
+        text-align: left;
         font-weight: bold;
-        padding-right: 5px;
     }
 
     .tabText {
-        padding-left: 5px;
         text-align: center;
     }
 
@@ -73,6 +71,42 @@
         font-weight: bold;
         color:green;
         font-size: 15pt;
+    }
+
+    .infoBoxContent{
+        margin:20px;
+    }
+    .infoBoxContent button{
+        background-color: #008CBA;
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 16px;
+        width: 120px;
+    }
+    .infoBoxContent h3{
+        color: white;
+    }
+    .infoBoxContent tr{
+        color:white;
+    }
+
+    .infoBoxContent p{
+        color:white;
+    }
+    .infoBoxContent:before {
+        content: '';
+        width: 0;
+        height: 0;
+        border: 20px solid transparent;
+        border-top-color: #333333;
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        margin-left: -20px;
     }
 
 </style>
@@ -173,6 +207,7 @@
 </section>
 <div th:include="/credit/footer" />
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW"></script>
+<script type="text/javascript" src="/static/assets/baidumap/InfoBox_min.js"></script>
 <script type="text/javascript">
 
     /*<![CDATA[*/
@@ -377,15 +412,12 @@
         });
     };
 
-/*    function loadJScript() {
+    function loadJScript() {
         var script = document.createElement("script");
         script.type = "text/javascript";
         script.src = "http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW&callback=initMap";
         document.body.appendChild(script);
-        $.postAjax("/credit/home/page/map/org", function (result) {
-            points = result;
-        });
-    }*/
+    }
 
     function query2(){
         let orgname = $("#orgName").val();
@@ -401,15 +433,6 @@
         }
         initMap(newPoints);
     }
-
-
-/*    var points = [
-         {"lng":120.967572,"lat":31.388136,"grade":"诚实守信(A级)","name":"昆山第一人民医院"},
-         {"lng":120.9659,"lat":31.409471,"grade":"诚实守信(A级)","name":"昆山第三人民医院"},
-         {"lng":120.916446,"lat":31.180644,"grade":"诚实守信(A级)","name":"昆山市锦溪人民医院"},
-         {"lng":120.916446,"lat":31.180644,"grade":"诚实守信(A级)","name":"昆山市锦溪人民医院"},
-         {"lng":120.916446,"lat":31.180644,"grade":"诚实守信(A级)","name":"昆山市锦溪人民医院"}
-    ];*/
 
     //创建标注点并添加到地图中
     function addMarker(map,points) {
@@ -427,7 +450,8 @@
                     var thePoint = points[i];
                     marker.addEventListener("click",
                         function() {
-                            showInfo(this,thePoint);
+                            //showInfo(this,thePoint);
+                            showBoxInfo(map,this,thePoint)
                         });
                 })();
             }
@@ -498,7 +522,9 @@
             map.centerAndZoom(new BMap.Point(120.987239, 31.391653), 14);
         }
     }
-    
+
+
+    //根据地名更新坐标
     function updatePoints(points) {
         var geoc = new BMap.Geocoder();
 
@@ -533,6 +559,7 @@
         };
     }
 
+    //展示信息窗口
     function showInfo(thisMarker,point) {
          $.postAjax('/credit/home/page/map/org/info',{'agencyId':point.agencyId},function (data) {
              point['events'] = data;
@@ -568,6 +595,50 @@
 
     }
 
+    window.lastInfoBox = null;//定义上一个窗体为lastInfoBox;
+    function showBoxInfo(map,marker, point) {
+        $.postAjax('/credit/home/page/map/org/info',{'agencyId':point.agencyId},function (data) {
+            point['events'] = data;
+            var opts = {
+                boxStyle:{
+                    opacity: "0.8",
+                    background: "#333333",
+                    width: "350px",
+                    height: "300px"
+                }
+                ,enableAutoPan: true
+                ,align: INFOBOX_AT_TOP,
+                closeIconUrl:'/static/image/iconfont-close.png',
+                closeIconMargin:'1px',
+                closeIconZIndex:1,
+                closeIconWidth:'10px'
+
+            };
+            var html = '<div class="infoBoxContent">';
+            html += '<h3>机构信誉情况</h3><hr />';
+            html += '<div><table>';
+            html += '<tr><td class="tabLabel">机构名称:</td><td class="tabText">'+point.agencyName+'</td></tr>';
+            html += '<tr><td class="tabLabel">医疗信用等级:</td><td class="tabText">'+point.gradeName+'</td></tr>';
+            html += '<table class="childTab" style="border-collapse:separate; border-spacing:0px 10px;"><tr><th colspan="2">近期事件</th></tr>';
+            if (point.events && point.events.length > 0) {
+                point.events.forEach(function (event) {
+                    html += '<tr><td >' + event.item + '</td><td style="text-align: left">' + event.resultGradeName + '</td></tr>';
+                });
+            } else {
+                html += '<tr><td colspan="2">暂无数据</td></tr>';
+            }
+            html += '</table></table></div></div>';
+            var infoWindow =  new BMapLib.InfoBox(map,html,opts);
+            if(lastInfoBox){
+                //判断上一个窗体是否存在，若存在则执行close
+                lastInfoBox.close();
+            }
+            lastInfoBox = infoWindow;
+            infoWindow.open(marker);
+        });
+    }
+
+    //地图初始化
     function initMap(data) {
         var map = new BMap.Map("allmap");
         if ($.isArray(data) && data.length > 0) {
