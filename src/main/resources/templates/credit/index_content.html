@@ -603,8 +603,8 @@
                 boxStyle:{
                     opacity: "0.8",
                     background: "#333333",
-                    width: "350px",
-                    height: "300px"
+                    width: "380px",
+                    height: "auto"
                 }
                 ,enableAutoPan: true
                 ,align: INFOBOX_AT_TOP,
@@ -622,7 +622,7 @@
             html += '<table class="childTab" style="border-collapse:separate; border-spacing:0px 10px;"><tr><th colspan="2">近期事件</th></tr>';
             if (point.events && point.events.length > 0) {
                 point.events.forEach(function (event) {
-                    html += '<tr><td >' + event.item + '</td><td style="text-align: left">' + event.resultGradeName + '</td></tr>';
+                    html += '<tr><td style="text-align: left">' + event.item + '</td><td style="text-align: right">' + event.resultGradeName + '</td></tr>';
                 });
             } else {
                 html += '<tr><td colspan="2">暂无数据</td></tr>';
