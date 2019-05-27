@@ -159,6 +159,32 @@
     <script src="/static/assets/layer/layer.js"></script>
     <script src="/static/js/common.js"></script>
     <script type="text/javascript">
+    var currentTab;
+    var addTabs = function(e) {
+    	currentTab = e;
+        var t = {
+            id: 200 * Math.random(),
+            urlType: "relative",
+            title: "新页面"
+        };
+        if ("relative" === (e = $.extend(!0, t, e)).urlType) {
+            var a = window.location.pathname + "/../";
+            e.url = a + e.url
+        }
+        var o, n = e.id;
+        App.blockUI({
+            target: "#tab-content",
+            boxed: !0,
+            message: "加载中......"
+        }),
+        (o = $("<iframe></iframe>").attr("src", e.url).css("width", "100%").attr("frameborder", "no").attr("id", "iframe_" + n).addClass("tab_iframe").attr(pageIdField, n)).load(function() {
+            App.unblockUI("#tab-content"),
+            App.fixIframeCotent()
+        }),
+        $("#tab-content").empty(),
+        $("#tab-content").append(o)
+    }
+    
     function goHome() {
         addTabs({ id: '0001', title: '首页', close: true, url: '/home/page/index', urlType: 'relative' });
     }
@@ -246,8 +272,8 @@
     }
 
     function updateCode(code) {
-        $.getAjax('/credit/update/'+code,function () {
-
+        $.getAjax('/credit/update/'+code,function (data) {
+        	addTabs(currentTab);
         })
     }
     </script>
