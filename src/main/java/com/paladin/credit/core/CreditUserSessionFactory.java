@@ -30,6 +30,7 @@ public class CreditUserSessionFactory {
 	@Autowired
 	private OrgPersonnelAgencyService agencyService;
 
+	private final static String CONSTANT_TYPE_SUPERVISE_SCOPE = "supervise-scope";
 
 	public UserSession createSession(SysUser sysUser) {
 		int type = sysUser.getType();
@@ -39,6 +40,8 @@ public class CreditUserSessionFactory {
 			userSession = new CreditUserSession(sysUser.getId(), "系统管理员", sysUser.getAccount());
 			userSession.isSystemAdmin = true;
 			userSession.roleLevel = CreditUserSession.ROLE_LEVEL_ADMIN;
+			List<ConstantsContainer.KeyValue> keyValues = ConstantsContainer.getType(CONSTANT_TYPE_SUPERVISE_SCOPE);
+			userSession.superviseScopes = keyValues.stream().map(ConstantsContainer.KeyValue::getKey).toArray(String[] :: new);
 			userSession.currentSuperviseScope = ConstantsContainer.getType("supervise-scope").get(0).getKey();
 		} else if (type == SysUser.TYPE_SUPERVISE) {
 			String userId = sysUser.getUserId();

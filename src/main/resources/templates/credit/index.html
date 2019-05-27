@@ -62,10 +62,10 @@
                             </ul>
                         </li>
                         <li class="dropdown" th:if="${isSupervisor}">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">[[${currentSuperviseScope}]] <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="code">[[${currentSuperviseScope}]]<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 <!--<li role="presentation" class="dropdown-header">请选择更换的监管科室·机构:</li>-->
-                                <li th:each="s: ${supervise}"><a th:onclick="updateCode([[${s.key}]])" href="javascript:void(0)" th:text="${s.value}"></a></li>
+                                <li th:each="s: ${supervise}"><a th:onclick="updateCode([[${s.key}]],[[${s.value}]])" href="javascript:void(0)" th:text="${s.value}"></a></li>
                             </ul>
                         </li>
                         <li>
@@ -271,9 +271,10 @@
         return [w + "px", h + "px"];
     }
 
-    function updateCode(code) {
+    function updateCode(code,name) {
         $.getAjax('/credit/update/'+code,function (data) {
-        	addTabs(currentTab);
+            $("#code").html("" +name+ "<span class='caret'></span>");
+            addTabs(currentTab);
         })
     }
     </script>

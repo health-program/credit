@@ -169,8 +169,9 @@ public class LoginController {
 
 	@RequestMapping(value = "/update/{superviseCode}", method = RequestMethod.GET)
 	@ResponseBody
-	public Object update(@PathVariable String superviseCode, Model model) {
-		CreditUserSession.getCurrentUserSession().setCurrentSuperviseScope(superviseCode);
+	public Object update(@PathVariable String superviseCode) {
+		CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+		userSession.setCurrentSuperviseScope(superviseCode);
 		return CommonResponse.getSuccessResponse();
 	}
 
