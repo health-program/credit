@@ -114,7 +114,7 @@
 <section class="content" style="padding-top: 5px">
     <div class="row" style="height: 250px" id="countDiv">
         <div class="col-md-6" style="padding-left: 0">
-            <div class="box box-solid">
+            <div class="box box-success">
                 <div class="box-header with-border">
                     <i class="fa fa-pie-chart"></i>
                     <h3 class="box-title">分析统计(事件等级)</h3>
@@ -137,7 +137,7 @@
             </div>
         </div>
         <div class="col-md-6 no-padding">
-            <div class="box box-solid">
+            <div class="box box-success">
                 <div class="box-header with-border">
                     <i class="fa fa-pie-chart"></i>
                     <h3 class="box-title">分析统计(机构信誉等级)</h3>
@@ -163,7 +163,7 @@
 
     <div class="row">
         <div class="col-md-8" style="padding-left: 0">
-            <div class="box box-solid">
+            <div class="box box-success">
                 <div class="box-header with-border">
                     <i class="fa fa-pie-chart"></i>
                     <h3 class="box-title">分析统计</h3>
@@ -184,7 +184,7 @@
             </div>
         </div>
         <div class="col-md-4 no-padding">
-            <div class="box box-solid">
+            <div class="box box-success">
                 <div class="box-header with-border">
                     <i class="fa fa-bell-o"></i>
                     <h3 class="box-title">最新公告</h3>
@@ -209,7 +209,6 @@
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW"></script>
 <script type="text/javascript" src="/static/assets/baidumap/InfoBox_min.js"></script>
 <script type="text/javascript">
-
     /*<![CDATA[*/
     var  points;
     $(function () {
@@ -413,10 +412,30 @@
     };
 
     function loadJScript() {
+        console.log("loadMap")
         var script = document.createElement("script");
         script.type = "text/javascript";
         script.src = "http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW&callback=initMap";
         document.body.appendChild(script);
+    }
+
+    function loadScript(src, callback) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        var loaded;
+        script.src = src;
+        if(typeof callback === 'function') {
+            script.onload = script.onreadystatechange = function () {
+                if (!loaded && (!script.readyState || /loaded|complete/.test(script.readyState))) {
+                    script.onload = script.onreadystatechange = null;
+                    loaded = true;
+                    callback();
+                }
+
+            };
+            document.body.appendChild(script);
+            console.log("loadBox")
+        }
     }
 
     function query2(){
@@ -670,7 +689,8 @@
             //map.setViewport(ply.getPath());    //调整视野
         });
     }
-    //window.onload = loadJScript;  //异步加载地图
+
+    //window.onload = loadScript('/static/assets/baidumap/InfoBox_min.js',loadJScript()); //异步加载地图
     /*]]>*/
 </script>
 </body>
