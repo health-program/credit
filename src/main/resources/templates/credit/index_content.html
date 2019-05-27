@@ -209,7 +209,6 @@
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW"></script>
 <script type="text/javascript" src="/static/assets/baidumap/InfoBox_min.js"></script>
 <script type="text/javascript">
-
     /*<![CDATA[*/
     var  points;
     $(function () {
@@ -413,10 +412,30 @@
     };
 
     function loadJScript() {
+        console.log("loadMap")
         var script = document.createElement("script");
         script.type = "text/javascript";
         script.src = "http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW&callback=initMap";
         document.body.appendChild(script);
+    }
+
+    function loadScript(src, callback) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        var loaded;
+        script.src = src;
+        if(typeof callback === 'function') {
+            script.onload = script.onreadystatechange = function () {
+                if (!loaded && (!script.readyState || /loaded|complete/.test(script.readyState))) {
+                    script.onload = script.onreadystatechange = null;
+                    loaded = true;
+                    callback();
+                }
+
+            };
+            document.body.appendChild(script);
+            console.log("loadBox")
+        }
     }
 
     function query2(){
@@ -670,7 +689,8 @@
             //map.setViewport(ply.getPath());    //调整视野
         });
     }
-    //window.onload = loadJScript;  //异步加载地图
+
+    //window.onload = loadScript('/static/assets/baidumap/InfoBox_min.js',loadJScript()); //异步加载地图
     /*]]>*/
 </script>
 </body>
