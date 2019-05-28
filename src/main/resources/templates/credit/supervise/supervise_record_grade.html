@@ -6,7 +6,7 @@
 <body>
 <tt:constant enumcode="selection-grade-type,item-target-type,sex-type"/>
 <section class="content-header">
-    <h1 th:text="|监察记录-${targetType == '1' ? '医疗机构' : (targetType == '2' ? '医疗人员' : '医疗活动相关人员')}|"></h1>
+    <h1 th:text="|${targetType == '1' ? '医疗机构' : (targetType == '2' ? '医疗人员' : '医疗活动相关人员')}-卫监所|"></h1>
     <ol class="breadcrumb">
         <li><a  th:href="@{'/credit/daily/operation/' + ${targetType}}" ><i class="fa fa-list-alt"></i>项目列表</a></li>
         <li><a  th:href="@{'/credit/supervise/record/index/' + ${targetType}}" ><i class="fa fa-list-alt"></i>监察记录列表</a></li>
@@ -30,8 +30,10 @@
                     </div>
                     <div class="form-group form-button-bar">
                         <div class="col-sm-2 col-sm-offset-3">
-                            <button type="button" id="gradeBtn" onclick="gradeSave()" class="btn btn-primary btn-block">保存
-                            </button>
+                            <button type="button" id="gradeBtn" onclick="gradeSave()" class="btn btn-primary btn-block">保存</button>
+                        </div>
+                        <div class="col-sm-2 col-sm-offset-1">
+                            <button type="button" id="reply_btn" class="btn btn-default btn-block">返回</button>
                         </div>
                     </div>
                 </form>
@@ -39,9 +41,6 @@
         </div>
     </div>
 </section>
-<div class="col-sm-2 col-sm-offset-5 btn-back">
-    <a th:href="@{'/credit/daily/operation/wjs/' + ${targetType}}" class="btn btn-primary btn-block">返回</a>
-</div>
 <input type="hidden" id="id" th:value="${id}"/>
 <input type="hidden" id="targetType" th:value="${targetType}"/>
 <div th:include="/credit/footer" />
@@ -93,6 +92,9 @@
         };
         var html = generateViewHtml(options);
         $("#gradeContent").html(html);
+        $("#reply_btn").click(function () {
+            window.location = '/credit/daily/operation/wjs/'+type;
+        });
         $.initComponment($("#gradeContent"));
         $.getAjax("/credit/supervise/record/get?id=" + recordId, function (data) {
             var model = new tonto.Model("model", options.columns);

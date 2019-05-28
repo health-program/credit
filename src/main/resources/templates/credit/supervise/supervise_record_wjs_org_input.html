@@ -6,7 +6,7 @@
 <body>
 
 <section class="content-header">
-    <h1 th:text="|${type == '1' ? '医疗机构' : (type == '2' ? '医疗人员' : '医疗活动相关人员')}-卫监所|"></h1>
+    <h1 th:text="|${type == 1 ? '医疗机构' : (type == 2 ? '医疗人员' : '医疗活动相关人员')}-卫监所|"></h1>
     <ol class="breadcrumb">
         <li><a  th:href="@{'/credit/daily/operation/wjs/'+${type}}" ><i class="fa fa-table"></i>监察记录列表</a></li>
         <li class="active">添加监察记录</li>
@@ -67,14 +67,14 @@
                     <div class="col-sm-2 col-sm-offset-3">
                         <button type="submit" id="model_form_submit_btn" class="btn btn-primary btn-block">保存</button>
                     </div>
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <button type="button" id="reply_btn" class="btn btn-default btn-block">返回</button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 </section>
-<div class="col-sm-2 col-sm-offset-5 btn-back">
-    <a th:href="@{'/credit/daily/operation/wjs/'+${type}}" class="btn btn-primary btn-block">返回</a>
-</div>
 <input type="hidden" id="type" name="type" th:value="${type}">
 <div th:include="/credit/footer" />
 <script type="text/javascript">
@@ -97,6 +97,9 @@
 
     $(function() {
         type = $("#type").val();
+        $("#reply_btn").click(function () {
+            window.location = "/credit/daily/operation/wjs/"+type;
+        });
         var model = new tonto.Model("model", options.columns, {
             pattern:"edit",
             extraParam:{

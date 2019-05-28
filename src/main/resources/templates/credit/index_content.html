@@ -444,7 +444,7 @@
             var newPoints = points.filter((point, index, array) => point.agencyName.indexOf(orgname) > -1);
             if (newPoints.length === 0) {
                 $.errorMessage("查询不到要搜索的机构");
-                initMap();
+                return;
             }
         } else {
             $.errorMessage("请输入正确的机构名称");

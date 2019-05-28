@@ -16,15 +16,13 @@
 </section>
 <section class="content">
 </section>
-<div class="col-sm-2 col-sm-offset-5 btn-back">
-    <a th:href="${url}" class="btn btn-primary btn-block">返回</a>
-</div>
 <div th:include="/credit/footer" />
 <script type="text/javascript" src="/static/js/template.js"></script>
 <script type="text/javascript">
+    var url;
     $(function() {
         var itemId = $("#itemId").val();
-        var url =$("#url").val();
+        url =$("#url").val();
         $.getAjax("/credit/template/item/get?id=" + itemId, function(data) {
             createItemEditor(data, ".content", function(data, formSubmitBtn) {
                 data["itemId"] = itemId;

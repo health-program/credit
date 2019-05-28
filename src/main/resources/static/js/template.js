@@ -61,12 +61,22 @@ function createItemEditor(data, el, callback) {
         hearderBox: false,
         server: false,
         cancelBtn: false,
+        formButtonBar:[{
+            id:  'reply_btn',
+            type: 'button',
+            name:  '返回',
+            class: 'btn btn-default btn-block',
+            order: 2
+        }],
         boxHeaderClass: 'box-header no-border',
         boxStyle: '-webkit-box-shadow: none;box-shadow: none;border-radius: 0;border-bottom: 1px solid #f4f4f4;',
         columns: columns,
         editFormClass: false
     });
     $(el).html(html);
+    $("#reply_btn").click(function () {
+        window.location = url;
+    });
     $.initComponment($(el));
     var model = new tonto.Model("model", columns, {
         pattern: "edit",
