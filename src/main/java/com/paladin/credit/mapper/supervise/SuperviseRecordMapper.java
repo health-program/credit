@@ -17,7 +17,7 @@ public interface SuperviseRecordMapper extends CustomMapper<SuperviseRecord> {
 
     List<SuperviseRecordReportOrgVO> searchAgencyReportsOrgByQuery(@Param("query") SuperviseRecordQuery query);
 
-    List<SuperviseRecordSimpleVO> searchSuperviseRecordsPageByQuery(@Param("query") SuperviseRecordQuery query);
+    List<SuperviseRecordSimpleVO> searchSuperviseRecordsByQuery(@Param("query") SuperviseRecordQuery query);
 
     int updateRecordById(@Param("id") String id, @Param("illustrate") String newIllustrate, @Param("status") int i);
 

@@ -115,7 +115,7 @@
         </if>
         order by resultGrade
     </select>
-    <select id="searchSuperviseRecordsPageByQuery"
+    <select id="searchSuperviseRecordsByQuery"
             resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO">
         SELECT
         r.id,
@@ -177,7 +177,7 @@
         UPDATE supervise_record
         SET
         status = 0
-        <if test="item==null">
+        <if test="resultName==null">
             ,result_grade = 0
         </if>
         WHERE status > 0 AND id = #{id} and CURDATE() &lt; DATE_FORMAT((date_add(update_time, interval 1

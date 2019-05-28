@@ -5,10 +5,12 @@ import com.paladin.common.model.syst.SysAttachment;
 import com.paladin.common.service.syst.SysAttachmentService;
 import com.paladin.credit.controller.supervise.dto.SuperviseRecordExportCondition;
 import com.paladin.credit.core.CreditUserSession;
-import com.paladin.credit.model.supervise.SuperviseRecord;
 import com.paladin.credit.service.supervise.SuperviseRecordService;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
+import com.paladin.credit.service.supervise.vo.SuperviseRecordReportOrgVO;
+import com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO;
+import com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordVO;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
@@ -162,7 +164,7 @@ public class SuperviseRecordController extends ControllerSupport {
     @RequestMapping(value = "/find/report/org/page", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object findReportOrgPage(SuperviseRecordQuery query) {
-        return CommonResponse.getSuccessResponse(superviseRecordService.searchAgencyReportsOrgByQuery(query));
+        return CommonResponse.getSuccessResponse(superviseRecordService.searchAgencyReportsOrgPageByQuery(query));
     }
 
     @GetMapping("/report/index")
@@ -173,7 +175,7 @@ public class SuperviseRecordController extends ControllerSupport {
     @RequestMapping(value = "/find/report/page", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object findReportPage(SuperviseRecordQuery query) {
-        return CommonResponse.getSuccessResponse(superviseRecordService.searchAgencyReportsByQuery(query));
+        return CommonResponse.getSuccessResponse(superviseRecordService.searchAgencyReportsPageByQuery(query));
     }
 
     @GetMapping("/report/view/{agencyId}/{grade}")
@@ -234,10 +236,56 @@ public class SuperviseRecordController extends ControllerSupport {
         try {
             if (query != null) {
                 if (condition.isExportAll()) {
-                    return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, superviseRecordService.searchAll(query), SuperviseRecord.class));
+                    return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, superviseRecordService.searchSuperviseAllRecordsByQuery(query), SuperviseRecordSimpleVO.class));
                 } else if (condition.isExportPage()) {
                     return CommonResponse.getSuccessResponse("success",
-                            ExportUtil.export(condition, superviseRecordService.searchPage(query).getData(), SuperviseRecord.class));
+                            ExportUtil.export(condition, superviseRecordService.searchSuperviseRecordsPageByQuery(query).getData(), SuperviseRecordSimpleVO.class));
+                }
+            }
+            return CommonResponse.getFailResponse("导出数据失败：请求参数错误");
+        } catch (IOException | ExcelWriteException e) {
+            return CommonResponse.getFailResponse("导出数据失败：" + e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/summary/export")
+    @ResponseBody
+    public Object summaryExport(@RequestBody SuperviseRecordExportCondition condition) {
+        if (condition == null) {
+            return CommonResponse.getFailResponse("导出失败：请求参数异常");
+        }
+        condition.sortCellIndex();
+        SuperviseRecordQuery query = condition.getQuery();
+        try {
+            if (query != null) {
+                if (condition.isExportAll()) {
+                    return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, superviseRecordService.searchAllAgencyReportsByQuery(query), SuperviseRecordReportVO.class));
+                } else if (condition.isExportPage()) {
+                    return CommonResponse.getSuccessResponse("success",
+                            ExportUtil.export(condition, superviseRecordService.searchAgencyReportsPageByQuery(query).getData(), SuperviseRecordReportVO.class));
+                }
+            }
+            return CommonResponse.getFailResponse("导出数据失败：请求参数错误");
+        } catch (IOException | ExcelWriteException e) {
+            return CommonResponse.getFailResponse("导出数据失败：" + e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/org/export")
+    @ResponseBody
+    public Object orgExport(@RequestBody SuperviseRecordExportCondition condition) {
+        if (condition == null) {
+            return CommonResponse.getFailResponse("导出失败：请求参数异常");
+        }
+        condition.sortCellIndex();
+        SuperviseRecordQuery query = condition.getQuery();
+        try {
+            if (query != null) {
+                if (condition.isExportAll()) {
+                    return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, superviseRecordService.searchAllAgencyReportsOrgByQuery(query), SuperviseRecordReportOrgVO.class));
+                } else if (condition.isExportPage()) {
+                    return CommonResponse.getSuccessResponse("success",
+                            ExportUtil.export(condition, superviseRecordService.searchAgencyReportsOrgPageByQuery(query).getData(), SuperviseRecordReportOrgVO.class));
                 }
             }
             return CommonResponse.getFailResponse("导出数据失败：请求参数错误");

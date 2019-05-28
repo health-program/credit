@@ -1293,7 +1293,7 @@ function _initTable() {
         getEnumColumnFormatter: function(enumTypeMap, type, multiple) {
             if (enumTypeMap && type) {
                 return function(value, row, index) {
-                    if (!value) {
+                    if (!value && value !== 0) {
                         return "";
                     }
 

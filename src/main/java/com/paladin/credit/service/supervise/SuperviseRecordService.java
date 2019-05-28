@@ -134,26 +134,45 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     }
 
     /**
-     * 功能描述: <查询所有机构报表>
+     * 功能描述: <分页查询所有机构报表>
      * @param query
      * @return  com.paladin.framework.common.PageResult<com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO>
      * @date  2019/4/29
      */
-    public PageResult<SuperviseRecordReportVO> searchAgencyReportsByQuery(SuperviseRecordQuery query) {
+    public PageResult<SuperviseRecordReportVO> searchAgencyReportsPageByQuery(SuperviseRecordQuery query) {
         Page<SuperviseRecordReportVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
         superviseRecordMapper.searchAgencyReportsByQuery(query);
         return  new PageResult<>(page);
     }
+
     /**
-     * 功能描述 :<查询医疗机构信誉等级表>
+     * 功能描述: <查询所有机构报表>
+     * @param query
+     * @date  2019/4/29
+     */
+    public List<SuperviseRecordReportVO> searchAllAgencyReportsByQuery(SuperviseRecordQuery query) {
+        return    superviseRecordMapper.searchAgencyReportsByQuery(query);
+    }
+
+    /**
+     * 功能描述 :<分页查询医疗机构信誉等级表>
      * @Date 14:15 2019/4/29
-     * @Param  * @param query
+     *  @param query
      * @return com.paladin.framework.common.PageResult<com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO>
      **/
-    public PageResult<SuperviseRecordReportOrgVO> searchAgencyReportsOrgByQuery(SuperviseRecordQuery query) {
+    public PageResult<SuperviseRecordReportOrgVO> searchAgencyReportsOrgPageByQuery(SuperviseRecordQuery query) {
         Page<SuperviseRecordReportOrgVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
         superviseRecordMapper.searchAgencyReportsOrgByQuery(query);
         return  new PageResult<>(page);
+    }
+
+    /**
+     * 功能描述 :<查询医疗机构信誉等级表>
+     * @Date 14:15 2019/4/29
+     * @param query
+     **/
+    public List<SuperviseRecordReportOrgVO> searchAllAgencyReportsOrgByQuery(SuperviseRecordQuery query) {
+        return   superviseRecordMapper.searchAgencyReportsOrgByQuery(query);
     }
 
     /**
@@ -167,15 +186,26 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     }
 
     /**
-     * 功能描述: <查询监察记录>
+     * 功能描述: <分页查询监察记录>
      * @param query
      * @return  com.paladin.framework.common.PageResult<com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO>
      * @date  2019/5/5
      */
     public PageResult<SuperviseRecordSimpleVO> searchSuperviseRecordsPageByQuery(SuperviseRecordQuery query) {
         Page<SuperviseRecordSimpleVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
-        superviseRecordMapper.searchSuperviseRecordsPageByQuery(query);
+        superviseRecordMapper.searchSuperviseRecordsByQuery(query);
         return  new PageResult<>(page);
+    }
+
+
+    /**
+     * 功能描述: <查询所有监察记录>
+     * @param query
+     * @return  java.util.List<com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO>
+     * @date  2019/5/28
+     */
+    public List<SuperviseRecordSimpleVO> searchSuperviseAllRecordsByQuery(SuperviseRecordQuery query) {
+        return   superviseRecordMapper.searchSuperviseRecordsByQuery(query);
     }
 
   /**
