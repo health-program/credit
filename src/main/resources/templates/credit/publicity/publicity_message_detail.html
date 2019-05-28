@@ -24,6 +24,7 @@
     <script type="text/javascript" src="/static/assets/ueditor/ueditor.config.js"></script>
     <script type="text/javascript" src="/static/assets/ueditor/ueditor.all.min.js"></script>
     <script type="text/javascript">
+    var allowedFileExtensions = ["jpeg", "jpg", "png", "gif", "rar", "zip", "pdf", "xls", "txt", "xlsx", "doc", "docx"];
     var options = {
         id: "model",
         name: "公告详情",
@@ -37,7 +38,8 @@
                 title: "附件",
                 name: "attachments",
                 inputType: "ATTACHMENT",
-                fileName: "attachmentFiles"
+                fileName: "attachmentFiles",
+                allowedFileExtensions: allowedFileExtensions
             }
         ]
     };
