@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+    <div class="container">
+        <tt:constant enumcode="publicity-message-status,publicity-message-type" />
+        <section class="content">
+            <div class="box box-solid" style="margin-top:5px">
+                <div class="box-header with-border">
+                    <i class="fa fa-list"></i>
+                    <h3 class="box-title">更多公告</h3>
+                    <div class="pull-right box-tools">
+                        <a class="btn btn-box-tool" id="model_edit_btn" href="/credit/home/page/index"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+                <div id="result" class="box-body">
+                    <table id="dataGrid"></table>
+                </div>
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+            </div>
+            <div class="col-sm-2 col-sm-offset-5 btn-back">
+                <a  class="btn btn-primary btn-block"  href="/credit/home/page/index">返回</a>
+            </div>
+        </section>
+    </div>
+<div th:include="/credit/footer" />
+<script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "公告标题", field: "title" },
+                    { title: "信息类型", field: "type", enumcode: "publicity-message-type" },
+                    { title: "发布时期", field: "publishTime", formatter: "date" },
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "100px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>';
+
+
+                        }
+                    }
+                ]
+            ],
+            url: '/credit/publicity/message/find/page',
+            pagination: true,
+        });
+    }
+
+    function detail(row) {
+        window.location = '/credit/home/page/notice/view' + (row ? ('?id=' + row.id) : '');
+    }
+
+</script>
+</body>
+
+</html>

@@ -42,12 +42,17 @@ public class PublicityMessageController extends ControllerSupport {
         return "/credit/publicity/publicity_message_index";
     }
 
+	@GetMapping("/more/index")
+	@QueryInputMethod(queryClass = PublicityMessageQuery.class)
+	public String moreIndex() {
+		return "/credit/publicity/publicity_message_more_index";
+	}
+
     @RequestMapping(value = "/find/page", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     @QueryOutputMethod(queryClass = PublicityMessageQuery.class, paramIndex = 0)
     public Object findPage(PublicityMessageQuery query) {
-		query.setStatus(PublicityMessage.STATUS_EXAMINE_SUCCESS);
-        return CommonResponse.getSuccessResponse(publicityMessageService.searchPage(query));
+        return CommonResponse.getSuccessResponse(publicityMessageService.searchPageNotices(query));
     }
     
     @GetMapping("/get")
