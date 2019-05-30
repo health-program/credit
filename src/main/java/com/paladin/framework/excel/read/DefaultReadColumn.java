@@ -1,5 +1,13 @@
 package com.paladin.framework.excel.read;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import com.paladin.common.core.ConstantsContainer;
 import com.paladin.framework.excel.ConvertException;
 import com.paladin.framework.excel.ICell;
@@ -9,10 +17,6 @@ import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.reflect.Entity;
 import com.paladin.framework.utils.reflect.EntityField;
 import com.paladin.framework.utils.validate.ValidateUtil;
-
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * 缺省Excel读取列实例
@@ -87,7 +91,7 @@ public class DefaultReadColumn extends ReadColumn {
 			if (isEnum) {
 				String name = cell.getString();
 				if (name != null && name.length() > 0) {
-					Integer key = Integer.valueOf(ConstantsContainer.getTypeKey(enumType, name));
+					String key = ConstantsContainer.getTypeKey(enumType, name);
 					if (key == null) {
 						throw new ExcelReadException("第" + (cellIndex + 1) + "列值[" + name + "]为无效值");
 					}
