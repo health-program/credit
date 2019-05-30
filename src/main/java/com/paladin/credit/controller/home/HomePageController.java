@@ -57,14 +57,14 @@ public class HomePageController extends ControllerSupport {
 
     @PostMapping("/count/event")
     @ResponseBody
-    public Object countEventGrade(@RequestParam(required = false)Date searchTime,Model model) {
-        return CommonResponse.getSuccessResponse( superviseRecordService.countRecordEventGradeByDate(searchTime)) ;
+    public Object countEventGrade(@RequestParam(required = false) Date bgTime, @RequestParam(required = false) Date endTime) {
+        return CommonResponse.getSuccessResponse( superviseRecordService.countRecordEventGradeByDate(bgTime,endTime )) ;
     }
 
     @PostMapping("/count/org")
     @ResponseBody
-    public Object countOrgCredit(@RequestParam(required = false)Date searchTime) {
-        return CommonResponse.getSuccessResponse( superviseRecordService.countRecordOrgCreditByDate(searchTime)) ;
+    public Object countOrgCredit(@RequestParam(required = false) Date bgTime, @RequestParam(required = false) Date endTime) {
+        return CommonResponse.getSuccessResponse( superviseRecordService.countRecordOrgCreditByDate(bgTime,endTime)) ;
     }
 
     @PostMapping("/map/org")

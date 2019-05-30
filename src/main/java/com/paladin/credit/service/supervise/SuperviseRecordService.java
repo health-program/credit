@@ -321,11 +321,12 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
 
     /**
      * 功能描述: <按事件等级统计监察记录>
-     * @param searchTime
+     * @param bgTime
+     * @param endTime
      * @return  com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO
      */
-  public SuperviseRecordReportVO countRecordEventGradeByDate(Date searchTime) {
-    return superviseRecordMapper.countRecordEventGradeByDate(searchTime);
+  public SuperviseRecordReportVO countRecordEventGradeByDate(Date bgTime, Date endTime) {
+    return superviseRecordMapper.countRecordEventGradeByDate(bgTime,endTime);
   }
 
     /**
@@ -333,16 +334,15 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
      * @param searchTime
      * @return  com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO
      */
-    public SuperviseRecordReportVO countRecordOrgCreditByDate(Date searchTime) {
-        return superviseRecordMapper.countRecordOrgCreditByDate(searchTime);
+    public SuperviseRecordReportVO countRecordOrgCreditByDate(Date bgTime, Date endTime) {
+        return superviseRecordMapper.countRecordOrgCreditByDate(bgTime,endTime);
     }
     /**
      * 功能描述: <首页地图查询所有机构>
      * @return  com.paladin.credit.service.supervise.vo.SuperviseRecordReportVO
      */
     public List<SuperviseRecordOrgMapVO> findAllOrgMap() {
-        List<SuperviseRecordOrgMapVO> orgMap = superviseRecordMapper.findAllOrgMap();
-        return orgMap;
+        return superviseRecordMapper.findAllOrgMap();
     }
     /**
      * 功能描述 :<首页地图根据机构id查询机构事件>

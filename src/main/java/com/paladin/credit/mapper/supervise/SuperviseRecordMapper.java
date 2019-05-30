@@ -23,13 +23,13 @@ public interface SuperviseRecordMapper extends CustomMapper<SuperviseRecord> {
 
     int updateGradeById(@Param("id") String id, @Param("grade") Integer grade);
 
-    SuperviseRecordReportVO countRecordEventGradeByDate(@Param("searchTime") Date searchTime);
+    SuperviseRecordReportVO countRecordEventGradeByDate(@Param("bgTime") Date bgTime, @Param("endTime") Date endTime);
 
-    SuperviseRecordReportVO countRecordOrgCreditByDate(@Param("searchTime") Date searchTime);
+    SuperviseRecordReportVO countRecordOrgCreditByDate(@Param("bgTime") Date bgTime, @Param("endTime") Date endTime);
 
-    int updateRecordCheckStatusById(@Param("id") String id ,@Param("resultName")String resultName);
+    int updateRecordCheckStatusById(@Param("id") String id, @Param("resultName") String resultName);
 
-    List<SuperviseRecordOrgMapVO>  findAllOrgMap();
+    List<SuperviseRecordOrgMapVO> findAllOrgMap();
 
-    List<SuperviseRecordOrgMapVO> findMapOrgInfoById(@Param("agencyId")String agencyId);
+    List<SuperviseRecordOrgMapVO> findMapOrgInfoById(@Param("agencyId") String agencyId);
 }

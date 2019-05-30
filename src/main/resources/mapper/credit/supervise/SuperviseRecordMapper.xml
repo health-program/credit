@@ -204,8 +204,11 @@
         b.time,
         DATE_SUB( CURRENT_DATE ( ), INTERVAL 1 YEAR )
         )
-        <if test="searchTime != null">
-            AND TIMESTAMPDIFF( DAY, a.create_time, #{searchTime} ) = 0
+        <if test="bgTime != null">
+            AND date_format(a.create_time,'%Y-%m-%d') >= #{bgTime}
+        </if>
+        <if test="endTime != null">
+            AND date_format(a.create_time,'%Y-%m-%d') <![CDATA[<=]]>#{endTime}
         </if>
     </select>
     <select id="countRecordOrgCreditByDate"
@@ -239,8 +242,11 @@
         b.time,
         DATE_SUB( CURRENT_DATE ( ), INTERVAL 1 YEAR )
         )
-        <if test="searchTime != null">
-            AND TIMESTAMPDIFF( DAY, a.create_time, #{searchTime}) = 0
+        <if test="bgTime != null">
+            AND date_format(a.create_time,'%Y-%m-%d') >= #{bgTime}
+        </if>
+        <if test="endTime != null">
+            AND date_format(a.create_time,'%Y-%m-%d') <![CDATA[<=]]>#{endTime}
         </if>
         GROUP BY
         a.agency_id
