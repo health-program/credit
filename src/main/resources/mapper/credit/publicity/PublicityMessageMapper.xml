@@ -2,4 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.credit.mapper.publicity.PublicityMessageMapper">
 
+    <select id="searchHomePagNotices" resultType="com.paladin.credit.model.publicity.PublicityMessage">
+        select
+        id,
+        title,
+        publish_time AS publishTime
+        FROM
+        publicity_message
+        WHERE
+        publish_time <![CDATA[<=]]> CURRENT_DATE
+        AND  status = 9
+        ORDER BY publish_time DESC LIMIT 0,10
+    </select>
+    <select id="searchPageNotices" resultType="com.paladin.credit.service.publicity.vo.PublicityMessageVO">
+        select
+        id,
+        type,
+        title,
+        publish_time AS publishTime
+        FROM
+        publicity_message
+        WHERE
+        publish_time <![CDATA[<=]]> CURRENT_DATE
+        AND  status = 9
+        <if test="query.title != null and query.title != ''">
+            AND  title LIKE  CONCAT('%',#{query.title} ,'%')
+        </if>
+        ORDER BY publish_time DESC
+    </select>
 </mapper>

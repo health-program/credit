@@ -35,7 +35,7 @@ public class HomePageController extends ControllerSupport {
 
     @GetMapping("/index")
     public String index(Model model) {
-        List<PublicityMessage> notices = publicityMessageService.findAll();
+        List<PublicityMessage> notices = publicityMessageService.searchHomePagNotices();
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         String bgTimeStr = now.minusYears(1).format(formatter);
@@ -45,13 +45,14 @@ public class HomePageController extends ControllerSupport {
     }
 
     @GetMapping("/notice/view")
-    public String view(@RequestParam String id, Model model) {
+    public String view(@RequestParam String id,@RequestParam(required = false) boolean isHomePage, Model model) {
         PublicityMessage message = publicityMessageService.get(id);
         if (message == null) {
             throw new BusinessException("查看的内容不存在");
         }
         PublicityMessageVO publicityMessageVO = beanCopy(message, new PublicityMessageVO());
         model.addAttribute("object",publicityMessageVO);
+        model.addAttribute("isHomePage",isHomePage);
         return "/credit/publicity/publicity_message_home_view";
     }
 
