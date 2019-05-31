@@ -14,32 +14,6 @@
     </ol>
 </section>
 <section class="content">
-    <div id="gradeContent"></div>
-    <div id="gradeDiv">
-        <div id="grade_container" class="box box-widget">
-            <div class="box-header no-border">
-                <h3 class="box-title">请选择评级等级</h3>
-            </div>
-            <div id="grade_edit" class="box-body">
-                <form class="form-horizontal" style="padding-left:100px">
-                    <div class="form-group">
-                        <label for="resultGrade" class="col-sm-2 control-label">监察结果等级：</label>
-                        <div class="col-sm-8">
-                            <div name="resultGrade" id="resultGrade" class="tonto-radio-constant" enumcode="selection-grade-type"></div>
-                        </div>
-                    </div>
-                    <div class="form-group form-button-bar">
-                        <div class="col-sm-2 col-sm-offset-3">
-                            <button type="button" id="gradeBtn" onclick="gradeSave()" class="btn btn-primary btn-block">保存</button>
-                        </div>
-                        <div class="col-sm-2 col-sm-offset-1">
-                            <button type="button" id="reply_btn" class="btn btn-default btn-block">返回</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 </section>
 <input type="hidden" id="id" th:value="${id}"/>
 <input type="hidden" id="targetType" th:value="${targetType}"/>
@@ -47,38 +21,41 @@
 <script type="text/javascript">
     var recordId,type,name;
     var agencyColumns = [
-        { title: "机构", name: "agencyId",  multiple: false,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" },
-        { title: "扣分条例依据", name: "item", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/1"},
-        { title: "扣除分值", name: "score", inputType: "NUMBER" },
-        { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 },
-        { title: "行政处罚决定书编号",name:"punishNo",inputType: "TEXT" },
-        { title: "处罚时间",name: "punishTime", inputType: "DATE"},
-        { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5 }
+        { title: "机构", name: "agencyId",  multiple: false,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower",editable:false},
+        { title: "扣分条例依据", name: "item",inputType: "TEXT",editable:false},
+        { title: "扣除分值", name: "score", inputType: "NUMBER",editable:false },
+        { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 ,editable:false},
+        { title: "行政处罚决定书编号",name:"punishNo",inputType: "TEXT",editable:false },
+        { title: "处罚时间",name: "punishTime", inputType: "DATE",editable:false},
+        { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5,editable:false},
+        { title: "监察结果评级",name: "resultGrade", inputType: "RADIO" ,colspan:2,enum: "selection-grade-type"}
     ];
     var personnelInSystemColumns = [
-        { title: "人员姓名", name: "personnelId",  multiple: false,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/people/lower" },
-        { title: "记分时间",name: "scoreTime", inputType: "DATE"},
-        { title: "违法事实选择", name: "item", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/2"},
-        { title: "扣除分值", name: "score", inputType: "NUMBER" },
-        { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 },
-        { title: "行政处罚决定书编号",name:"punishNo",inputType: "TEXT" },
-        { title: "处罚时间",name: "punishTime", inputType: "DATE"},
-        { title: "违法事实照片上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5 }
+        { title: "人员姓名", name: "personnelId",  multiple: false,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/people/lower" ,editable:false},
+        { title: "记分时间",name: "scoreTime", inputType: "DATE",editable:false},
+        { title: "违法事实选择", name: "item",inputType: "TEXT",editable:false},
+        { title: "扣除分值", name: "score", inputType: "NUMBER" ,editable:false},
+        { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 ,editable:false},
+        { title: "行政处罚决定书编号",name:"punishNo",inputType: "TEXT",editable:false},
+        { title: "处罚时间",name: "punishTime", inputType: "DATE",editable:false},
+        { title: "违法事实照片上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5 ,editable:false},
+        { title: "监察结果评级",name: "resultGrade", inputType: "RADIO" ,colspan:2, enum: "selection-grade-type" }
     ];
 
     var personnelOutSystemColumns = [
-        { title: "人员姓名", name: "personnelName", inputType: "TEXT" },
-        { title: "人员性别", name: "personnelSex", inputType: "RADIO", enum: "sex-type" },
-        { title: "人员身份证", name: "personnelIdentification", inputType: "TEXT" },
-        { title: "人员地址", name: "personnelAddress", inputType: "TEXT" },
-        { title: "违法事实项选择", name: "item", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/2"},
-        { title: "扣除分值", name: "score", inputType: "NUMBER" },
-        { title: "决定书编号",name:"scoreNo",inputType: "TEXT" },
-        { title: "记分时间",name: "scoreTime", inputType: "DATE"},
-        { title: "记分决定书上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 },
-        { title: "处罚文件编号",name:"punishNo",inputType: "TEXT" },
-        { title: "处罚时间",name: "punishTime", inputType: "DATE"},
-        { title: "违法事实拍照上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5 }
+        { title: "人员姓名", name: "personnelName", inputType: "TEXT" ,editable:false},
+        { title: "人员性别", name: "personnelSex", inputType: "RADIO", enum: "sex-type" ,editable:false},
+        { title: "人员身份证", name: "personnelIdentification", inputType: "TEXT" ,editable:false},
+        { title: "人员地址", name: "personnelAddress", inputType: "TEXT" ,editable:false},
+        { title: "违法事实项选择", name: "item",inputType: "TEXT",editable:false},
+        { title: "扣除分值", name: "score", inputType: "NUMBER" ,editable:false},
+        { title: "决定书编号",name:"scoreNo",inputType: "TEXT" ,editable:false},
+        { title: "记分时间",name: "scoreTime", inputType: "DATE",editable:false},
+        { title: "记分决定书上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 ,editable:false},
+        { title: "处罚文件编号",name:"punishNo",inputType: "TEXT" ,editable:false},
+        { title: "处罚时间",name: "punishTime", inputType: "DATE",editable:false},
+        { title: "违法事实拍照上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5 ,editable:false},
+        { title: "监察结果评级",name: "resultGrade", inputType: "RADIO" ,colspan:2, enum: "selection-grade-type" }
     ];
     $(function () {
         recordId = $("#id").val();
@@ -87,17 +64,36 @@
         var columns = type == 1 ? agencyColumns : (type == 2 ? personnelInSystemColumns : personnelOutSystemColumns);
         var options = {
             id: "model",
-            name: "监察详情",
-            columns: columns
+            name: "监察评级",
+            url:"/credit/supervise/record/grade/save",
+            columns: columns,
+            cancelBtn: false,
+            formButtonBar:[{
+                id:  'reply_btn',
+                type: 'button',
+                name:  '返回',
+                class: 'btn btn-default btn-block',
+                order: 2
+            }],
         };
-        var html = generateViewHtml(options);
-        $("#gradeContent").html(html);
+        var html = generateEditHtml(options);
+        $(".content").html(html);
         $("#reply_btn").click(function () {
             window.location = '/credit/daily/operation/wjs/'+type;
         });
-        $.initComponment($("#gradeContent"));
+        $.initComponment($(".content"));
         $.getAjax("/credit/supervise/record/get?id=" + recordId, function (data) {
-            var model = new tonto.Model("model", options.columns);
+            var model = new tonto.Model("model", options.columns,{
+                pattern:"edit",
+                extraParam:{
+                    id: recordId,
+                },
+                successCallback:function(){
+                    $.successAlert("评级成功",function(){
+                        window.location = '/credit/daily/operation/wjs/'+type;
+                    });
+                }
+            });
             model.setData(data);
         });
     });
