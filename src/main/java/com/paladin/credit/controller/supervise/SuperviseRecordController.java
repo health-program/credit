@@ -96,8 +96,8 @@ public class SuperviseRecordController extends ControllerSupport {
 
     @PostMapping("/grade/save")
     @ResponseBody
-    public Object gradeSave(@RequestParam String id, Integer grade) {
-        return CommonResponse.getResponse(superviseRecordService.grade(id, grade));
+    public Object gradeSave(@RequestParam String id, Integer resultGrade) {
+        return CommonResponse.getResponse(superviseRecordService.grade(id, resultGrade));
     }
 
 

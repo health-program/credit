@@ -287,6 +287,9 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
      * @date  2019/5/17
      */
     public int grade(String id, Integer grade) {
+        if (grade == 0) {
+            throw new BusinessException("请选择正确的评价等级");
+        }
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
         int roleLevel = userSession.getRoleLevel();
         if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN) {
