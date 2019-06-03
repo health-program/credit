@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="license-status-type,license-target-type,information-usage-scope,identification-type" />
+    <section class="content-header">
+        <h1 th:text="|行政许可上报-${type == '1' ? '自然人' : (type == '2' ? '法人' : '')}|"></h1>
+        <ol class="breadcrumb">
+            <li><a th:href="@{'/credit/department/administrative/license/index/'+${type}}" ><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a th:href="@{'/credit/department/administrative/license/index/'+${type}}"  class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <input type="hidden" id="type" th:value="${type}"/>
+    <div th:include="/credit/footer" />
+    <script type="text/javascript">
+    var type;
+    $(function() {
+        type = $("#type").val();
+    	var options = {
+	        id: "model",
+	        name: "详情",
+	        url:"/credit/department/administrative/license/update?id="+$("#id").val(),
+	        columns: [
+				{ title: "许可类型", name: "type", inputType: "SELECT",enum:"license-target-type",editable:false },
+				{ title: "许可相对人", name: "name", required: "required", inputType: "TEXT" },
+                { title: "统一社会信用代码", name: "socialCreditCode",required: "required", inputType: "TEXT" ,dependency:["type","2"]},
+                { title: "组织机构代码", name: "organizationCode", inputType: "TEXT" ,dependency:["type","2"]},
+                { title: "工商注册号", name: "commercialRegistrationNumber", inputType: "TEXT" ,dependency:["type","2"]},
+                { title: "税务登记号", name: "taxRegistrationNumber", inputType: "TEXT",dependency:["type","2"] },
+                { title: "法定代表人或负责人", name: "chargePerson", inputType: "TEXT",dependency:["type","2"] },
+                { title: "证件类型", name: "identificationType", required: "required", inputType: "SELECT",enum:"identification-type"},
+                { title: "证件号码", name: "identificationNo", required: "required", inputType: "TEXT"},
+                { title: "审批类别", name: "examineType", required: "required", inputType: "TEXT" },
+                { title: "许可名称", name: "licenseName", required: "required", inputType: "TEXT" },
+                { title: "许可文书号", name: "licenseDocumentNumber", required: "required", inputType: "TEXT" },
+                { title: "许可权力编码", name: "licenseAuthorityCode", inputType: "TEXT" },
+                { title: "许可决定日期", name: "licenseDecisionTime", required: "required", inputType: "DATE" },
+                { title: "许可有效期（始）", name: "licenseEffectivityStartTime", inputType: "DATE" },
+                { title: "许可有效期（终）", name: "licenseEffectivityEndTime", inputType: "DATE" },
+                { title: "许可机构", name: "licenseOrganization", required: "required", inputType: "TEXT" },
+                { title: "许可内容", name: "licenseText", required: "required", inputType: "TEXTAREA" },
+				{ title: "信息使用范围", name: "informationUsageScope", required: "required", inputType: "SELECT",enum:"information-usage-scope"  },
+				{ title: "许可状态", name: "licenseStatus", required: "required", inputType: "SELECT",enum:"license-status-type"  },
+				{ title: "备注", name: "remark", inputType: "TEXTAREA" ,dependency:["licenseStatus","3"]},
+                { title: "事业单位证书号", name: "institutionCertificateNumber", inputType: "TEXT" ,dependency:["type","2"]},
+                { title: "社会组织登记证号", name: "socialOrganizationRegistrationNumber", inputType: "TEXT" ,dependency:["type","2"]},
+                { title: "许可证书名称", name: "licenseCertificateName", inputType: "TEXT" },
+                { title: "许可证书编号", name: "licenseCertificateNumber", inputType: "TEXT" },
+                { title: "许可文书名称", name: "licenseDocumentName", inputType: "TEXT" },
+                { title: "许可机构统一社会信用代码", name: "licenseSocialCreditCode", inputType: "TEXT" },
+				{ title: "数据来源单位", name: "dataSourceUnit", inputType: "TEXT" },
+				{ title: "数据来源统一社会信用代码", name: "sourceSocialCreditCode", inputType: "TEXT" }
+				]
+	    }
+    
+        $.getAjax("/credit/department/administrative/license/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns,{
+                extraParam:{
+                    'type':type
+                }
+            });
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>
