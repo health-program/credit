@@ -4,9 +4,9 @@
 <head th:include="/credit/header" />
 
 <body>
-    <tt:constant enumcode="administrative-status-type,administrative-target-type,information-usage-scope,identification-type" />
+<tt:constant enumcode="administrative-status-type,administrative-target-type,information-usage-scope,identification-type,punishment-type,dishonesty-degree-type" />
     <section class="content-header">
-        <h1 th:text="|行政许可上报-${type == '1' ? '自然人' : (type == '2' ? '法人' : '')}|"></h1>
+        <h1 th:text="|行政处罚上报-${type == '1' ? '自然人' : (type == '2' ? '法人' : '')}|"></h1>
     </section>
     <section class="content">
         <div class="box box-solid">
@@ -15,7 +15,7 @@
                     <input type="hidden" id="type" name="type" th:value="${type}">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <input name="name" class="form-control" placeholder="请输入许可相对人" />
+                            <input name="name" class="form-control" placeholder="请输入行政相对人" />
                         </div>
                         <div class="col-md-2" id="identificationNoDiv">
                             <input name="identificationNo" class="form-control" placeholder="请输入证件号码"  />
@@ -50,10 +50,10 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" th:text="|${type == '1' ? '自然人行政许可名单信息导入' : (type == '2' ? '法人行政许可名单信息导入' : '')}|"></h4>
+                        <h4 class="modal-title" th:text="|${type == '1' ? '自然人行政处罚名单信息导入' : (type == '2' ? '法人行政处罚名单信息导入' : '')}|"></h4>
                     </div>
                     <div class="modal-body">
-                        <form id="uploadForm" enctype="multipart/form-data" th:action="${type == '1' ? '/credit/department/administrative/license/upload/people' : (type == '2' ? '/credit/department/administrative/license/upload/org' : '')}" method="post" class="form-horizontal">
+                        <form id="uploadForm" enctype="multipart/form-data" th:action="${type == '1' ? '/credit/department/administrative/punishment/upload/people' : (type == '2' ? '/credit/department/administrative/punishment/upload/org' : '')}" method="post" class="form-horizontal">
                             <div class="form-group" style="margin-bottom: 0">
                                 <div class="col-md-10">
                                     <input id="file" name="file" type="file">
@@ -76,8 +76,8 @@
                 <table id="dataGrid"></table>
                 <div id="toolbar">
                     <div class="btn-group">
-                        <a  th:if="${type == '1'}" href="/static/excel/信用办行政许可自然人导入模板.xlsx" class="btn bg-teal-active" target="_blank"  download = "自然人行政许可名单导入模板" ><i class="glyphicon glyphicon-download-alt"></i>&nbsp;导入模板下载</a>
-                        <a  th:if="${type == '2'}" href="/static/excel/信用办行政许可法人导入模板.xlsx" class="btn bg-teal-active" target="_blank"  download = "法人行政许可名单导入模板" ><i class="glyphicon glyphicon-download-alt"></i>&nbsp;导入模板下载</a>
+                        <a  th:if="${type == '1'}" href="/static/excel/信用办行政处罚自然人导入模板.xlsx" class="btn bg-teal-active" target="_blank"  download = "自然人行政处罚名单导入模板" ><i class="glyphicon glyphicon-download-alt"></i>&nbsp;导入模板下载</a>
+                        <a  th:if="${type == '2'}" href="/static/excel/信用办行政处罚法人导入模板.xlsx" class="btn bg-teal-active" target="_blank"  download = "法人行政处罚名单导入模板" ><i class="glyphicon glyphicon-download-alt"></i>&nbsp;导入模板下载</a>
                     </div>
                     <div class="btn-group">
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
@@ -90,27 +90,28 @@
     </section>
     <div th:include="/credit/footer" />
     <script type="text/javascript">
-    var table,type;
-    $(function() {
-        type = $("#type").val();
-        initDataGrid();
-        hideColumn();
-        initUploadForm();
-    });
+        var table,type;
+        $(function() {
+            type = $("#type").val();
+            initDataGrid();
+            hideColumn();
+            initUploadForm();
+        });
 
     function initDataGrid() {
         table = $.createTable("#dataGrid", {
             idField: "id",
             columns: [
                 [
+                    { title: "行政相对人", field: "name" },
                     { title: "统一社会信用代码", field: "socialCreditCode" },
+                    { title: "法定代表人或负责人", field: "chargePerson" },
                     { title: "证件号码", field: "identificationNo" },
-                    { title: "许可相对人", field: "name" },
-                    { title: "许可名称", field: "licenseName" },
-                    { title: "许可文书号", field: "licenseDocumentNumber" },
-                    { title: "许可内容", field: "licenseText" },
-                    { title: "许可机构", field: "licenseOrganization" },
-                    { title: "许可决定日期", field: "licenseDecisionTime" ,formatter: "date" },
+                    { title: "处罚名称", field: "punishmentName"},
+                    { title: "处罚文书号", field: "punishmentDocumentNumber" },
+                    { title: "处罚类型", field: "punishmentTypeOne" ,enumcode:"punishment-type"},
+                    { title: "处罚机构", field: "punishmentOrganization" },
+                    { title: "处罚决定日期", field: "punishmentDecisionTime" ,formatter: "date" },
                     {
                         title: "操作",
                         align: "center",
@@ -131,9 +132,9 @@
                     }
                 ]
             ],
-            url: '/credit/department/administrative/license/find/page',
+            url: '/credit/department/administrative/punishment/find/page',
             searchbar: '#searchbar',
-            exportUrl: '/credit/department/administrative/license/export',
+            exportUrl: '/credit/department/administrative/punishment/export',
             showExport: true,
             showColumns: true,
             pagination: true,
@@ -143,13 +144,13 @@
     }
 
     function detail(row) {
-        window.location = '/credit/department/administrative/license/detail' + (row ? ('?id=' + row.id+'&type='+row.type) : '');
+        window.location = '/credit/department/administrative/punishment/detail' + (row ? ('?id=' + row.id+'&type='+row.type) : '');
     }
 
     function remove(row) {
         if (row) {
             layer.confirm('确定删除吗?', function() {
-                $.getAjax('/credit/department/administrative/license/delete?id=' + row.id, function() {
+                $.getAjax('/credit/department/administrative/punishment/delete?id=' + row.id, function() {
                     $.successMessage("删除成功");
                     table.refresh();
                 });
@@ -157,59 +158,61 @@
         }
     }
 
-    function hideColumn() {
-        if (type == 1) {
-            table.hideColumn("socialCreditCode");
-            $("#socialCreditCodeDiv").hide();
-        } else {
-            table.hideColumn("identificationNo");
-            $("#identificationNoDiv").hide();
-        }
-    }
-
-    function initUploadForm() {
-        $("#file").fileinput({
-            language: 'zh',
-            uploadUrl: '/common/upload/files',
-            layoutTemplates: {
-                main1: '{preview}\n' +
-                    '<div class="kv-upload-progress kv-hidden"></div><div class="clearfix"></div>\n' +
-                    '<div class="input-group {class}">\n' +
-                    '  {caption}\n' +
-                    '  <div class="input-group-btn">\n' +
-                    '    {remove}\n' +
-                    '    {browse}\n' +
-                    '  </div>\n' +
-                    '</div>'
-            },
-            showPreview: false,
-            msgPlaceholder: "选择上传的Excel文件",
-            removeClass: "btn btn-danger",
-            allowedFileExtensions: ["xlsx"]
-        });
-        $("#uploadForm").createForm(showImportResult);
-    }
-
-    function showImportResult(result) {
-        if (result) {
-            if (result.errorCount == 0) {
-                $.successAlert("导入成功");
-                $("#myModal").modal('hide');
-                table.refresh();
+        function hideColumn() {
+            if (type == 1) {
+                table.hideColumn("socialCreditCode");
+                table.hideColumn("chargePerson");
+                table.hideColumn("socialCreditCode");
+                $("#socialCreditCodeDiv").hide();
             } else {
-                var html = "<p>成功导入" + result.successCount + "条记录</p>";
-                result.errors.forEach(function(a) {
-                    html += "<p>导入第<b>" + a.index + "</b>条记录失败：" + a.message + "</p>";
-                });
-
-                $("#myModal").modal('hide');
-                layer.alert(html, { icon: 6, area: ['600px', '200px'] });
+                $("#identificationNoDiv").hide();
             }
-        } else {
-            $("#myModal").modal('hide');
-            $.successAlert("没有可导入的名单，是否正确使用模板");
         }
-    }
+
+        function initUploadForm() {
+            $("#file").fileinput({
+                language: 'zh',
+                uploadUrl: '/common/upload/files',
+                layoutTemplates: {
+                    main1: '{preview}\n' +
+                        '<div class="kv-upload-progress kv-hidden"></div><div class="clearfix"></div>\n' +
+                        '<div class="input-group {class}">\n' +
+                        '  {caption}\n' +
+                        '  <div class="input-group-btn">\n' +
+                        '    {remove}\n' +
+                        '    {browse}\n' +
+                        '  </div>\n' +
+                        '</div>'
+                },
+                showPreview: false,
+                msgPlaceholder: "选择上传的Excel文件",
+                removeClass: "btn btn-danger",
+                allowedFileExtensions: ["xlsx"]
+            });
+            $("#uploadForm").createForm(showImportResult);
+        }
+
+        function showImportResult(result) {
+            if (result) {
+                if (result.errorCount == 0) {
+                    $.successAlert("导入成功");
+                    $("#myModal").modal('hide');
+                    table.refresh();
+                } else {
+                    var html = "<p>成功导入" + result.successCount + "条记录</p>";
+                    result.errors.forEach(function(a) {
+                        html += "<p>导入第<b>" + a.index + "</b>条记录失败：" + a.message + "</p>";
+                    });
+
+                    $("#myModal").modal('hide');
+                    layer.alert(html, { icon: 6, area: ['600px', '200px'] });
+                }
+            } else {
+                $("#myModal").modal('hide');
+                $.successAlert("没有可导入的名单，是否正确使用模板");
+            }
+        }
+
     </script>
 </body>
 

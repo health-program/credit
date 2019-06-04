@@ -4,7 +4,7 @@
 <head th:include="/credit/header" />
 
 <body>
-<tt:constant enumcode="license-status-type,license-target-type,information-usage-scope,identification-type" />
+<tt:constant enumcode="administrative-status-type,administrative-target-type,information-usage-scope,identification-type" />
     <section class="content-header">
         <h1 th:text="|行政许可上报-${type == '1' ? '自然人' : (type == '2' ? '法人' : '')}|"></h1>
         <ol class="breadcrumb">
@@ -29,7 +29,7 @@
 	        name: "详情",
 	        url:"/credit/department/administrative/license/update?id="+$("#id").val(),
 	        columns: [
-				{ title: "许可类型", name: "type", inputType: "SELECT",enum:"license-target-type",editable:false },
+				{ title: "许可类型", name: "type", inputType: "SELECT",enum:"administrative-target-type",editable:false },
 				{ title: "许可相对人", name: "name", required: "required", inputType: "TEXT" },
                 { title: "统一社会信用代码", name: "socialCreditCode",required: "required", inputType: "TEXT" ,dependency:["type","2"]},
                 { title: "组织机构代码", name: "organizationCode", inputType: "TEXT" ,dependency:["type","2"]},
@@ -48,7 +48,7 @@
                 { title: "许可机构", name: "licenseOrganization", required: "required", inputType: "TEXT" },
                 { title: "许可内容", name: "licenseText", required: "required", inputType: "TEXTAREA" },
 				{ title: "信息使用范围", name: "informationUsageScope", required: "required", inputType: "SELECT",enum:"information-usage-scope"  },
-				{ title: "许可状态", name: "licenseStatus", required: "required", inputType: "SELECT",enum:"license-status-type"  },
+				{ title: "许可状态", name: "licenseStatus", required: "required", inputType: "SELECT",enum:"administrative-status-type"  },
 				{ title: "备注", name: "remark", inputType: "TEXTAREA" ,dependency:["licenseStatus","3"]},
                 { title: "事业单位证书号", name: "institutionCertificateNumber", inputType: "TEXT" ,dependency:["type","2"]},
                 { title: "社会组织登记证号", name: "socialOrganizationRegistrationNumber", inputType: "TEXT" ,dependency:["type","2"]},
