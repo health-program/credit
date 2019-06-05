@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/static/assets/daterangepicker/daterangepicker.css">
 <style>
     .row{
-        padding: 5px 10px  0 10px;
+        padding: 3px 10px  0 10px;
     }
     .notice-list {
         list-style: none;
@@ -142,7 +142,7 @@
         <div class="col-md-6 no-padding">
             <div class="box box-success">
                 <div class="box-header with-border">
-                    <i class="fa fa-bar-chart"></i>
+                    <i class="fa fa-pie-chart"></i>
                     <h3 class="box-title">机构信誉等级统计</h3>
                     <div class="box-tools pull-right">
                         <form action="/credit/home/page/count/event" method="get"  class="navbar-form navbar-right  no-margin" style="padding-right: 0;" role="search">
@@ -347,29 +347,35 @@
         let endTime = split[1];
         $.postAjax("/credit/home/page/count/org",{'bgTime':bgTime,'endTime':endTime}, function(result) {
             var chartValue = [];
+            var count = 0;
             $.each(result,function (name, value) {
                 if (name === 'grade1') {
-                    chartValue[0] = value
+                    chartValue[0] = {value:value,name:'诚实守信'};
+                    if (value > 0)  count += 1;
                 }else if (name === 'grade2') {
-                    chartValue[1] = value
+                    chartValue[1] = {value:value,name:'信用良好'};
+                    if (value > 0)  count += 1;
                 }else if (name === 'grade3') {
-                    chartValue[2] = value
+                    chartValue[2] = {value:value,name:'一般失信'};
+                    if (value > 0)  count += 1;
                 }else if (name === 'grade4') {
-                    chartValue[3] = value
+                    chartValue[3] = {value:value,name:'较重失信'};
+                    if (value > 0)  count += 1;
                 }else if (name === 'grade5') {
-                    chartValue[4] = value
+                    chartValue[4] = {value:value,name:'严重失信'};
+                    if (value > 0)  count += 1;
                 }
             });
+            if (count === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
             var labelOption = {
                 normal: {
                     show: true,
-                    position: 'top',
-                    distance: 15,
                     align: 'center',
                     verticalAlign: 'top',
-                    rotate: 0,
-                    formatter: '{name|{a}}	 {c}个',
-                    fontSize: 12,
+                    formatter: '{name|{b}}的机构数量: {c}个',
                     rich: {
                         name: {
                             textBorderColor: '#fff'
@@ -378,52 +384,64 @@
                 }
             };
             option = {
-                color: ['#3398DB'],
+                //color: [ 'green', 'blue', 'orange', 'yellow','red'], //环形图每块的颜色
+                color: [ '#37A2DA', '#67E0E3', '#FFDB5C',  '#FF9F7F', '#E062AE'], //环形图每块的颜色
                 tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                    },
-                    formatter: function (params) {
-                        return params[0].name + '的机构数量: '
-                            + params[0].data + '(个)<br/>'
-                    }
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c}个 ({d}%)"
                 },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['诚实守信','信用良好','一般失信','较重失信','严重失信']
                 },
-                calculable: true,
-                xAxis: [
-                    {
-                        type: 'category',
-                        data: ['诚实守信','信用良好','一般失信','较重失信','严重失信'],
-                        axisTick: {
-                            alignWithLabel: true
-                        }
-                    }
-                ],
-                yAxis: [
-                    {
-                        type: 'value',
-                        name:'机构数量'
-                    }
-                ],
                 series: [
                     {
                         name: '机构数量',
-                        type: 'bar',
-                        barWidth: '60%',
-                        label: labelOption,
+                        type: 'pie',
+                        radius : '65%',
+                        center: ['50%', '50%'],
                         barGap: 0,
+                        //label:labelOption,
                         data: chartValue,
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
                     }
                 ]
             };
             chart.setOption(option,true);
         });
+    };
+
+    //无数据展示
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
     };
 
     function loadJScript() {
