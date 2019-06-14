@@ -1,34 +1,25 @@
 package com.paladin.credit.controller.template;
 
+import com.paladin.common.core.export.ExportUtil;
 import com.paladin.credit.controller.template.dto.TemplateItemExportCondition;
 import com.paladin.credit.model.template.TemplateItem;
 import com.paladin.credit.service.template.TemplateItemService;
-import com.paladin.credit.service.template.dto.TemplateItemQuery;
 import com.paladin.credit.service.template.dto.TemplateItemDTO;
-
-import com.paladin.common.core.export.ExportUtil;
+import com.paladin.credit.service.template.dto.TemplateItemQuery;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
-import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.framework.utils.uuid.UUIDUtil;
-
+import com.paladin.framework.web.response.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/credit/template/item")
@@ -55,7 +46,13 @@ public class TemplateItemController extends ControllerSupport {
     public Object getDetail(@RequestParam String id, Model model) {   	
         return CommonResponse.getSuccessResponse(templateItemService.getItem(id));
     }
-    
+
+	@GetMapping("/get/org")
+	@ResponseBody
+	public Object getOrgDetail(@RequestParam String id,@RequestParam String agencyId, Model model) {
+		return CommonResponse.getSuccessResponse(templateItemService.getOrgItem(id,agencyId));
+	}
+
     @GetMapping("/add")
     public String addInput() {
         return "/credit/template/template_item_add";

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="selection-grade-type,item-target-type,sex-type,supervise-check-status,boolean-type"/>
+<section class="content-header">
+    <h1 th:text="|机构奖励事件录入-${agencyName}|"></h1>
+    <ol class="breadcrumb">
+        <li><a  href="/credit/daily/operation/org" ><i class="fa fa-list-alt"></i>项目列表</a></li>
+        <li><a  th:href="@{'/credit/supervise/record/org/index?agencyId=' + ${agencyId}+'&agencyName='+${agencyName}}" ><i class="fa fa-list-alt"></i>录入列表</a></li>
+        <li class="active">详情</li>
+    </ol>
+</section>
+<section class="content">
+    <div id="detail"></div>
+</section>
+<div class="col-sm-2 col-sm-offset-5 btn-back">
+    <a th:href="@{'/credit/supervise/record/org/index?agencyId=' + ${agencyId}+'&agencyName='+${agencyName}}" class="btn btn-primary btn-block">返回</a>
+</div>
+<input type="hidden" id="id" th:value="${id}"/>
+
+<div th:include="/credit/footer" />
+<script type="text/javascript">
+
+    $(function() {
+        var options = {
+            id: "model",
+            name: "监察详情",
+            columns: [
+                { title: "监察项目", name: "item",colspan:2, inputType: "TEXT"},
+                { title: "监察结果等级", name: "resultGrade", enum: "selection-grade-type", inputType: "SELECT" },
+                { title: "机构", name: "agencyId",inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower"},
+                { title: "监察结果名称", name: "item", inputType: "TEXT" },
+                { title: "说明", name: "explainText", inputType: "TEXTAREA" },
+                { title: "附件", name: "explainAttachment", fileName: "explainAttachmentFile", maxFileCount: 5, inputType: "ATTACHMENT" },
+                { title: "审核意见", name: "illustrate", colspan:2, inputType: "TEXT" },
+                { title: "审核状态", name: "status",colspan:2, inputType: "SELECT", enum: "supervise-check-status" }
+            ]
+        };
+
+        $.getAjax("/credit/supervise/record/get?id="+$("#id").val(), function(data) {
+            var html = generateViewHtml(options);
+            $("#detail").html(html);
+            $.initComponment($("#detail"));
+
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+
+</script>
+</body>
+
+</html>

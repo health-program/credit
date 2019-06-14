@@ -6,11 +6,11 @@
 <body>
 <tt:constant enumcode="item-target-type,selection-grade-type,sex-type" />
 <input th:value="${itemId}" id="itemId" type="hidden" />
-<input type="hidden" id="url" th:value="${url}">
+<input type="hidden" id="agencyId" name="agencyId" th:value="${agencyId}">
 <section class="content-header">
-    <h1 th:text="|日常操作功能管理-${name}|"></h1>
+    <h1 th:text="|机构奖励事件录入-${agencyName}|"></h1>
     <ol class="breadcrumb">
-        <li><a th:href="${url}"><i class="fa fa-list-alt"></i>项目列表</a></li>
+        <li><a href="/credit/daily/operation/org"><i class="fa fa-list-alt"></i>项目列表</a></li>
         <li class="active">录入</li>
     </ol>
 </section>
@@ -19,13 +19,15 @@
 <div th:include="/credit/footer" />
 <script type="text/javascript" src="/static/js/template.js"></script>
 <script type="text/javascript">
-    var url;
+    var url,agencyId;
     $(function() {
         var itemId = $("#itemId").val();
-        url =$("#url").val();
-        $.getAjax("/credit/template/item/get?id=" + itemId, function(data) {
-            createItemEditor(false,data, ".content", function(data, formSubmitBtn) {
+        agencyId = $("#agencyId").val();
+        url ='/credit/daily/operation/org';
+        $.getAjax("/credit/template/item/get/org?id=" + itemId+"&agencyId="+agencyId, function(data) {
+            createItemEditor(true,data, ".content", function(data, formSubmitBtn) {
                 data["itemId"] = itemId;
+                data["agencyId"] = $("#agencyId").val();
                 var files = data.explainAttachmentFiles;
                 if (files && files.length > 0) {
                     ajaxUploadFile(files, function (att) {
@@ -34,16 +36,16 @@
                             attachment += a.id + ',';
                         });
                         data.explainAttachment = attachment;
-                        $.postJsonAjax('/credit/supervise/record/save',data,function () {
+                        $.postJsonAjax('/credit/supervise/record/org/save',data,function () {
                             $.successAlert("录入成功",function () {
-                                window.location = url
+                                window.location = '/credit/daily/operation/org'
                             })
                         })
                     }, formSubmitBtn);
                 } else {
-                    $.postJsonAjax('/credit/supervise/record/save',data,function () {
+                    $.postJsonAjax('/credit/supervise/record/org/save',data,function () {
                         $.successAlert("录入成功",function () {
-                            window.location = url
+                            window.location = '/credit/daily/operation/org'
                         })
                     })
                 }

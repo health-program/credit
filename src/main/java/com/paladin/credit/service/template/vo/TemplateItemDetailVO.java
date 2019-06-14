@@ -1,8 +1,8 @@
 package com.paladin.credit.service.template.vo;
 
-import java.util.List;
-
 import com.paladin.credit.model.template.TemplateItemSelection;
+
+import java.util.List;
 
 public class TemplateItemDetailVO {
 
@@ -16,6 +16,8 @@ public class TemplateItemDetailVO {
 	private Integer itemTargetType;
 	
 	private Integer isMultiple;
+
+	private  String agencyId;
 
 	// 选项
 	private List<TemplateItemSelection> selections;
@@ -60,4 +62,11 @@ public class TemplateItemDetailVO {
 		this.isMultiple = isMultiple;
 	}
 
+	public String getAgencyId() {
+		return agencyId;
+	}
+
+	public void setAgencyId(String agencyId) {
+		this.agencyId = agencyId;
+	}
 }

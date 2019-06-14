@@ -2,4 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.credit.mapper.template.TemplateItemMapper">
 
+    <select id="searchPageTemplatesByGrade"
+            resultType="com.paladin.credit.service.template.vo.TemplateItemDetailVO">
+        SELECT
+        i.id,
+        i.item_name AS itemName,
+        i.item_target_type AS itemTargetType
+        FROM
+        template_item i
+        LEFT JOIN template_item_selection s ON i.id = s.item_id
+        WHERE s.selection_grade IN ( 1, 2 )
+        <if test="templateItemQuery.itemName != null and templateItemQuery.itemName != ''">
+            AND i.item_name LIKE CONCAT ('%',#{templateItemQuery.itemName} ,'%')
+        </if>
+        <if test="templateItemQuery.itemTargetType != null">
+            AND item_target_type = #{templateItemQuery.itemTargetType}
+        </if>
+        GROUP BY i.id
+    </select>
 </mapper>

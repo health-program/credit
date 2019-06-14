@@ -48,6 +48,14 @@ public class SuperviseRecordController extends ControllerSupport {
         return "/credit/supervise/supervise_record_index";
     }
 
+    @GetMapping("/org/index")
+    public String orgIndex(@RequestParam String agencyName,@RequestParam String agencyId, Model model) {
+        model.addAttribute("targetType",1);
+        model.addAttribute("agencyName", agencyName);
+        model.addAttribute("agencyId", agencyId);
+        return "/credit/supervise/supervise_record_org_index";
+    }
+
     @RequestMapping(value = "/find/page", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     @QueryOutputMethod(queryClass = SuperviseRecordQuery.class, paramIndex = 0)
@@ -116,17 +124,31 @@ public class SuperviseRecordController extends ControllerSupport {
         return "/credit/supervise/supervise_record_wjs_detail";
     }
 
+    @GetMapping("/org/detail")
+    public String detailOrg(@RequestParam String itemId,@RequestParam String agencyName,@RequestParam String agencyId,Model model) {
+        model.addAttribute("id", itemId);
+        model.addAttribute("agencyName", agencyName);
+        model.addAttribute("agencyId", agencyId);
+        return "/credit/supervise/supervise_record_org_detail";
+    }
+
     @PostMapping("/save")
     @ResponseBody
-    public Object save(
-            @Valid @RequestBody SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
+    public Object save(@RequestBody SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
         }
-
         return CommonResponse.getResponse(superviseRecordService.saveRecords(superviseRecordDTO));
     }
 
+    @PostMapping("/org/save")
+    @ResponseBody
+    public Object orgSave(@RequestBody SuperviseRecordDTO superviseRecordDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return validErrorHandler(bindingResult);
+        }
+        return CommonResponse.getResponse(superviseRecordService.saveOrgRecords(superviseRecordDTO));
+    }
 
     @PostMapping("/wjs/save")
     @ResponseBody

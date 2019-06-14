@@ -1,15 +1,20 @@
 package com.paladin.credit.controller.daily;
 
+import com.paladin.credit.core.CreditAgencyContainer;
 import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.model.template.TemplateItem;
 import com.paladin.credit.service.template.TemplateItemAgencyService;
+import com.paladin.credit.service.template.TemplateItemService;
 import com.paladin.credit.service.template.dto.TemplateItemAgencyQuery;
+import com.paladin.credit.service.template.dto.TemplateItemQuery;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.web.response.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <日常操作功能管理>
@@ -22,6 +27,9 @@ public class DailyOperationController extends ControllerSupport {
 
     @Autowired
     private TemplateItemAgencyService templateItemAgencyService;
+    @Autowired
+    private TemplateItemService templateItemService;
+
 
     @GetMapping("/{targetType}")
     public String index( @PathVariable String targetType,Model model) {
@@ -73,6 +81,38 @@ public class DailyOperationController extends ControllerSupport {
         model.addAttribute("isWjs",1);
         model.addAttribute("roleLevel",userSession.getRoleLevel());
         return "/credit/supervise/supervise_record_wjs_index";
+    }
+
+    @GetMapping("/org")
+    public String orgIndex(Model model) {
+        String agencyId = "";
+        String agencyName = "";
+        CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+        String[] agencyIds = userSession.getAgencyIds();
+        List<CreditAgencyContainer.Agency> agencies = CreditAgencyContainer.getAgencies(agencyIds);
+        if (agencies != null) {
+            CreditAgencyContainer.Agency agency = agencies.get(0);
+            agencyId = agency.getId();
+            agencyName = agency.getName();
+        }
+        model.addAttribute("itemTargetType",1);
+        model.addAttribute("agencyName",agencyName);
+        model.addAttribute("agencyId",agencyId);
+        return "/credit/daily/daily_operation_org_index";
+    }
+
+    @RequestMapping(value = "/find/page/org", method = { RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public Object findPageOrg(TemplateItemQuery templateItemQuery) {
+        return CommonResponse.getSuccessResponse(templateItemService.searchPageTemplatesByGrade(templateItemQuery));
+    }
+
+    @GetMapping("/write/org")
+    public String writeOrg(@RequestParam String itemId,@RequestParam String agencyName,@RequestParam String agencyId, Model model) {
+        model.addAttribute("itemId", itemId);
+        model.addAttribute("agencyName", agencyName);
+        model.addAttribute("agencyId", agencyId);
+        return "/credit/daily/daily_operation_org_write";
     }
 
 }

@@ -1,5 +1,6 @@
 package com.paladin.credit.controller;
 
+import com.paladin.common.core.ConstantsContainer;
 import com.paladin.common.core.permission.PermissionContainer;
 import com.paladin.common.core.permission.Role;
 import com.paladin.credit.core.CreditUserSession;
@@ -98,6 +99,20 @@ public class PermissionController extends ControllerSupport {
 	@ResponseBody
 	public Object findLowerPeople() {
 		return CommonResponse.getSuccessResponse(personnelService.searchName());
+	}
+
+	@RequestMapping("/code/all")
+	@ResponseBody
+	public Object findAllCode() {
+		List<Map<String, Object>> result;
+		List<ConstantsContainer.KeyValue> keyValues = ConstantsContainer.getType("supervise-scope");
+		result = keyValues.stream().collect(ArrayList::new, (lists, keyValue) -> {
+			HashMap<String, Object> map = new HashMap<>(2);
+			map.put("id", keyValue.getKey());
+			map.put("name", keyValue.getValue());
+			lists.add(map);
+		}, List::addAll);
+		return CommonResponse.getSuccessResponse(result);
 	}
 
 }

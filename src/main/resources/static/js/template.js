@@ -7,13 +7,20 @@ var agencyInSystemColumns = [
     { title: "文件照片上传", name: "explainAttachment", inputType: "ATTACHMENT", fileName: "explainAttachmentFiles", maxFileCount: 5, allowedFileExtensions: allowedFileExtensions }
 ]
 
+var agencyInternalColumns = [
+    { title: "内容", name: "selections", itemField: "itemName", required: "required", inputType: "TEMPLATE-ITEM" },
+    { title: "所在机构", name: "agencyId", required: "required", multiple: false, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" ,editable:false},
+    { title: "审核机构", name: "code", required: "required", multiple: false, inputType: "SELECT-SERVER", url: "/credit/permission/code/all" },
+    { title: "说明", name: "explain", inputType: "TEXTAREA" },
+    { title: "文件照片上传", name: "explainAttachment", inputType: "ATTACHMENT", fileName: "explainAttachmentFiles", maxFileCount: 5, allowedFileExtensions: allowedFileExtensions }
+]
+
 var personnelInSystemColumns = [
     { title: "内容", name: "selections", itemField: "itemName", required: "required", inputType: "TEMPLATE-ITEM" },
     { title: "人员", name: "personnelId", required: "required", multiple: true, inputType: "SELECT-SERVER", url: "/credit/permission/people/lower" },
     { title: "说明", name: "explain", inputType: "TEXTAREA" },
     { title: "文件照片上传", name: "explainAttachment", inputType: "ATTACHMENT", fileName: "explainAttachmentFiles", maxFileCount: 5, allowedFileExtensions: allowedFileExtensions }
 ]
-
 
 var personnelOutSystemColumns = [
     { title: "内容", name: "selections", itemField: "itemName", required: "required", inputType: "TEMPLATE-ITEM" },
@@ -53,8 +60,13 @@ var personnelOutSystemColumns = [
     { title: "文件照片上传", name: "explainAttachment", inputType: "ATTACHMENT", fileName: "explainAttachmentFiles", maxFileCount: 5, allowedFileExtensions: allowedFileExtensions }
 ]
 
-function createItemEditor(data, el, callback) {
-    var columns = data.itemTargetType == 1 ? agencyInSystemColumns : (data.itemTargetType == 2 ? personnelInSystemColumns : personnelOutSystemColumns);
+function createItemEditor(isOrg, data, el, callback) {
+    var columns = [];
+    if (isOrg) {
+        columns = agencyInternalColumns
+    } else {
+        columns = data.itemTargetType == 1 ? agencyInSystemColumns : (data.itemTargetType == 2 ? personnelInSystemColumns : personnelOutSystemColumns);
+    }
     var html = generateHtml({
         id: "model",
         headBorder: false,
@@ -83,7 +95,6 @@ function createItemEditor(data, el, callback) {
         server: false,
         submitClick: function() {
             var param = model.getFormData();
-
             if (typeof callback === 'function') {
                 callback(param, model.formSubmitBtn);
             }
