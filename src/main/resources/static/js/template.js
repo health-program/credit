@@ -9,7 +9,7 @@ var agencyInSystemColumns = [
 
 var agencyInternalColumns = [
     { title: "内容", name: "selections", itemField: "itemName", required: "required", inputType: "TEMPLATE-ITEM" },
-    { title: "所在机构", name: "agencyId", required: "required", multiple: false, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" ,editable:false},
+    { title: "所在机构", name: "agencyId",colspan:2, multiple: false, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower" ,editable:false},
     { title: "审核机构", name: "code", required: "required", multiple: false, inputType: "SELECT-SERVER", url: "/credit/permission/code/all" },
     { title: "说明", name: "explain", inputType: "TEXTAREA" },
     { title: "文件照片上传", name: "explainAttachment", inputType: "ATTACHMENT", fileName: "explainAttachmentFiles", maxFileCount: 5, allowedFileExtensions: allowedFileExtensions }

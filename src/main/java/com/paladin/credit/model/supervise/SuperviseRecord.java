@@ -8,6 +8,7 @@ import java.util.Date;
 public class SuperviseRecord extends BaseModel {
 
 	public static final  int DEFAULT_ILLUSTRATE_SIZE = 30;
+	public static final  int WJS_SUPERVISE_SCOPE = 6;
 
 	@Id
 	private String id;

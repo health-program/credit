@@ -19,7 +19,12 @@
                     <div class="col-md-2">
                         <input type="text" class="form-control" name="itemName"  placeholder="请输入查询的项目名称" />
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-sm-2">
+                        <select name="itemTargetType" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.itemTargetType}" enumcode="item-target-type">
+                            <option value="">请选择项目目标类型</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
                         <div class="pull-right">
                             <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
                             <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -59,7 +64,7 @@
             columns: [
                 [
                     { title: "项目名称", field: "itemName" , formatter:function (value, row, index) { return value ? value : "无"}},
-                 /*   { title: "项目适用对象", field: "itemTargetType", enumcode: "item-target-type" },*/
+                    { title: "项目适用对象", field: "itemTargetType", enumcode: "item-target-type" },
                     {
                         title: "操作",
                         align: "center",
