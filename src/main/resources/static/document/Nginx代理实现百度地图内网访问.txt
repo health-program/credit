@@ -1,0 +1,7 @@
+1、修改引入百度地图js路径
+
+<script type="text/javascript" src="/static/assets/baidumap/mapAPI.min_server.js"></script>
+
+2、修改Nginx配置
+
+详见static/document/nginx.conf配置
