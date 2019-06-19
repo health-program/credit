@@ -17,7 +17,39 @@ var agencyInternalColumns = [
 
 var personnelInSystemColumns = [
     { title: "内容", name: "selections", itemField: "itemName", required: "required", inputType: "TEMPLATE-ITEM" },
-    { title: "人员", name: "personnelId", required: "required", multiple: true, inputType: "SELECT-SERVER", url: "/credit/permission/people/lower" },
+    {
+        title: "医疗人员姓名",
+        name: "personnelId",
+        required: "required",
+        inputType: "SELECT-TREE-SERVER",
+        idField:'id',
+        url: "/credit/permission/people/lower",
+        selectDataFilter:function (column, data) {
+            let peoples = data.people;
+            let agencies = data.agency;
+            if(agencies) {
+                agencies.filter(function (item) {
+                   item.isAgency = true;
+                });
+            }
+
+            let oldData = peoples.concat(agencies);
+            let newData;
+            newData = oldData.filter(function (father) {
+                let children = oldData.filter(function (child) {
+                    return father.id === child.agencyId
+                });
+                if (children.length > 0) {
+                    father.children = children;
+                }
+                return father.agencyId == null;
+            });
+            return newData;
+        },
+        selectedHandler:function(column, data){
+            return (data && data.data.isAgency === true)?false:true;
+        }
+    },
     { title: "说明", name: "explain", inputType: "TEXTAREA" },
     { title: "文件照片上传", name: "explainAttachment", inputType: "ATTACHMENT", fileName: "explainAttachmentFiles", maxFileCount: 5, allowedFileExtensions: allowedFileExtensions }
 ]

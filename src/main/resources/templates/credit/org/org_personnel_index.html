@@ -50,6 +50,7 @@
             columns: [
                 [
                     { title: "姓名", field: "name" },
+                    { title: "机构", field: "agencyName" ,formatter:function (value, row, index) {  return   value ? value : '无'}},
                     { title: "出生日期", field: "birthday", formatter: "date" },
                     { title: "证件类型", field: "identificationType", enumcode: "identification-type" },
                     { title: "证件号码", field: "identificationNo", formatter: "identification" },
@@ -61,7 +62,7 @@
                     {
                         title: "操作",
                         align: "center",
-                        width: "200px",
+                        width: "150px",
                         events: {
                             'click .detail': function(e, value, row, index) {
                                 detail(row);

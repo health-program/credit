@@ -109,14 +109,10 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
             record.setId(UUIDUtil.createUUID());
             i += save(record);
         }else if ( itemTargetType == TemplateItem.ITEM_TARGET_TYPE_PERSONNEL){
-            String[] personnelId = superviseRecordDTO.getPersonnelId();
-            if ( personnelId != null && personnelId.length > 0) {
-                for (String id : personnelId) {
-                    record.setPersonnelId(id);
-                    record.setId(UUIDUtil.createUUID());
-                    i += save(record);
-                }
-            }
+            String personnelId = superviseRecordDTO.getPersonnelId();
+            record.setPersonnelId(personnelId);
+            record.setId(UUIDUtil.createUUID());
+            i += save(record);
         } else {
             List<SuperviseRecordPersonnelDTO> personnels = superviseRecordDTO.getPersonnels();
             if ( personnels != null && personnels.size() > 0) {

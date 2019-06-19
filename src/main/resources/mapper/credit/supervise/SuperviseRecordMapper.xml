@@ -170,6 +170,7 @@
         <if test="query.code != null">
             AND r.code = #{query.code}
         </if>
+        ORDER BY r.create_time DESC
     </select>
     <update id="updateRecordById">
         UPDATE supervise_record SET  status = #{status} , update_time = now(),illustrate = #{illustrate}  WHERE  status = 0 AND  id = #{id}

@@ -9,4 +9,26 @@
 	  org_personnel
 	  limit 0,20
     </select>
+    <select id="searchPeoplePage" resultType="com.paladin.credit.service.org.vo.OrgPersonnelVO">
+   SELECT
+	p.id,
+	p.identification_type AS identificationType,
+	p.identification_no AS identificationNo,
+	p.`name`,
+	p.sex,
+	p.cellphone,
+	p.nation,
+	p.join_party_time AS joinPartyTime,
+	a.`name` AS agencyName,
+	p.political_affiliation AS politicalAffiliation,
+	p.birthday
+	FROM
+	org_personnel AS p
+	LEFT JOIN org_agency AS a ON p.agency_id = a.id
+	WHERE p.is_delete = 0
+	<if test="query.name != null and query.name != ''">
+		AND  p.name LIKE  CONCAT('%',#{query.name} ,'%')
+	</if>
+	ORDER BY  p.create_time DESC
+    </select>
 </mapper>

@@ -10,6 +10,8 @@ public class OrgPersonnelDTO {
 	// 证件类型
 	private Integer identificationType;
 
+	private String agencyId;
+
 	// 证件号码
 	private String identificationNo;
 
@@ -136,4 +138,11 @@ public class OrgPersonnelDTO {
 		this.politicalAffiliation = politicalAffiliation;
 	}
 
+	public String getAgencyId() {
+		return agencyId;
+	}
+
+	public void setAgencyId(String agencyId) {
+		this.agencyId = agencyId;
+	}
 }

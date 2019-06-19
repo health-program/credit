@@ -1,14 +1,19 @@
 package com.paladin.credit.model.org;
 
 import com.paladin.framework.common.UnDeleteBaseModel;
-import java.util.Date;
+
 import javax.persistence.Id;
+import java.util.Date;
 
 public class OrgPersonnel extends UnDeleteBaseModel {
+
+	public final static String COLUMN_FIELD_AGENCY_ID= "agencyId";
 
 	// 
 	@Id
 	private String id;
+
+	private String agencyId;
 
 	// 证件类型
 	private Integer identificationType;
@@ -161,4 +166,11 @@ public class OrgPersonnel extends UnDeleteBaseModel {
 		this.nativePlace = nativePlace;
 	}
 
+	public String getAgencyId() {
+		return agencyId;
+	}
+
+	public void setAgencyId(String agencyId) {
+		this.agencyId = agencyId;
+	}
 }

@@ -1,19 +1,14 @@
 package com.paladin.credit.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.paladin.credit.model.org.OrgAgency;
 import com.paladin.credit.service.org.OrgAgencyService;
 import com.paladin.framework.core.VersionContainer;
 import com.paladin.framework.core.VersionContainerManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 @Component
 public class CreditAgencyContainer implements VersionContainer {
@@ -44,7 +39,7 @@ public class CreditAgencyContainer implements VersionContainer {
 		private String id;
 		private String name;
 
-		@JsonIgnoreProperties
+		@JsonIgnore
 		private OrgAgency source;
 
 		private Agency(OrgAgency agency) {
