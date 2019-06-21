@@ -105,13 +105,16 @@ public class PermissionController extends ControllerSupport {
 	public Object findLowerPeople() {
 		HashMap<String, Object> result = new HashMap<>(2);
 		List<CreditAgencyContainer.Agency> agencies = DataPermissionUtil.getManageAgency();
-		List<String> agencyIds = agencies.stream().map(CreditAgencyContainer.Agency::getId).collect(Collectors.toList());
-		List<OrgPersonnel> personnels = personnelService.searchAll(new Condition(OrgPersonnel.COLUMN_FIELD_AGENCY_ID, QueryType.IN, agencyIds));
-		List<OrgPersonnel> newPersonnels = personnels.stream().collect(ArrayList::new, (lists, orgPersonnel) -> {
-			String newName = orgPersonnel.getName() + "(" + orgPersonnel.getIdentificationNo() + ")";
-			orgPersonnel.setName(newName);
-			lists.add(orgPersonnel);
-		}, List::addAll);
+		List<OrgPersonnel> newPersonnels = null;
+		if (agencies != null && agencies.size() > 0) {
+			List<String> agencyIds = agencies.stream().map(CreditAgencyContainer.Agency::getId).collect(Collectors.toList());
+			List<OrgPersonnel> personnels = personnelService.searchAll(new Condition(OrgPersonnel.COLUMN_FIELD_AGENCY_ID, QueryType.IN, agencyIds));
+			newPersonnels = personnels.stream().collect(ArrayList::new, (lists, orgPersonnel) -> {
+				String newName = orgPersonnel.getName() + "(" + orgPersonnel.getIdentificationNo() + ")";
+				orgPersonnel.setName(newName);
+				lists.add(orgPersonnel);
+			}, List::addAll);
+		}
 		result.put("people",newPersonnels);
 		result.put("agency",agencies);
 		return CommonResponse.getSuccessResponse(result);

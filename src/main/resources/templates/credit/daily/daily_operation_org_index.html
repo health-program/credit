@@ -6,11 +6,12 @@
 <body>
 <tt:constant enumcode="item-target-type,supervise-scope" />
 <section class="content-header">
-    <h1 th:text="|机构奖励事件录入-${agencyName}|"></h1>
+    <h1 th:text="|机构奖励事件录入-${agencyName == '' ? '管理员' : agencyName}|"></h1>
 </section>
 <section class="content">
     <input type="hidden" id="agencyName" name="agencyName" th:value="${agencyName}">
     <input type="hidden" id="agencyId" name="agencyId" th:value="${agencyId}">
+    <input type="hidden" id="roleLevel" name="roleLevel" th:value="${roleLevel}">
     <div class="box box-solid">
         <div class="box-body">
             <form id="searchbar" class="form-horizontal form-search">
@@ -51,10 +52,11 @@
 </section>
 <div th:include="/credit/footer" />
 <script type="text/javascript">
-    var table,agencyId,agencyName;
+    var table,agencyId,agencyName,roleLevel;
     $(function() {
         agencyId = $("#agencyId").val();
         agencyName = $("#agencyName").val();
+        roleLevel = $("#roleLevel").val();
         initDataGrid();
     });
 
@@ -82,9 +84,13 @@
                         },
                         formatter: function operateFormatter(value, row, index) {
                             if (row.itemName) {
-                                return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
-                                    '<button class="write btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-pencil"></i>录入</button>' +
-                                    '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                                if (roleLevel == 2) {
+                                    return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                        '<button class="write btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-pencil"></i>录入</button>' +
+                                        '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                                } else {
+                                    return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>'
+                                }
                             }
                         }
                     }

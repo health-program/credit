@@ -89,13 +89,17 @@ public class DailyOperationController extends ControllerSupport {
         String agencyId = "";
         String agencyName = "";
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
-        String[] agencyIds = userSession.getAgencyIds();
-        List<CreditAgencyContainer.Agency> agencies = CreditAgencyContainer.getAgencies(agencyIds);
-        if (agencies != null) {
-            CreditAgencyContainer.Agency agency = agencies.get(0);
-            agencyId = agency.getId();
-            agencyName = agency.getName();
+        int roleLevel = userSession.getRoleLevel();
+        if (roleLevel == CreditUserSession.ROLE_LEVEL_AGENCY) {
+            String[] agencyIds = userSession.getAgencyIds();
+            List<CreditAgencyContainer.Agency> agencies = CreditAgencyContainer.getAgencies(agencyIds);
+            if (agencies != null) {
+                CreditAgencyContainer.Agency agency = agencies.get(0);
+                agencyId = agency.getId();
+                agencyName = agency.getName();
+            }
         }
+        model.addAttribute("roleLevel",userSession.getRoleLevel());
         model.addAttribute("itemTargetType",1);
         model.addAttribute("agencyName",agencyName);
         model.addAttribute("agencyId",agencyId);

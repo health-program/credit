@@ -6,7 +6,7 @@
 <body>
 <tt:constant enumcode="selection-grade-type,item-target-type,supervise-check-status,boolean-type,supervise-scope" />
 <section class="content-header">
-    <h1 th:text="|机构奖励事件录入-${agencyName}|"></h1>
+    <h1 th:text="|机构奖励事件录入-${agencyName == '' ? '管理员' : agencyName}|"></h1>
     <ol class="breadcrumb">
         <li><a  href="/credit/daily/operation/org" ><i class="fa fa-list-alt"></i>项目列表</a></li>
         <li class="active">录入列表</li>
