@@ -11,6 +11,7 @@ import com.paladin.credit.service.department.dto.DepartmentPersonRedUploadDTO;
 import com.paladin.credit.service.department.vo.DepartmentPersonCreditVO;
 import com.paladin.framework.common.ExcelImportResult;
 import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.DefaultSheet;
@@ -115,8 +116,11 @@ public class DepartmentPersonCreditController extends ControllerSupport {
 
 	@RequestMapping("/upload/red")
 	@ResponseBody
-	public Object uploadBase(@RequestParam("file") MultipartFile file) {
+	public Object uploadBase(@RequestParam(value = "file",required = false) MultipartFile file) {
 		try {
+			if (file == null) {
+				throw new BusinessException("请选择文件");
+			}
 			@SuppressWarnings("resource")
 			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 			ExcelReader<DepartmentPersonRedUploadDTO> reader = new ExcelReader<>(DepartmentPersonRedUploadDTO.class, departmentPersonRedUploadColumns,
@@ -158,8 +162,11 @@ public class DepartmentPersonCreditController extends ControllerSupport {
 
 	@RequestMapping("/upload/black")
 	@ResponseBody
-	public Object uploadBlack(@RequestParam("file") MultipartFile file) {
+	public Object uploadBlack(@RequestParam(value = "file",required = false) MultipartFile file) {
 		try {
+			if (file == null) {
+				throw new BusinessException("请选择文件");
+			}
 			@SuppressWarnings("resource")
 			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 			ExcelReader<DepartmentPersonBlackUploadDTO> reader = new ExcelReader<>(DepartmentPersonBlackUploadDTO.class, departmentPersonBlackUploadColumns,

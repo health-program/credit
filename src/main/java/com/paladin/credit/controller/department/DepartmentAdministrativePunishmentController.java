@@ -4,10 +4,14 @@ import com.paladin.common.core.export.ExportUtil;
 import com.paladin.credit.controller.department.dto.DepartmentAdministrativePunishmentExportCondition;
 import com.paladin.credit.model.department.DepartmentAdministrativePunishment;
 import com.paladin.credit.service.department.DepartmentAdministrativePunishmentService;
-import com.paladin.credit.service.department.dto.*;
+import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentDTO;
+import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentOrgUploadDTO;
+import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentPeopleUploadDTO;
+import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentQuery;
 import com.paladin.credit.service.department.vo.DepartmentAdministrativePunishmentVO;
 import com.paladin.framework.common.ExcelImportResult;
 import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.DefaultSheet;
@@ -112,8 +116,11 @@ public class DepartmentAdministrativePunishmentController extends ControllerSupp
 
 	@RequestMapping("/upload/people")
 	@ResponseBody
-	public Object uploadPeople(@RequestParam("file") MultipartFile file) {
+	public Object uploadPeople(@RequestParam(value = "file",required = false) MultipartFile file) {
 		try {
+			if (file == null) {
+				throw new BusinessException("请选择文件");
+			}
 			@SuppressWarnings("resource")
 			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 			ExcelReader<DepartmentAdministrativePunishmentPeopleUploadDTO> reader = new ExcelReader<>(DepartmentAdministrativePunishmentPeopleUploadDTO.class, DepartmentAdministrativePunishmentPeopleUploadColumns,
@@ -155,8 +162,11 @@ public class DepartmentAdministrativePunishmentController extends ControllerSupp
 
 	@RequestMapping("/upload/org")
 	@ResponseBody
-	public Object uploadOrg(@RequestParam("file") MultipartFile file) {
+	public Object uploadOrg(@RequestParam(value = "file",required = false) MultipartFile file) {
 		try {
+			if (file == null) {
+				throw new BusinessException("请选择文件");
+			}
 			@SuppressWarnings("resource")
 			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 			ExcelReader<DepartmentAdministrativePunishmentOrgUploadDTO> reader = new ExcelReader<>(DepartmentAdministrativePunishmentOrgUploadDTO.class, DepartmentAdministrativePunishmentOrgUploadColumns,

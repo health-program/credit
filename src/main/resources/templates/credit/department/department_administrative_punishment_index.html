@@ -205,11 +205,11 @@
                     });
 
                     $("#myModal").modal('hide');
-                    layer.alert(html, { icon: 6, area: ['600px', '200px'] });
+                    layer.alert(html, { icon: 5, area: ['600px', '200px'] });
                 }
             } else {
                 $("#myModal").modal('hide');
-                $.successAlert("没有可导入的名单，是否正确使用模板");
+                $.errorAlert("没有可导入的名单，是否正确使用模板");
             }
         }
 

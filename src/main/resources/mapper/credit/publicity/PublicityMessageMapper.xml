@@ -11,7 +11,7 @@
         publicity_message
         WHERE
         publish_time <![CDATA[<=]]> CURRENT_DATE
-        AND  status = 9
+        AND  status = 9 AND  is_delete = 0
         ORDER BY publish_time DESC LIMIT 0,10
     </select>
     <select id="searchPageNotices" resultType="com.paladin.credit.service.publicity.vo.PublicityMessageVO">
@@ -24,7 +24,7 @@
         publicity_message
         WHERE
         publish_time <![CDATA[<=]]> CURRENT_DATE
-        AND  status = 9
+        AND  status = 9  AND  is_delete = 0
         <if test="query.title != null and query.title != ''">
             AND  title LIKE  CONCAT('%',#{query.title} ,'%')
         </if>

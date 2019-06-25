@@ -8,6 +8,7 @@ import com.paladin.credit.service.department.dto.*;
 import com.paladin.credit.service.department.vo.DepartmentCreditVO;
 import com.paladin.framework.common.ExcelImportResult;
 import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.DefaultSheet;
@@ -113,8 +114,11 @@ public class DepartmentCreditController extends ControllerSupport {
 
 	@RequestMapping("/upload/red")
 	@ResponseBody
-	public Object uploadBase(@RequestParam("file") MultipartFile file) {
+	public Object uploadBase(@RequestParam(value = "file",required = false) MultipartFile file) {
 		try {
+			if (file == null) {
+				throw new BusinessException("请选择文件");
+			}
 			@SuppressWarnings("resource")
 			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 			ExcelReader<DepartmentCreditRedUploadDTO> reader = new ExcelReader<>(DepartmentCreditRedUploadDTO.class, departmentCreditRedUploadColumns,
@@ -156,8 +160,11 @@ public class DepartmentCreditController extends ControllerSupport {
 
 	@RequestMapping("/upload/black")
 	@ResponseBody
-	public Object uploadBlack(@RequestParam("file") MultipartFile file) {
+	public Object uploadBlack(@RequestParam(value = "file",required = false) MultipartFile file) {
 		try {
+			if (file == null) {
+				throw new BusinessException("请选择文件");
+			}
 			@SuppressWarnings("resource")
 			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 			ExcelReader<DepartmentCreditBlackUploadDTO> reader = new ExcelReader<>(DepartmentCreditBlackUploadDTO.class, departmentCreditBlackUploadColumns,
@@ -199,8 +206,11 @@ public class DepartmentCreditController extends ControllerSupport {
 
 	@RequestMapping("/upload/business")
 	@ResponseBody
-	public Object uploadBusiness(@RequestParam("file") MultipartFile file) {
+	public Object uploadBusiness(@RequestParam(value = "file",required = false) MultipartFile file) {
 		try {
+			if (file == null) {
+				throw new BusinessException("请选择文件");
+			}
 			@SuppressWarnings("resource")
 			XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 			ExcelReader<DepartmentEnterpriseUploadDTO> reader = new ExcelReader<>(DepartmentEnterpriseUploadDTO.class, departmentEnterpriseUploadColumns,
