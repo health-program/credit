@@ -2,4 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.credit.mapper.template.TemplateItemSelectionMapper">
 
+    <select id="findSelectionByItem" resultType="com.paladin.credit.model.template.TemplateItemSelection">
+    SELECT
+        create_time AS createTime,
+        create_user_id AS createUserId,
+        update_time AS updateTime,
+        update_user_id AS updateUserId,
+        id,
+        item_id AS itemId,
+        selection_name AS selectionName,
+        selection_grade AS selectionGrade
+    FROM
+        template_item_selection
+    WHERE  1  = 1
+    <if test="itemId != null and itemId != ''">
+        AND template_item_selection.item_id = #{itemId}
+    </if>
+    ORDER  BY template_item_selection.selection_grade ASC
+    </select>
 </mapper>

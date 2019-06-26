@@ -2,6 +2,7 @@ package com.paladin.credit.controller.template;
 
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.credit.controller.template.dto.TemplateItemAgencyExportCondition;
+import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.model.template.TemplateItemAgency;
 import com.paladin.credit.service.org.dto.OrgAgencyQuery;
 import com.paladin.credit.service.template.TemplateItemAgencyService;
@@ -29,11 +30,11 @@ public class TemplateItemAgencyController extends ControllerSupport {
 	@GetMapping("/index")
 	@QueryInputMethod(queryClass = OrgAgencyQuery.class)
 	public String index(Model model) {
-		/*CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+		CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
 		int roleLevel = userSession.getRoleLevel();
 		if (roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE) {
 			model.addAttribute("code",userSession.getCurrentSuperviseScope());
-		}*/
+		}
 		return "/credit/template/template_agencies";
 	}
 

@@ -110,7 +110,12 @@ public class PermissionController extends ControllerSupport {
 			List<String> agencyIds = agencies.stream().map(CreditAgencyContainer.Agency::getId).collect(Collectors.toList());
 			List<OrgPersonnel> personnels = personnelService.searchAll(new Condition(OrgPersonnel.COLUMN_FIELD_AGENCY_ID, QueryType.IN, agencyIds));
 			newPersonnels = personnels.stream().collect(ArrayList::new, (lists, orgPersonnel) -> {
-				String newName = orgPersonnel.getName() + "(" + orgPersonnel.getIdentificationNo() + ")";
+				String newIdentificationNo = "无身份证号";
+				String identificationNo = orgPersonnel.getIdentificationNo();
+				if (identificationNo != null && identificationNo.length() > 14) {
+					newIdentificationNo = identificationNo.substring(0,14) + "****";
+				}
+				String newName = orgPersonnel.getName() + "(" + newIdentificationNo + ")";
 				orgPersonnel.setName(newName);
 				lists.add(orgPersonnel);
 			}, List::addAll);
