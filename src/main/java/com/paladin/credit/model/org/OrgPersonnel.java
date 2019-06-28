@@ -15,6 +15,8 @@ public class OrgPersonnel extends UnDeleteBaseModel {
 
 	private String agencyId;
 
+	private String agencyName;
+
 	// 证件类型
 	private Integer identificationType;
 
@@ -172,5 +174,13 @@ public class OrgPersonnel extends UnDeleteBaseModel {
 
 	public void setAgencyId(String agencyId) {
 		this.agencyId = agencyId;
+	}
+
+	public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
 	}
 }

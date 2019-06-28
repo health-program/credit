@@ -16,10 +16,10 @@
                         <div class="col-md-2">
                             <input type="text" class="form-control" name="name" th:value="${query?.name}" placeholder="请输入查询的机构名称" />
                         </div>
-                        <div class="col-md-2">
-                            <input type="text" class="form-control" name="licenseNo" th:value="${query?.licenseNo}" placeholder="请输入查询的执业许可证" />
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" name="licenseNo" th:value="${query?.licenseNo}" placeholder="请输入查询的全国唯一识别码" />
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-7">
                             <div class="pull-right">
                                 <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar')[0].reset()"><i class="fa fa-repeat"></i>重置</button>
@@ -57,20 +57,18 @@
             columns: [
                 [
                     { title: "机构名称", field: "name" },
-                    { title: "机构类型", field: "agencyType", enumcode: "agency-type" },
-                    { title: "执业许可证", field: "licenseNo" },
-                    { title: "统一社会信用代码", field: "socialCreditCode" },
+                    { title: "机构类型", field: "agencyType" },
+                    { title: "全国唯一识别码", field: "licenseNo" },
+                /*    { title: "统一社会信用代码", field: "socialCreditCode",formatter:function (value, row, index) {
+                            return value ? value : '无'
+                        } },*/
                     { title: "地址", field: "address" },
-                    { title: "成立日期", field: "registerTime", formatter: "date" },
-                    { title: "法人或负责人", field: "chargePerson" },
-                    { title: "法人或负责人证件", field: "chargePersonId", formatter: "identification", visible: false },
-                    { title: "联系方式", field: "contactWay", visible: false },
-                    { title: "经营范围", field: "businessScope", visible: false },
-                    { title: "人事信息", field: "personnelInformation", visible: false },
+                    { title: "法人", field: "chargePerson" },
+                    { title: "法人证件", field: "chargePersonId", formatter: "identification" },
                     {
                         title: "操作",
                         align: "center",
-                        width: "200px",
+                        width: "150px",
                         events: {
                             'click .detail': function(e, value, row, index) {
                                 detail(row);

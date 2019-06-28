@@ -2,7 +2,9 @@ package com.paladin.credit.controller.org;
 
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.credit.controller.org.dto.OrgPersonnelExportCondition;
+import com.paladin.credit.model.org.OrgAgency;
 import com.paladin.credit.model.org.OrgPersonnel;
+import com.paladin.credit.service.org.OrgAgencyService;
 import com.paladin.credit.service.org.OrgPersonnelService;
 import com.paladin.credit.service.org.dto.OrgPersonnelDTO;
 import com.paladin.credit.service.org.dto.OrgPersonnelQuery;
@@ -26,6 +28,9 @@ public class OrgPersonnelController extends ControllerSupport {
 
 	@Autowired
 	private OrgPersonnelService orgPersonnelService;
+	@Autowired
+	private OrgAgencyService orgAgencyService;
+
 
 	@GetMapping("/index")
 	public String index() {
@@ -61,6 +66,16 @@ public class OrgPersonnelController extends ControllerSupport {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
+		String agencyId = orgPersonnelDTO.getAgencyId();
+		OrgAgency orgAgency = orgAgencyService.get(agencyId);
+		String licenseNo = orgAgency.getLicenseNo();
+		String name = orgAgency.getName();
+		if (licenseNo != null &&  licenseNo.length() > 0) {
+			orgPersonnelDTO.setAgencyId(licenseNo);
+		}
+		if (name != null &&  name.length() > 0) {
+			orgPersonnelDTO.setAgencyName(name);
+		}
 		OrgPersonnel model = beanCopy(orgPersonnelDTO, new OrgPersonnel());
 		String id = UUIDUtil.createUUID();
 		model.setId(id);
@@ -75,6 +90,16 @@ public class OrgPersonnelController extends ControllerSupport {
 	public Object update(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
+		}
+		String agencyId = orgPersonnelDTO.getAgencyId();
+		OrgAgency orgAgency = orgAgencyService.get(agencyId);
+		String licenseNo = orgAgency.getLicenseNo();
+		String name = orgAgency.getName();
+		if (licenseNo != null &&  licenseNo.length() > 0) {
+			orgPersonnelDTO.setAgencyId(licenseNo);
+		}
+		if (name != null &&  name.length() > 0) {
+			orgPersonnelDTO.setAgencyName(name);
 		}
 		String id = orgPersonnelDTO.getId();
 		OrgPersonnel model = beanCopy(orgPersonnelDTO, orgPersonnelService.get(id));

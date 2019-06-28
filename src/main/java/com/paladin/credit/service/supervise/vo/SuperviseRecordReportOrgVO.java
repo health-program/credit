@@ -27,6 +27,11 @@ public class SuperviseRecordReportOrgVO {
 
     private  String agencyCoordinate;
 
+    private String licenseNo;
+
+    private String chargePersonId;
+
+
     public String getResultGrade() {
         return resultGrade;
     }
@@ -105,5 +110,21 @@ public class SuperviseRecordReportOrgVO {
 
     public void setAgencyCoordinate(String agencyCoordinate) {
         this.agencyCoordinate = agencyCoordinate;
+    }
+
+    public String getLicenseNo() {
+        return licenseNo;
+    }
+
+    public void setLicenseNo(String licenseNo) {
+        this.licenseNo = licenseNo;
+    }
+
+    public String getChargePersonId() {
+        return chargePersonId;
+    }
+
+    public void setChargePersonId(String chargePersonId) {
+        this.chargePersonId = chargePersonId;
     }
 }

@@ -38,6 +38,7 @@ public class CreditAgencyContainer implements VersionContainer {
 
 		private String id;
 		private String name;
+		private String uniqueCode;
 
 		@JsonIgnore
 		private OrgAgency source;
@@ -45,6 +46,7 @@ public class CreditAgencyContainer implements VersionContainer {
 		private Agency(OrgAgency agency) {
 			this.id = agency.getId();
 			this.name = agency.getName();
+			this.uniqueCode = agency.getLicenseNo();
 			this.source = agency;
 		}
 
@@ -72,6 +74,13 @@ public class CreditAgencyContainer implements VersionContainer {
 			this.source = source;
 		}
 
+		public String getUniqueCode() {
+			return uniqueCode;
+		}
+
+		public void setUniqueCode(String uniqueCode) {
+			this.uniqueCode = uniqueCode;
+		}
 	}
 
 	public static List<Agency> getAgencys() {

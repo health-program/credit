@@ -110,6 +110,9 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
             i += save(record);
         }else if ( itemTargetType == TemplateItem.ITEM_TARGET_TYPE_PERSONNEL){
             String personnelId = superviseRecordDTO.getPersonnelId();
+            if (Strings.isNullOrEmpty(personnelId)) {
+                throw new BusinessException("医疗人员不能为空");
+            }
             record.setPersonnelId(personnelId);
             record.setId(UUIDUtil.createUUID());
             i += save(record);

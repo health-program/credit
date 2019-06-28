@@ -6,10 +6,8 @@ import com.paladin.common.core.permission.Role;
 import com.paladin.credit.core.CreditAgencyContainer;
 import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.core.DataPermissionUtil;
-import com.paladin.credit.model.org.OrgPersonnel;
 import com.paladin.credit.service.org.OrgPersonnelService;
-import com.paladin.framework.common.Condition;
-import com.paladin.framework.common.QueryType;
+import com.paladin.credit.service.org.vo.OrgPersonnelSimpleVO;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.web.response.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,10 +103,10 @@ public class PermissionController extends ControllerSupport {
 	public Object findLowerPeople() {
 		HashMap<String, Object> result = new HashMap<>(2);
 		List<CreditAgencyContainer.Agency> agencies = DataPermissionUtil.getManageAgency();
-		List<OrgPersonnel> newPersonnels = null;
+		List<OrgPersonnelSimpleVO> newPersonnels = null;
 		if (agencies != null && agencies.size() > 0) {
-			List<String> agencyIds = agencies.stream().map(CreditAgencyContainer.Agency::getId).collect(Collectors.toList());
-			List<OrgPersonnel> personnels = personnelService.searchAll(new Condition(OrgPersonnel.COLUMN_FIELD_AGENCY_ID, QueryType.IN, agencyIds));
+			List<String> codes = agencies.stream().map(CreditAgencyContainer.Agency::getUniqueCode).collect(Collectors.toList());
+			List<OrgPersonnelSimpleVO> personnels = personnelService.searchMangePeoples(codes);
 			newPersonnels = personnels.stream().collect(ArrayList::new, (lists, orgPersonnel) -> {
 				String newIdentificationNo = "无身份证号";
 				String identificationNo = orgPersonnel.getIdentificationNo();

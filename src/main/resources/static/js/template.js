@@ -15,6 +15,7 @@ var agencyInternalColumns = [
     { title: "文件照片上传", name: "explainAttachment", inputType: "ATTACHMENT", fileName: "explainAttachmentFiles", maxFileCount: 5, allowedFileExtensions: allowedFileExtensions }
 ]
 
+var _count_test = 0;
 var personnelInSystemColumns = [
     { title: "内容", name: "selections", itemField: "itemName", required: "required", inputType: "TEMPLATE-ITEM" },
     {
@@ -32,17 +33,15 @@ var personnelInSystemColumns = [
                    item.isAgency = true;
                 });
             }
-
-            let oldData = peoples.concat(agencies);
             let newData;
-            newData = oldData.filter(function (father) {
-                let children = oldData.filter(function (child) {
-                    return father.id === child.agencyId
+            newData = agencies.filter(function (father) {
+                let children = peoples.filter(function (child) {
+                    return father.uniqueCode === child.uniqueCode
                 });
                 if (children.length > 0) {
                     father.children = children;
                 }
-                return father.agencyId == null;
+                return father.uniqueCode != null;
             });
             return newData;
         },

@@ -1,5 +1,6 @@
 package com.paladin.credit.controller.org;
 
+import com.google.common.base.Strings;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.common.model.syst.SysAttachment;
 import com.paladin.common.service.syst.SysAttachmentService;
@@ -11,6 +12,7 @@ import com.paladin.credit.service.org.dto.OrgAgencyDTO;
 import com.paladin.credit.service.org.dto.OrgAgencyQuery;
 import com.paladin.credit.service.org.vo.OrgAgencyVO;
 import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
@@ -98,18 +100,18 @@ public class OrgAgencyController extends ControllerSupport {
 
 	@PostMapping("/update")
 	@ResponseBody
-	public Object update(@Valid OrgAgencyDTO orgAgencyDTO, BindingResult bindingResult,@RequestParam(required = false) MultipartFile[] licenseFile ) {
+	public Object update(@Valid OrgAgencyDTO orgAgencyDTO, BindingResult bindingResult ) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
-		List<SysAttachment> license = sysAttachmentService.checkOrCreateAttachment(orgAgencyDTO.getLicense(), licenseFile);
-		if (license != null && license.size() > 4) {
-			return CommonResponse.getErrorResponse("执业许可证照片数量不能超过4张");
+		String agencyCoordinate = orgAgencyDTO.getAgencyCoordinate();
+		if (Strings.isNullOrEmpty(agencyCoordinate)) {
+			throw new BusinessException("机构坐标不能为空");
 		}
-		orgAgencyDTO.setLicense(sysAttachmentService.splicingAttachmentId(license));
 		String id = orgAgencyDTO.getId();
-		OrgAgency model = beanCopy(orgAgencyDTO, orgAgencyService.get(id));
-		if (orgAgencyService.update(model) > 0) {
+		OrgAgency agency = orgAgencyService.get(id);
+		agency.setAgencyCoordinate(agencyCoordinate);
+		if (orgAgencyService.update(agency) > 0) {
 			creditAgencyContainer.updateData();
 			return CommonResponse.getSuccessResponse(beanCopy(orgAgencyService.get(id), new OrgAgencyVO()));
 		}

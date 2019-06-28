@@ -143,17 +143,15 @@
                             item.isAgency = true;
                         });
                     }
-
-                    let oldData = peoples.concat(agencies);
                     let newData;
-                    newData = oldData.filter(function (father) {
-                        let children = oldData.filter(function (child) {
-                            return father.id === child.agencyId
+                    newData = agencies.filter(function (father) {
+                        let children = peoples.filter(function (child) {
+                            return father.uniqueCode === child.uniqueCode
                         });
                         if (children.length > 0) {
                             father.children = children;
                         }
-                        return father.agencyId == null;
+                        return father.uniqueCode != null;
                     });
                     return newData;
                 },

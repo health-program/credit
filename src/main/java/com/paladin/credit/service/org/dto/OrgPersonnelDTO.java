@@ -12,6 +12,8 @@ public class OrgPersonnelDTO {
 
 	private String agencyId;
 
+	private  String agencyName;
+
 	// 证件号码
 	private String identificationNo;
 
@@ -144,5 +146,13 @@ public class OrgPersonnelDTO {
 
 	public void setAgencyId(String agencyId) {
 		this.agencyId = agencyId;
+	}
+
+	public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
 	}
 }

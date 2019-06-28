@@ -68,6 +68,8 @@
         SELECT
         resultGrade,
         a.name as agencyName,
+        a.license_no as licenseNo,
+        a.charge_person_id as chargePersonId,
         a.social_credit_code as socialCreditCode,
         a.address as address,
         a.charge_person as chargePerson,

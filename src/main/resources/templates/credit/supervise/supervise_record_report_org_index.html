@@ -56,14 +56,12 @@
             columns: [
                 [
                     {title: "信誉等级", field: "resultGrade", enumcode:"agency-credit-grade"},
-                    {title: "单位名称", field: "agencyName"},
-                    {title: "社会信用代码", field: "socialCreditCode"},
-                    {title: "单位地址", field: "address"},
-                    {title: "法定代表人或负责人", field: "chargePerson"},
-                    {title: "联系电话", field: "contactWay"},
-                    {title: "机构类别", field: "agencyType"},
-                    {title: "成立日期", field: "registerTime"},
-                    {title: "经营范围", field: "businessScope"}
+                    { title: "机构名称", field: "agencyName" },
+                    { title: "机构类型", field: "agencyType" },
+                    { title: "全国唯一识别码", field: "licenseNo" },
+                    { title: "地址", field: "address" },
+                    { title: "法人", field: "chargePerson" },
+                    { title: "法人证件", field: "chargePersonId", formatter: "identification" }
                 ]
             ],
             url: '/credit/supervise/record/find/report/org/page',

@@ -19,16 +19,29 @@
 	p.cellphone,
 	p.nation,
 	p.join_party_time AS joinPartyTime,
-	a.`name` AS agencyName,
+	p.agency_name AS agencyName,
 	p.political_affiliation AS politicalAffiliation,
 	p.birthday
 	FROM
 	org_personnel AS p
-	LEFT JOIN org_agency AS a ON p.agency_id = a.id
 	WHERE p.is_delete = 0
 	<if test="query.name != null and query.name != ''">
 		AND  p.name LIKE  CONCAT('%',#{query.name} ,'%')
 	</if>
 	ORDER BY  p.create_time DESC
     </select>
+    <select id="searchMangePeoples" resultType="com.paladin.credit.service.org.vo.OrgPersonnelSimpleVO">
+		   SELECT
+	p.id,
+	p.identification_no AS identificationNo,
+	p.`name`,
+	p.agency_name AS agencyName,
+	p.agency_id as uniqueCode
+	FROM
+	org_personnel AS p
+	WHERE  p.agency_id in
+	<foreach collection="codes" item="code" open="(" close=")" index="index" separator=",">
+		#{code}
+	</foreach>
+	</select>
 </mapper>
