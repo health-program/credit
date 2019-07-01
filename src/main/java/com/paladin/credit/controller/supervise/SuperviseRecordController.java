@@ -50,9 +50,13 @@ public class SuperviseRecordController extends ControllerSupport {
 
     @GetMapping("/org/index")
     public String orgIndex(@RequestParam String agencyName,@RequestParam String agencyId, Model model) {
-        model.addAttribute("targetType",1);
         model.addAttribute("agencyName", agencyName);
         model.addAttribute("agencyId", agencyId);
+        model.addAttribute("resultGrade", 2);
+        CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+        if (userSession.getRoleLevel() >= 5) {
+            model.addAttribute("code", userSession.getCurrentSuperviseScope());
+        }
         return "/credit/supervise/supervise_record_org_index";
     }
 
@@ -61,6 +65,13 @@ public class SuperviseRecordController extends ControllerSupport {
     @QueryOutputMethod(queryClass = SuperviseRecordQuery.class, paramIndex = 0)
     public Object findPage(SuperviseRecordQuery query) {
         return CommonResponse.getSuccessResponse(superviseRecordService.searchSuperviseRecordsPageByQuery(query));
+    }
+
+    @RequestMapping(value = "/find/org/page", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    @QueryOutputMethod(queryClass = SuperviseRecordQuery.class, paramIndex = 0)
+    public Object findOrgPage(SuperviseRecordQuery query) {
+        return CommonResponse.getSuccessResponse(superviseRecordService.searchSuperviseOrgRecordsPageByQuery(query));
     }
 
     @GetMapping("/get")

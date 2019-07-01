@@ -132,6 +132,22 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         return i;
     }
 
+    public int getOrgSaveResult(SuperviseRecord record, SuperviseRecordDTO superviseRecordDTO, TemplateItemSelection templateItemSelection) {
+        int i = 0;
+        if (templateItemSelection != null) {
+            record.setResultGrade(templateItemSelection.getSelectionGrade());
+            record.setResultName(templateItemSelection.getSelectionName());
+        }
+        String agencyId = superviseRecordDTO.getAgencyId();
+        if (Strings.isNullOrEmpty(agencyId)) {
+            throw new BusinessException("机构不能为空");
+        }
+        record.setAgencyId(agencyId);
+        record.setId(UUIDUtil.createUUID());
+        i += save(record);
+        return i;
+    }
+
     /**
      * 功能描述: <分页查询所有机构报表>
      * @param query
@@ -193,6 +209,18 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     public PageResult<SuperviseRecordSimpleVO> searchSuperviseRecordsPageByQuery(SuperviseRecordQuery query) {
         Page<SuperviseRecordSimpleVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
         superviseRecordMapper.searchSuperviseRecordsByQuery(query);
+        return  new PageResult<>(page);
+    }
+
+    /**
+     * 功能描述: <分页查询机构奖励事件监察记录>
+     * @param query
+     * @return  com.paladin.framework.common.PageResult<com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO>
+     * @date  2019/5/5
+     */
+    public PageResult<SuperviseRecordSimpleVO> searchSuperviseOrgRecordsPageByQuery(SuperviseRecordQuery query) {
+        Page<SuperviseRecordSimpleVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+        superviseRecordMapper.searchSuperviseOrgRecordsByQuery(query);
         return  new PageResult<>(page);
     }
 
@@ -388,12 +416,11 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
             throw new BusinessException("项目选项不能为空");
         }
         SuperviseRecord record = new SuperviseRecord();
-        Integer itemTargetType = templateItem.getItemTargetType();
         record.setItem(templateItem.getItemName());
         record.setCode(superviseRecordDTO.getCode());
         record.setExplainText(superviseRecordDTO.getExplain());
         record.setExplainAttachment(superviseRecordDTO.getExplainAttachment());
-        record.setTargetType(itemTargetType);
+        record.setTargetType(1);
         record.setStatus(0);
         Integer isMultiple = templateItem.getIsMultiple();
         TemplateItemSelection templateItemSelection;
@@ -403,7 +430,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
                 if (templateItemSelection == null) {
                     throw new BusinessException("找不到对应项目选项");
                 }
-                i = getSaveResult(record, itemTargetType, superviseRecordDTO, templateItemSelection);
+                i = getOrgSaveResult(record,superviseRecordDTO, templateItemSelection);
             }
 
         } else {
@@ -411,7 +438,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
             if (templateItemSelection == null) {
                 throw new BusinessException("找不到对应项目选项");
             }
-            i = getSaveResult(record, itemTargetType, superviseRecordDTO, templateItemSelection);
+            i = getOrgSaveResult(record,superviseRecordDTO, templateItemSelection);
         }
         return i;
     }

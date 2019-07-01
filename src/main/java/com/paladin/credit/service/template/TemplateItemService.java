@@ -62,6 +62,7 @@ public class TemplateItemService extends ServiceSupport<TemplateItem> {
 		newSelections = selections.stream().filter(templateItemSelection -> templateItemSelection.getSelectionGrade() <= 2).collect(Collectors.toList());
 		detail.setSelections(newSelections);
 		detail.setAgencyId(agencyId);
+		detail.setItemTargetType(item.getItemTargetType());
 		return detail;
 	}
 

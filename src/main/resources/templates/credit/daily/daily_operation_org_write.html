@@ -27,7 +27,7 @@
         $.getAjax("/credit/template/item/get/org?id=" + itemId+"&agencyId="+agencyId, function(data) {
             createItemEditor(true,data, ".content", function(data, formSubmitBtn) {
                 data["itemId"] = itemId;
-                data["agencyId"] = $("#agencyId").val();
+                data["agencyId"] = agencyId;
                 var files = data.explainAttachmentFiles;
                 if (files && files.length > 0) {
                     ajaxUploadFile(files, function (att) {

@@ -17,18 +17,14 @@
     <div class="box box-solid">
         <div class="box-body">
             <form id="searchbar" class="form-horizontal form-search">
-                <input type="hidden" id="targetType" name="targetType" th:value="${targetType}">
                 <input type="hidden" id="agencyId" name="agencyId" th:value="${agencyId}">
+                <input type="hidden" id="resultGrade" name="resultGrade" th:value="${resultGrade}">
+                <input type="hidden" id="code" name="code" th:value="${code}">
                 <div class="form-group">
                     <div class="col-md-2">
                         <input name="item" class="form-control" placeholder="请输入项目名称"  />
                     </div>
-                    <div class="col-md-2">
-                        <select name="resultGrade" class="form-control tonto-select-constant" enumcode="selection-grade-type">
-                            <option value="">请选择结果等级</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" th:if="${code == null}">
                         <select name="code" class="form-control tonto-select-constant"  enumcode="supervise-scope">
                             <option value="">请选择审核机构</option>
                         </select>
@@ -118,7 +114,7 @@
                     }
                 ]
             ],
-            url: '/credit/supervise/record/find/page',
+            url: '/credit/supervise/record/find/org/page',
             searchbar: '#searchbar',
            /* exportUrl: '/credit/supervise/record/export',
             showExport: true,*/

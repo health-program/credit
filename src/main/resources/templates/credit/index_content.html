@@ -123,14 +123,19 @@
                     <i class="fa fa-bar-chart"></i>
                     <h3 class="box-title">事件等级统计</h3>
                     <div class="box-tools pull-right">
-                        <form action="/credit/home/page/count/event" method="get"  class="navbar-form navbar-right  no-margin" style="padding-right: 0;" role="search">
-                            <div class="input-group" >
-                                <input type="text" name="searchTime" id="searchTime" class="form-control" th:placeholder="|查询日期(${time})|" style="padding-right: 20px;text-align: center">
-                                <span class="input-group-btn" >
-                                     <button type="button"  class="btn btn-flat tonto-btn-search" onclick="query()" ><i class="fa fa-search"></i></button>
-                                </span>
+                        <div class="input-group input-group-sm" style="width: 220px;">
+                            <input type="text" name="searchTime" id="searchTime" class="form-control pull-right" th:placeholder="|查询日期(${time})|">
+
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default" onclick="query()"><i class="fa fa-search"></i></button>
                             </div>
-                        </form>
+                        </div>
+
+
+                     <!--   <div class="has-feedback">
+                            <input type="text" class="form-control input-sm" placeholder="Search Mail">
+                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </div>-->
                     </div>
                 </div>
                 <div class="box-body no-padding">
@@ -146,14 +151,14 @@
                     <i class="fa fa-pie-chart"></i>
                     <h3 class="box-title">机构信誉等级统计</h3>
                     <div class="box-tools pull-right">
-                        <form action="/credit/home/page/count/event" method="get"  class="navbar-form navbar-right  no-margin" style="padding-right: 0;" role="search">
+                        <!--<form action="/credit/home/page/count/event" method="get"  class="navbar-form navbar-right  no-margin" style="padding-right: 0;" role="search">
                             <div class="input-group">
                                 <input type="text" name="searchTime" id="searchTime1" class="form-control"  th:placeholder="|查询日期(${time})|" style="padding-right: 20px;text-align: center">
                                 <span class="input-group-btn" >
                                      <button type="button"  class="btn btn-flat tonto-btn-search" onclick="query1()" ><i class="fa fa-search"></i></button>
                                 </span>
                             </div>
-                        </form>
+                        </form>-->
                     </div>
                 </div>
                 <div class="box-body no-padding">
@@ -343,11 +348,11 @@
     };
 
     function generatorOrgChart(chart) {
-        let searchTime = $("#searchTime1").val();
+      /*  let searchTime = $("#searchTime1").val();
         let split = searchTime.split("~");
         let bgTime = split[0];
-        let endTime = split[1];
-        $.postAjax("/credit/home/page/count/org",{'bgTime':bgTime,'endTime':endTime}, function(result) {
+        let endTime = split[1];*/
+        $.postAjax("/credit/home/page/count/org",{'bgTime':null,'endTime':null}, function(result) {
             var chartValue = [];
             var count = 0;
             $.each(result,function (name, value) {

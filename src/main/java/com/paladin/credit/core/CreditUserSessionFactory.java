@@ -77,6 +77,12 @@ public class CreditUserSessionFactory {
 				userSession.currentSuperviseScope = userSession.superviseScopes[0];				
 			}
 
+			  if (roleLevel == CreditUserSession.ROLE_LEVEL_ADMIN) {
+				  List<ConstantsContainer.KeyValue> keyValues = ConstantsContainer.getType(CONSTANT_TYPE_SUPERVISE_SCOPE);
+				  userSession.superviseScopes = keyValues.stream().map(ConstantsContainer.KeyValue::getKey).toArray(String[] :: new);
+				  userSession.currentSuperviseScope = ConstantsContainer.getType("supervise-scope").get(0).getKey();
+			  }
+
 			userSession.roleIds = roles;
 			userSession.roleLevel = roleLevel;
 		} else if (type == SysUser.TYPE_AGENCY) {
