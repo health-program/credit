@@ -77,6 +77,8 @@
         font-size: 15pt;
     }
 
+    /*百度infobox样式*/
+
     .infoBoxContent{
         margin:20px;
     }
@@ -112,6 +114,36 @@
         top: 100%;
         margin-left: -20px;
     }
+
+
+    /*星星样式*/
+
+
+    .show_number li{
+        list-style: none;
+        width:240px;
+        padding:10px;
+        margin-right:5px;
+        margin-bottom:20px;
+    }
+
+    .atar_Show{
+        background:url(/static/assets/star/images/starky.png);
+        width:66px; height:21px;
+        position: absolute;
+        z-index: 1001;
+        margin-left: 50px;
+        margin-top: -20px;
+    }
+
+    .atar_Show p{
+        background:url(/static/assets/star/images/starsy.png);
+        left:0;
+        height:21px;
+        width:216px;
+    }
+
+
 
 </style>
 <body>
@@ -204,7 +236,9 @@
                     <ul class="notice-list ul-dashed" th:each="notice,iter: ${notices}">
                         <li class="notice-li" >
                             <strong><a class="name" th:href="${'/credit/home/page/notice/view?id='+ notice.id+'&isHomePage=true'}"
-                                       th:text="${notice.title.length()>45}?${#strings.substring(notice.title,0,45)+'....'}:${notice.title}"></a></strong>
+                                       th:text="${notice.title.length()>16}?${#strings.substring(notice.title,0,16)+'....'}:${notice.title}"></a>
+                            </strong>
+                            <div class="atar_Show"><p th:value="${notice.type}"></p></div>
                             <div class="right-tool">
                                 <span th:text="${#dates.format(notice.publishTime, 'yyyy-MM-dd')}"></span>
                             </div>
@@ -221,6 +255,8 @@
 <!--<script type="text/javascript" src="/static/assets/baidumap/mapAPI.min_server.js"></script>-->
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW"></script>
 <script type="text/javascript" src="/static/assets/baidumap/InfoBox_min.js"></script>
+<!--<script type="text/javascript" src="/static/assets/star/starScore.js"></script>-->
+
 <script type="text/javascript">
     /*<![CDATA[*/
     var  points;
@@ -229,12 +265,14 @@
         initDateInput($("#searchTime1"));
         generatorEventChart(eventChart);
         generatorOrgChart(orgChart);
+        initStarStyle();
         $.postAjax("/credit/home/page/map/org", function (result) {
             points = result.filter((point, index, array) => point.lng && point.lat);
             initQuery2Input();
             initMap()
         });
     });
+
     //图表自适应大小
     window.addEventListener("resize", function () {
         eventChart.resize();
@@ -243,6 +281,20 @@
 
     var eventChart = echarts.init(document.getElementById('eventChart'));
     var orgChart = echarts.init(document.getElementById('orgChart'));
+
+    function initStarStyle() {
+        //显示分数
+        $(".atar_Show p").each(function(index, element) {
+            var num=$(this).attr("value");
+            var www=num*22;//
+            $(this).css("width",www);
+        });
+
+        $(".atar_Show").each(function (index, e) {
+            let width = $(this).prev().width();
+            $(this).css("margin-left",width+10);
+        });
+    }
 
     function query(){
         let searchTime = $("#searchTime").val();

@@ -37,6 +37,7 @@
         )
         GROUP BY
         a.agency_id
+        ORDER  BY mgrade asc
         ) c
         INNER JOIN org_agency d ON c.agency_id = d.id
         WHERE
