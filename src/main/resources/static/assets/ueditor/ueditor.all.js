@@ -24751,7 +24751,10 @@
 
                             // edit by tonto
                             if($.ajaxResponseCheck(json)){
-                                json = $.parseAttachmentData(json.result)[0];
+                                json = $.parseAttachmentData(json.result);
+                                if($.isArray(json)) {
+                                	json = json[0];
+                                }
                                 
                                 loader = me.document.getElementById(loadingId);
                                 loader.setAttribute('src', json.url);
