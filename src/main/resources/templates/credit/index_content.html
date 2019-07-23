@@ -6,6 +6,7 @@
     .row{
         padding: 5px 10px  0 10px;
     }
+
     .notice-list {
         list-style: none;
     }
@@ -76,6 +77,8 @@
         font-size: 15pt;
     }
 
+    /*百度infobox样式*/
+
     .infoBoxContent{
         margin:20px;
     }
@@ -112,52 +115,87 @@
         margin-left: -20px;
     }
 
+
+    /*星星样式*/
+
+
+    .show_number li{
+        list-style: none;
+        width:240px;
+        padding:10px;
+        margin-right:5px;
+        margin-bottom:20px;
+    }
+
+    .atar_Show{
+        background:url(/static/assets/star/images/starky.png);
+        width:66px; height:21px;
+        position: absolute;
+        z-index: 1001;
+        margin-left: 50px;
+        margin-top: -20px;
+    }
+
+    .atar_Show p{
+        background:url(/static/assets/star/images/starsy.png);
+        left:0;
+        height:21px;
+        width:216px;
+    }
+
+
+
 </style>
 <body>
 <section class="content" style="padding-top: 5px">
-    <div class="row" style="height: 250px" id="countDiv">
+    <div class="row"  id="countDiv" style="height: 400px">
         <div class="col-md-6" style="padding-left: 0">
-            <div class="box box-success">
+            <div class="box box-success no-margin">
                 <div class="box-header with-border">
                     <i class="fa fa-bar-chart"></i>
                     <h3 class="box-title">事件等级统计</h3>
                     <div class="box-tools pull-right">
-                        <form action="/credit/home/page/count/event" method="get"  class="navbar-form navbar-right  no-margin" style="padding-right: 0;" role="search">
-                            <div class="input-group" >
-                                <input type="text" name="searchTime" id="searchTime" class="form-control" th:placeholder="|查询日期(${time})|">
-                                <span class="input-group-btn" >
-                                     <button type="button"  class="btn btn-flat tonto-btn-search" onclick="query()" ><i class="fa fa-search"></i></button>
-                                </span>
+                        <div class="input-group input-group-sm" style="width: 220px;">
+                            <input type="text" name="searchTime" id="searchTime" class="form-control pull-right" th:placeholder="|查询日期(${time})|">
+
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default" onclick="query()"><i class="fa fa-search"></i></button>
                             </div>
-                        </form>
+                        </div>
+
+
+                     <!--   <div class="has-feedback">
+                            <input type="text" class="form-control input-sm" placeholder="Search Mail">
+                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </div>-->
                     </div>
                 </div>
                 <div class="box-body no-padding">
                     <div class="col-md-12">
-                        <div id="eventChart" style="height: 350px"></div>
+                        <div id="eventChart" style="height: 340px"></div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-6 no-padding">
-            <div class="box box-success">
+            <div class="box box-success no-margin">
                 <div class="box-header with-border">
-                    <i class="fa fa-bar-chart"></i>
+                    <i class="fa fa-pie-chart"></i>
                     <h3 class="box-title">机构信誉等级统计</h3>
                     <div class="box-tools pull-right">
-                        <form action="/credit/home/page/count/event" method="get"  class="navbar-form navbar-right  no-margin" style="padding-right: 0;" role="search">
+                        <!--<form action="/credit/home/page/count/event" method="get"  class="navbar-form navbar-right  no-margin" style="padding-right: 0;" role="search">
                             <div class="input-group">
-                                <input type="text" name="searchTime" id="searchTime1" class="form-control"  th:placeholder="|查询日期(${time})|">
+                                <input type="text" name="searchTime" id="searchTime1" class="form-control"  th:placeholder="|查询日期(${time})|" style="padding-right: 20px;text-align: center">
                                 <span class="input-group-btn" >
                                      <button type="button"  class="btn btn-flat tonto-btn-search" onclick="query1()" ><i class="fa fa-search"></i></button>
                                 </span>
                             </div>
-                        </form>
+                        </form>-->
                     </div>
                 </div>
                 <div class="box-body no-padding">
                     <div class="col-md-12">
-                        <div id="orgChart" style="height: 350px"></div>
+                        <div id="orgChart" style="height: 340px"></div>
                     </div>
                 </div>
             </div>
@@ -198,7 +236,9 @@
                     <ul class="notice-list ul-dashed" th:each="notice,iter: ${notices}">
                         <li class="notice-li" >
                             <strong><a class="name" th:href="${'/credit/home/page/notice/view?id='+ notice.id+'&isHomePage=true'}"
-                                       th:text="${notice.title.length()>45}?${#strings.substring(notice.title,0,45)+'....'}:${notice.title}"></a></strong>
+                                       th:text="${notice.title.length()>16}?${#strings.substring(notice.title,0,16)+'....'}:${notice.title}"></a>
+                            </strong>
+                            <div class="atar_Show"><p th:value="${notice.type}"></p></div>
                             <div class="right-tool">
                                 <span th:text="${#dates.format(notice.publishTime, 'yyyy-MM-dd')}"></span>
                             </div>
@@ -212,8 +252,11 @@
 <div th:include="/credit/footer" />
 <script type="text/javascript" src="/static/assets/daterangepicker/moment.min.js"></script>
 <script type="text/javascript" src="/static/assets/daterangepicker/daterangepicker.js"></script>
+<!--<script type="text/javascript" src="/static/assets/baidumap/mapAPI.min_server.js"></script>-->
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW"></script>
 <script type="text/javascript" src="/static/assets/baidumap/InfoBox_min.js"></script>
+<!--<script type="text/javascript" src="/static/assets/star/starScore.js"></script>-->
+
 <script type="text/javascript">
     /*<![CDATA[*/
     var  points;
@@ -222,12 +265,14 @@
         initDateInput($("#searchTime1"));
         generatorEventChart(eventChart);
         generatorOrgChart(orgChart);
+        initStarStyle();
         $.postAjax("/credit/home/page/map/org", function (result) {
             points = result.filter((point, index, array) => point.lng && point.lat);
             initQuery2Input();
             initMap()
         });
     });
+
     //图表自适应大小
     window.addEventListener("resize", function () {
         eventChart.resize();
@@ -236,6 +281,20 @@
 
     var eventChart = echarts.init(document.getElementById('eventChart'));
     var orgChart = echarts.init(document.getElementById('orgChart'));
+
+    function initStarStyle() {
+        //显示分数
+        $(".atar_Show p").each(function(index, element) {
+            var num=$(this).attr("value");
+            var www=num*22;//
+            $(this).css("width",www);
+        });
+
+        $(".atar_Show").each(function (index, e) {
+            let width = $(this).prev().width();
+            $(this).css("margin-left",width+10);
+        });
+    }
 
     function query(){
         let searchTime = $("#searchTime").val();
@@ -341,35 +400,41 @@
     };
 
     function generatorOrgChart(chart) {
-        let searchTime = $("#searchTime1").val();
+      /*  let searchTime = $("#searchTime1").val();
         let split = searchTime.split("~");
         let bgTime = split[0];
-        let endTime = split[1];
-        $.postAjax("/credit/home/page/count/org",{'bgTime':bgTime,'endTime':endTime}, function(result) {
+        let endTime = split[1];*/
+        $.postAjax("/credit/home/page/count/org",{'bgTime':null,'endTime':null}, function(result) {
             var chartValue = [];
+            var count = 0;
             $.each(result,function (name, value) {
                 if (name === 'grade1') {
-                    chartValue[0] = value
+                    chartValue[0] = {value:value,name:'诚实守信'};
+                    if (value > 0)  count += 1;
                 }else if (name === 'grade2') {
-                    chartValue[1] = value
+                    chartValue[1] = {value:value,name:'信用良好'};
+                    if (value > 0)  count += 1;
                 }else if (name === 'grade3') {
-                    chartValue[2] = value
+                    chartValue[2] = {value:value,name:'一般失信'};
+                    if (value > 0)  count += 1;
                 }else if (name === 'grade4') {
-                    chartValue[3] = value
+                    chartValue[3] = {value:value,name:'较重失信'};
+                    if (value > 0)  count += 1;
                 }else if (name === 'grade5') {
-                    chartValue[4] = value
+                    chartValue[4] = {value:value,name:'严重失信'};
+                    if (value > 0)  count += 1;
                 }
             });
+            if (count === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
             var labelOption = {
                 normal: {
                     show: true,
-                    position: 'top',
-                    distance: 15,
                     align: 'center',
                     verticalAlign: 'top',
-                    rotate: 0,
-                    formatter: '{name|{a}}	 {c}个',
-                    fontSize: 12,
+                    formatter: '{name|{a}}: {c}个',
                     rich: {
                         name: {
                             textBorderColor: '#fff'
@@ -378,52 +443,64 @@
                 }
             };
             option = {
-                color: ['#3398DB'],
+                //color: [ 'green', 'blue', 'orange', 'yellow','red'], //环形图每块的颜色
+                color: [ '#67E0E3', '#37A2DA', '#FFDB5C',  '#FF9F7F', '#E062AE'], //环形图每块的颜色
                 tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                    },
-                    formatter: function (params) {
-                        return params[0].name + '的机构数量: '
-                            + params[0].data + '(个)<br/>'
-                    }
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c}个 ({d}%)"
                 },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['诚实守信','信用良好','一般失信','较重失信','严重失信']
                 },
-                calculable: true,
-                xAxis: [
-                    {
-                        type: 'category',
-                        data: ['诚实守信','信用良好','一般失信','较重失信','严重失信'],
-                        axisTick: {
-                            alignWithLabel: true
-                        }
-                    }
-                ],
-                yAxis: [
-                    {
-                        type: 'value',
-                        name:'机构数量'
-                    }
-                ],
                 series: [
                     {
                         name: '机构数量',
-                        type: 'bar',
-                        barWidth: '60%',
-                        label: labelOption,
+                        type: 'pie',
+                        radius : '65%',
+                        center: ['50%', '50%'],
                         barGap: 0,
+                        label:labelOption,
                         data: chartValue,
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
                     }
                 ]
             };
             chart.setOption(option,true);
         });
+    };
+
+    //无数据展示
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
     };
 
     function loadJScript() {

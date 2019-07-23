@@ -2,7 +2,11 @@ package com.paladin.credit.mapper.template;
 
 import com.paladin.credit.model.template.TemplateItemSelection;
 import com.paladin.framework.core.configuration.mybatis.CustomMapper;
+import org.apache.ibatis.annotations.Param;
 
-public interface TemplateItemSelectionMapper extends CustomMapper<TemplateItemSelection>{
+import java.util.List;
 
+public interface TemplateItemSelectionMapper extends CustomMapper<TemplateItemSelection> {
+
+    List<TemplateItemSelection> findSelectionByItem(@Param("itemId") String itemId);
 }

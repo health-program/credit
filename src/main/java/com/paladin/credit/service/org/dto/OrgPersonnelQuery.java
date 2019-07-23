@@ -16,5 +16,5 @@ public class OrgPersonnelQuery extends OffsetPage {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }

@@ -46,24 +46,16 @@
                             <input name="name" id="agencyName" placeholder="请输入机构名称" type="text" class="form-control" required="required"></div>
                         <label for="agencyType" class="col-sm-2 control-label">机构类型：</label>
                         <div class="col-sm-3">
-                            <select name="agencyType" class="form-control tonto-select-constant" enumcode="agency-type">
-                                <option value="">请选择</option>
-                            </select>
+                            <input name="agencyType" placeholder="请输入机构类型" type="text" class="form-control" required="required">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="licenseNo" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>执业许可证：</label>
+                        <label for="licenseNo" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>全国唯一识别码：</label>
                         <div class="col-sm-3">
                             <input name="licenseNo" placeholder="请输入执业许可证" type="text" class="form-control" required="required"></div>
                         <label for="socialCreditCode" class="col-sm-2 control-label">统一社会信用代码：</label>
                         <div class="col-sm-3">
                             <input name="socialCreditCode" placeholder="请输入统一社会信用代码" type="text" class="form-control"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="license" class="col-sm-2 control-label">执业许可证照片：</label>
-                        <div name="license" class="col-sm-8" >
-                            <input type="file" name="licenseFile" multiple>
-                        </div>
                     </div>
                     <div class="form-group">
                         <label for="agencyCoordinate" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>机构坐标：</label>
@@ -80,30 +72,17 @@
                             <input name="address" id="address"  placeholder="请输入地址(点击获取机构坐标可自动填写)" type="text" class="form-control"></div>
                     </div>
                     <div class="form-group">
-                        <label for="businessScope" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>经营范围：</label>
+                        <label for="chargePerson" class="col-sm-2 control-label">法人：</label>
                         <div class="col-sm-3">
-                            <input name="businessScope" placeholder="请输入经营范围" type="text" class="form-control" required="required"></div>
-                        <label for="registerTime" class="col-sm-2 control-label">成立日期：</label>
+                            <input name="chargePerson" placeholder="请输入法人" type="text" class="form-control"></div>
+                        <label for="chargePersonId" class="col-sm-2 control-label">法人证件：</label>
                         <div class="col-sm-3">
-                            <input name="registerTime" placeholder="请输入成立日期" autocomplete="off" type="text" class="form-control tonto-datepicker-date"></div>
+                            <input name="chargePersonId" placeholder="请输入法人证件" type="text" class="form-control"></div>
                     </div>
                     <div class="form-group">
-                        <label for="contactWay" class="col-sm-2 control-label">联系方式：</label>
-                        <div class="col-sm-3">
-                            <input name="contactWay" placeholder="请输入联系方式" type="text" class="form-control"></div>
-                        <label for="chargePerson" class="col-sm-2 control-label">法人或负责人：</label>
-                        <div class="col-sm-3">
-                            <input name="chargePerson" placeholder="请输入法人或负责人" type="text" class="form-control"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="chargePersonId" class="col-sm-2 control-label">法人或负责人证件：</label>
-                        <div class="col-sm-3">
-                            <input name="chargePersonId" placeholder="请输入法人或负责人证件" type="text" class="form-control"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="personnelInformation" class="col-sm-2 control-label">人事信息：</label>
+                        <label for="businessScope" class="col-sm-2 control-label">经营范围：</label>
                         <div class="col-sm-8">
-                            <textarea name="personnelInformation" placeholder="请输入人事信息" rows="5" type="text" class="form-control"></textarea></div>
+                            <textarea name="businessScope" placeholder="请输入人事信息" rows="5" type="text" class="form-control"></textarea></div>
                     </div>
                     <div class="form-group form-button-bar">
                         <div class="col-sm-2 col-sm-offset-3">
@@ -119,6 +98,7 @@
     </section>
     <div th:include="/credit/footer" />
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sSelQoVi2L3KofLo1HOobonW"></script>
+<!--    <script type="text/javascript" src="/static/assets/baidumap/mapAPI.min_server.js"></script>-->
 </body>
 <script type="text/javascript">
     var options = {
@@ -129,17 +109,14 @@
         columns: [
             { title: "机构名称", name: "name", required: "required", inputType: "TEXT" },
             { title: "机构类型", name: "agencyType", enum: "agency-type", inputType: "SELECT" },
-            { title: "执业许可证", name: "licenseNo", required: "required", inputType: "TEXT" },
+            { title: "全国唯一识别码", name: "licenseNo", required: "required", inputType: "TEXT" },
             { title: "统一社会信用代码", name: "socialCreditCode", inputType: "TEXT" },
-            { title: "执业许可证照片", name: "license", fileName: "licenseFile", maxFileCount: 5, inputType: "ATTACHMENT" },
             { title: "机构坐标", name: "agencyCoordinate", inputType: "TEXT",colspan:2 },
             { title: "地址", name: "address", inputType: "TEXT" },
-            { title: "经营范围", name: "businessScope", required: "required", inputType: "TEXT" },
-            { title: "成立日期", name: "registerTime", inputType: "DATE" },
             { title: "联系方式", name: "contactWay", inputType: "TEXT" },
             { title: "法人或负责人", name: "chargePerson", inputType: "TEXT" },
             { title: "法人或负责人证件", name: "chargePersonId", inputType: "TEXT" },
-            { title: "人事信息", name: "personnelInformation", inputType: "TEXTAREA" }
+            { title: "经营范围", name: "businessScope", inputType: "TEXTAREA" }
         ]
     }
 

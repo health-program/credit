@@ -15,7 +15,7 @@ public class SuperviseRecordDTO {
 	private String agencyId;
 
 	// 人员ID
-	private String[] personnelId;
+	private String personnelId;
 
 	private String[] selections;
 
@@ -77,14 +77,6 @@ public class SuperviseRecordDTO {
 
 	public void setPersonnels(List<SuperviseRecordPersonnelDTO> personnels) {
 		this.personnels = personnels;
-	}
-
-	public String[] getPersonnelId() {
-		return personnelId;
-	}
-
-	public void setPersonnelId(String[] personnelId) {
-		this.personnelId = personnelId;
 	}
 
 	public String[] getSelections() {
@@ -181,5 +173,13 @@ public class SuperviseRecordDTO {
 
 	public void setCode(Integer code) {
 		this.code = code;
+	}
+
+	public String getPersonnelId() {
+		return personnelId;
+	}
+
+	public void setPersonnelId(String personnelId) {
+		this.personnelId = personnelId;
 	}
 }

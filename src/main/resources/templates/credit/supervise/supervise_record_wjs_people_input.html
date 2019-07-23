@@ -20,36 +20,77 @@
                 <a class="btn tonto-model-tool-view-btn" id="model_edit_btn" href="javascript:void(0)"><i class="fa fa-edit"></i>编辑</a>
             </div>
         </div>
-        <div id="model_edit" class="box-body" >
-            <form id="model_form" action="/credit/supervise/record/wjs/save" method="post" class="form-horizontal null" style="padding-left:100px">
+        <div id="model_view" class="box-body">
+            <form class="form-horizontal" style="padding-left:100px">
                 <div class="form-group">
-                    <label for="id" class="col-sm-2 control-label">人员姓名：</label>
+                    <label for="personnelId" class="col-sm-2 control-label">医疗人员姓名：</label>
                     <div class="col-sm-3">
-                        <select name="personnelId" class="form-control" multiple="multiple">
-                        </select>
+                        <p name="personnelId" class="form-control-static description"></p>
                     </div>
                     <label for="scoreTime" class="col-sm-2 control-label">记分时间：</label>
                     <div class="col-sm-3">
-                        <input name="scoreTime" placeholder="请输入记分时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                        <p name="scoreTime" class="form-control-static description"></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="item" class="col-sm-2 control-label">违法事实选择：</label>
+                    <label for="ruleName" class="col-sm-2 control-label">违法事实选择：</label>
                     <div class="col-sm-3">
-                        <select  class="form-control" name="ruleName" id="scoreItem" onchange="changeScoreInput()">
+                        <p name="ruleName" class="form-control-static description"></p>
+                    </div>
+                    <label for="score" class="col-sm-2 control-label">扣除分值：</label>
+                    <div class="col-sm-3">
+                        <p name="score" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="scoreAttachment" class="col-sm-2 control-label">扣分决定书照片上传：</label>
+                    <div name="scoreAttachment" class="col-sm-8"></div>
+                </div>
+                <div class="form-group">
+                    <label for="punishNo" class="col-sm-2 control-label">行政处罚决定书编号：</label>
+                    <div class="col-sm-3">
+                        <p name="punishNo" class="form-control-static description"></p>
+                    </div>
+                    <label for="punishTime" class="col-sm-2 control-label">处罚时间：</label>
+                    <div class="col-sm-3">
+                        <p name="punishTime" class="form-control-static description"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="punishAttachment" class="col-sm-2 control-label">违法事实照片上传：</label>
+                    <div name="punishAttachment" class="col-sm-8"></div>
+                </div>
+            </form>
+        </div>
+        <div id="model_edit" class="box-body" style="display: none">
+            <form id="model_form" action="/credit/supervise/record/wjs/save" method="post" class="form-horizontal null" style="padding-left:100px">
+                <div class="form-group">
+                    <label for="personnelId" class="col-sm-2 control-label">医疗人员姓名：</label>
+                    <div class="col-sm-3">
+                        <div class="input-group"><input name="personnelId" class="form-control" placeholder="请输入医疗人员姓名" autocomplete="off" readonly="readonly" style="background: rgb(255, 255, 255);"/>
+                            <span class="input-group-addon" id="tonto-tree-select-remove-personnelId" style="cursor:pointer"><i class="glyphicon glyphicon-remove"></i></span></div>
+                    </div>
+                    <label for="scoreTime" class="col-sm-2 control-label">记分时间：</label>
+                    <div class="col-sm-3">
+                        <input name="scoreTime" placeholder="请输入记分时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date"></div>
+                </div>
+                <div class="form-group">
+                    <label for="ruleName" class="col-sm-2 control-label">违法事实选择：</label>
+                    <div class="col-sm-3">
+                        <select name="ruleName" class="form-control" id="scoreItem" onchange="changeScoreInput()">
                             <option value="">请选择</option>
                         </select>
                     </div>
                     <input type="hidden" id="item" name="item">
                     <label for="score" class="col-sm-2 control-label">扣除分值：</label>
                     <div class="col-sm-3">
-                        <input name="score"  id="score" class="form-control" placeholder="请输入扣除分值"  type="number">
+                        <input name="score" class="form-control"  type="number" id="score" placeholder="请输入扣除分值">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="scoreAttachment" class="col-sm-2 control-label">扣分决定书照片上传：</label>
                     <div name="scoreAttachment" class="col-sm-8" >
-                        <input type="file" name="scoreAttachmentFiles" multiple="multiple">
+                        <input type="file" name="scoreAttachmentFiles" multiple>
                     </div>
                 </div>
                 <div class="form-group">
@@ -86,9 +127,38 @@
         id: "model",
         cancelBtn: false,
         name: "添加监察记录",
-        url:"/credit/supervise/record/save",
+        url:"/credit/supervise/record/wjs/save",
         columns: [
-            { title: "人员姓名", name: "personnelId",  multiple: true,colspan:2, inputType: "SELECT-SERVER", url: "/credit/permission/people/lower" },
+            {
+                title: "医疗人员姓名",
+                name: "personnelId",
+                inputType: "SELECT-TREE-SERVER",
+                idField:'id',
+                url: "/credit/permission/people/lower",
+                selectDataFilter:function (column, data) {
+                    let peoples = data.people;
+                    let agencies = data.agency;
+                    if(agencies) {
+                        agencies.filter(function (item) {
+                            item.isAgency = true;
+                        });
+                    }
+                    let newData;
+                    newData = agencies.filter(function (father) {
+                        let children = peoples.filter(function (child) {
+                            return father.uniqueCode === child.uniqueCode
+                        });
+                        if (children.length > 0) {
+                            father.children = children;
+                        }
+                        return father.uniqueCode != null;
+                    });
+                    return newData;
+                },
+                selectedHandler:function(column, data){
+                    return (data && data.data.isAgency === true)?false:true;
+                }
+            },
             { title: "记分时间",name: "scoreTime", inputType: "DATE"},
             { title: "违法事实选择", name: "ruleName", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/2"},
             { title: "扣除分值", name: "score", inputType: "NUMBER" },
@@ -101,9 +171,12 @@
 
     $(function() {
         type = $("#type").val();
+   /*     var html = generateHtml(options);
+        $(".content").html(html);*/
         $("#reply_btn").click(function () {
             window.location = "/credit/daily/operation/wjs/"+type;
         });
+        //$.initComponment($(".content"));
         var model = new tonto.Model("model", options.columns, {
             pattern:"edit",
             extraParam:{
@@ -120,7 +193,7 @@
     });
 
     function changeScoreInput() {
-        let $scoreItem = $("#scoreItem option:selected");
+        let $scoreItem = $("select[name = 'ruleName'] option:selected");
         let item = $scoreItem.text();
         let score = $scoreItem.val();
         $("#score").val(score);

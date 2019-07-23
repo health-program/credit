@@ -15,7 +15,7 @@
     .textarea1{
         resize: none;
         border: none;
-        min-height: 400px;
+        min-height: 500px;
         background-color:white;
     }
     .date{
@@ -28,6 +28,33 @@
         padding-left: 0;
         padding-right: 20px;
         width: auto;
+    }
+
+    /*星星样式*/
+
+
+    .show_number li{
+        list-style: none;
+        width:240px;
+        padding:10px;
+        margin-right:5px;
+        margin-bottom:20px;
+    }
+
+    .atar_Show{
+        background:url(/static/assets/star/images/starky.png);
+        width:66px; height:20.5px;
+        position: absolute;
+        z-index: 1001;
+        margin-left: 600px;
+        margin-top: -32px;
+    }
+
+    .atar_Show p{
+        background:url(/static/assets/star/images/starsy.png);
+        left:0;
+        height:20.5px;
+        width:216px;
     }
 </style>
 <body>
@@ -42,6 +69,7 @@
                             <div class="col-sm-12 title">
                                 <p name="title" th:text="${object.title}"  class="form-control-static description"></p>
                                 <p class="form-control-static description date">发布时间:<span name="publishTime" th:text="${#dates.format(object.publishTime, 'yyyy-MM-dd')}"></span></p>
+                                <div class="atar_Show"><p th:value="${object.type}"></p></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -69,7 +97,14 @@
     <div th:include="/credit/footer" />
 <script type="text/javascript">
     /*<![CDATA[*/
-
+    $(function () {
+        //显示分数
+        $(".atar_Show p").each(function(index, element) {
+            var num=$(this).attr("value");
+            var www=num*22;//
+            $(this).css("width",www);
+        });
+    });
     /*]]>*/
 </script>
 </body>

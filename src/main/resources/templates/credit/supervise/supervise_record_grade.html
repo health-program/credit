@@ -8,8 +8,7 @@
 <section class="content-header">
     <h1 th:text="|${targetType == '1' ? '医疗机构' : (targetType == '2' ? '医疗人员' : '医疗活动相关人员')}-卫监所|"></h1>
     <ol class="breadcrumb">
-        <li><a  th:href="@{'/credit/daily/operation/' + ${targetType}}" ><i class="fa fa-list-alt"></i>项目列表</a></li>
-        <li><a  th:href="@{'/credit/supervise/record/index/' + ${targetType}}" ><i class="fa fa-list-alt"></i>监察记录列表</a></li>
+        <li><a  th:href="@{'/credit/daily/operation/wjs/' + ${targetType}}" ><i class="fa fa-list-alt"></i>监察记录列表</a></li>
         <li class="active">评级</li>
     </ol>
 </section>

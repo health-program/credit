@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="item-target-type,selection-grade-type,sex-type" />
+<input th:value="${itemId}" id="itemId" type="hidden" />
+<input type="hidden" id="agencyId" name="agencyId" th:value="${agencyId}">
+<section class="content-header">
+    <h1 th:text="|机构奖励事件录入-${agencyName}|"></h1>
+    <ol class="breadcrumb">
+        <li><a href="/credit/daily/operation/org"><i class="fa fa-list-alt"></i>项目列表</a></li>
+        <li class="active">录入</li>
+    </ol>
+</section>
+<section class="content">
+</section>
+<div th:include="/credit/footer" />
+<script type="text/javascript" src="/static/js/template.js"></script>
+<script type="text/javascript">
+    var url,agencyId;
+    $(function() {
+        var itemId = $("#itemId").val();
+        agencyId = $("#agencyId").val();
+        url ='/credit/daily/operation/org';
+        $.getAjax("/credit/template/item/get/org?id=" + itemId+"&agencyId="+agencyId, function(data) {
+            createItemEditor(true,data, ".content", function(data, formSubmitBtn) {
+                data["itemId"] = itemId;
+                data["agencyId"] = agencyId;
+                var files = data.explainAttachmentFiles;
+                if (files && files.length > 0) {
+                    ajaxUploadFile(files, function (att) {
+                        let attachment = data.explainAttachment;
+                        att.forEach(function (a) {
+                            attachment += a.id + ',';
+                        });
+                        data.explainAttachment = attachment;
+                        $.postJsonAjax('/credit/supervise/record/org/save',data,function () {
+                            $.successAlert("录入成功",function () {
+                                window.location = '/credit/daily/operation/org'
+                            })
+                        })
+                    }, formSubmitBtn);
+                } else {
+                    $.postJsonAjax('/credit/supervise/record/org/save',data,function () {
+                        $.successAlert("录入成功",function () {
+                            window.location = '/credit/daily/operation/org'
+                        })
+                    })
+                }
+            });
+        });
+    });
+</script>
+</body>
+
+</html>

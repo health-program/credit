@@ -24,7 +24,7 @@
         var itemId = $("#itemId").val();
         url =$("#url").val();
         $.getAjax("/credit/template/item/get?id=" + itemId, function(data) {
-            createItemEditor(data, ".content", function(data, formSubmitBtn) {
+            createItemEditor(false,data, ".content", function(data, formSubmitBtn) {
                 data["itemId"] = itemId;
                 var files = data.explainAttachmentFiles;
                 if (files && files.length > 0) {

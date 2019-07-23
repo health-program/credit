@@ -50,18 +50,14 @@
             columns: [
                 [
                     { title: "姓名", field: "name" },
-                    { title: "出生日期", field: "birthday", formatter: "date" },
-                    { title: "证件类型", field: "identificationType", enumcode: "identification-type" },
-                    { title: "证件号码", field: "identificationNo", formatter: "identification" },
-                    { title: "民族", field: "nation", enumcode: "nation-type" },
                     { title: "性别", field: "sex", enumcode: "sex-type" },
-                    { title: "加入党派时间", field: "joinPartyTime", formatter: "date" },
-                    { title: "手机号码", field: "cellphone" },
-                    { title: "政治面貌", field: "politicalAffiliation", enumcode: "political-affiliation-type" },
+                    { title: "出生日期", field: "birthday", formatter: "date" },
+                    { title: "证件号码", field: "identificationNo", formatter: "identification" },
+                    { title: "机构", field: "agencyName" ,formatter:function (value, row, index) {  return   value ? value : '无'}},
                     {
                         title: "操作",
                         align: "center",
-                        width: "200px",
+                        width: "150px",
                         events: {
                             'click .detail': function(e, value, row, index) {
                                 detail(row);

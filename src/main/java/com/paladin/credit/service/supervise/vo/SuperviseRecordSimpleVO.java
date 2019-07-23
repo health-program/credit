@@ -28,6 +28,8 @@ public class SuperviseRecordSimpleVO {
 
     private Integer isWjs;
 
+    private Integer code;
+
     public String getId() {
         return id;
     }
@@ -106,5 +108,13 @@ public class SuperviseRecordSimpleVO {
 
     public void setIsWjs(Integer isWjs) {
         this.isWjs = isWjs;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
     }
 }

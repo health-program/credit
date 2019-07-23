@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="administrative-status-type,administrative-target-type,information-usage-scope,identification-type,punishment-type,dishonesty-degree-type" />
+    <section class="content-header">
+        <h1 th:text="|行政处罚上报-${type == '1' ? '自然人' : (type == '2' ? '法人' : '')}|"></h1>
+        <ol class="breadcrumb">
+            <li><a th:href="@{'/credit/department/administrative/punishment/index/'+${type}}"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a th:href="@{'/credit/department/administrative/punishment/index/'+${type}}" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+<input type="hidden" id="type" th:value="${type}"/>
+    <div th:include="/credit/footer" />
+    <script type="text/javascript">
+        var type;
+    $(function() {
+        type = $("#type").val();
+    	var options = {
+	        id: "model",
+	        name: "详情",
+	        url:"/credit/department/administrative/punishment/update?id="+$("#id").val(),
+	        columns: [
+				{ title: "处罚对象类型", name: "type",inputType: "SELECT" ,editable:false,enum:"administrative-target-type",colspan:2},
+				{ title: "行政相对人", name: "name", required: "required", inputType: "TEXT" },
+                { title: "统一社会信用代码", name: "socialCreditCode", inputType: "TEXT" ,dependency:["type","2"]},
+                { title: "组织机构代码", name: "organizationCode", inputType: "TEXT" ,dependency:["type","2"]},
+                { title: "工商注册号", name: "commercialRegistrationNumber", inputType: "TEXT" ,dependency:["type","2"]},
+                { title: "税务登记号", name: "taxRegistrationNumber", inputType: "TEXT",dependency:["type","2"]},
+                { title: "法定代表人或负责人", name: "chargePerson", inputType: "TEXT",dependency:["type","2"] },
+                { title: "证件类型", name: "identificationType", required: "required", inputType: "SELECT" ,enum:"identification-type"},
+                { title: "证件号码", name: "identificationNo", required: "required", inputType: "TEXT" },
+                { title: "处罚名称", name: "punishmentName", required: "required", inputType: "TEXT" ,colspan:2 },
+				{ title: "处罚权利编码", name: "punishmentPowerCode", inputType: "TEXT" },
+				{ title: "处罚文书号", name: "punishmentDocumentNumber", required: "required", inputType: "TEXT" },
+				{ title: "处罚日期", name: "punishmentDecisionTime", required: "required", inputType: "DATE" },
+				{ title: "公示日期", name: "punishmentEffectivityStartTime", inputType: "DATE" },
+				{ title: "公示截止日期", name: "punishmentEffectivityEndTime", inputType: "DATE" },
+				{ title: "处罚机构", name: "punishmentOrganization", required: "required", inputType: "TEXT" },
+				{ title: "处罚类型1", name: "punishmentTypeOne", required: "required", inputType: "SELECT",enum:"punishment-type" },
+				{ title: "处罚类型2", name: "punishmentTypeTwo", inputType: "SELECT",enum:"punishment-type" },
+				{ title: "处罚事由", name: "punishmentCause", required: "required", inputType: "TEXTAREA" },
+				{ title: "处罚依据", name: "punishmentBasis", required: "required", inputType: "TEXTAREA" },
+				{ title: "处罚结果", name: "punishmentResult", required: "required", inputType: "TEXTAREA" },
+				{ title: "信息使用范围", name: "informationUsageScope", required: "required", inputType: "SELECT" ,enum:"information-usage-scope"},
+                { title: "失信严重程度", name: "dishonestyDegree", required: "required", inputType: "SELECT",enum:"dishonesty-degree-type"  },
+                { title: "状态", name: "punishmentStatus", required: "required", inputType: "SELECT",enum:"administrative-status-type"  },
+                { title: "备注", name: "remark", inputType: "TEXTAREA" ,dependency:["punishmentStatus","3"] },
+                { title: "违法行为类型", name: "illegalActType", inputType: "TEXTAREA" },
+				{ title: "罚款金额", name: "penalty", inputType: "NUMBER" ,attr:{'step':'0.01','min':'0.00','max':'9999.99'},unit:"万元"},
+				{ title: "没收违法所得没收非法财物的金额", name: "illegalProceeds", inputType: "NUMBER" ,attr:{'step':'0.01','min':'0.00','max':'9999.99'},unit:"万元"},
+				{ title: "事业单位证书号", name: "institutionCertificateNumber", inputType: "TEXT",dependency:["type","2"] },
+				{ title: "社会组织登记证号", name: "socialOrganizationRegistrationNumber", inputType: "TEXT",dependency:["type","2"] },
+				{ title: "暂扣或吊销证照名称及编号", name: "involvedLicenses", inputType: "TEXT" },
+				{ title: "处罚机构统一社会信用代码", name: "punishmentSocialCreditCode", inputType: "TEXT" },
+				{ title: "数据来源单位", name: "dataSourceUnit", inputType: "TEXT" },
+				{ title: "数据来源统一社会信用代码", name: "sourceSocialCreditCode", inputType: "TEXT" }
+				]
+	    }
+    
+        $.getAjax("/credit/department/administrative/punishment/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns,{
+                extraParam:{
+                    'type':type
+                }
+            });
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>

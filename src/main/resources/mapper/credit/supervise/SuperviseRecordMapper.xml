@@ -37,6 +37,7 @@
         )
         GROUP BY
         a.agency_id
+        ORDER  BY mgrade asc
         ) c
         INNER JOIN org_agency d ON c.agency_id = d.id
         WHERE
@@ -48,7 +49,7 @@
     <select id="searchReportDetailByQuery" resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordVO">
         SELECT
         a.`name` AS agencyName,
-        s.result_name AS item,
+        s.result_name AS resultName,
         s.result_grade AS resultGrade,
         s.item,
         s.create_time AS createTime
@@ -68,6 +69,8 @@
         SELECT
         resultGrade,
         a.name as agencyName,
+        a.license_no as licenseNo,
+        a.charge_person_id as chargePersonId,
         a.social_credit_code as socialCreditCode,
         a.address as address,
         a.charge_person as chargePerson,
@@ -122,6 +125,7 @@
         r.target_type AS targetType,
         r.personnel_name AS relatedPersonnelName,
         r.item,
+        r.code,
         r.status,
         r.is_wjs AS isWjs,
         r.result_name AS item,
@@ -145,13 +149,16 @@
         <if test="query.agencyName != null and query.agencyName != ''">
             AND a.name LIKE CONCAT('%',#{query.agencyName},'%')
         </if>
+        <if test="query.agencyId != null">
+            AND a.id = #{query.agencyId}
+        </if>
         <if test="query.personnelName != null and query.personnelName != ''">
             AND p.name LIKE CONCAT('%',#{query.personnelName},'%')
         </if>
         <if test="query.relatedPersonnelName != null and query.relatedPersonnelName != ''">
             AND r.personnel_name LIKE CONCAT('%',#{query.relatedPersonnelName},'%')
         </if>
-        <if test="param1.bgTime != null">
+        <if test="query.bgTime != null">
             AND r.create_time >= #{query.bgTime}
         </if>
         <if test="query.endTime != null">
@@ -166,6 +173,7 @@
         <if test="query.code != null">
             AND r.code = #{query.code}
         </if>
+        ORDER BY r.create_time DESC
     </select>
     <update id="updateRecordById">
         UPDATE supervise_record SET  status = #{status} , update_time = now(),illustrate = #{illustrate}  WHERE  status = 0 AND  id = #{id}
@@ -310,5 +318,54 @@
         ORDER BY
         create_time DESC
         LIMIT 5
+    </select>
+    <select id="searchSuperviseOrgRecordsByQuery"
+            resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO">
+        SELECT
+        r.id,
+        r.target_type AS targetType,
+        r.personnel_name AS relatedPersonnelName,
+        r.item,
+        r.code,
+        r.status,
+        r.is_wjs AS isWjs,
+        r.result_name AS item,
+        r.result_grade AS resultGrade,
+        a.`name` AS agencyName,
+        p.`name` AS personnelName
+        FROM
+        supervise_record AS r
+        LEFT JOIN org_agency AS a ON r.agency_id = a.id
+        LEFT JOIN org_personnel AS p ON r.personnel_id = p.id
+        WHERE 1 = 1
+        <if test="query.item != null and query.item != ''">
+            AND r.item LIKE CONCAT('%',#{query.item},'%')
+        </if>
+        <if test="query.targetType != null">
+            AND r.target_type = #{query.targetType}
+        </if>
+        <if test="param1.resultGrade != null">
+            AND r.result_grade <![CDATA[<=]]> #{query.resultGrade}
+        </if>
+        <if test="query.agencyName != null and query.agencyName != ''">
+            AND a.name LIKE CONCAT('%',#{query.agencyName},'%')
+        </if>
+        <if test="query.agencyId != null">
+            AND a.id = #{query.agencyId}
+        </if>
+        <if test="query.bgTime != null">
+            AND r.create_time >= #{query.bgTime}
+        </if>
+        <if test="query.endTime != null">
+            AND r.create_time <![CDATA[<=]]> #{query.endTime}
+        </if>
+        <if test="query.status != null">
+            AND r.status = #{query.status}
+        </if>
+        <if test="query.code != null">
+            AND r.code = #{query.code}
+        </if>
+        ORDER BY r.create_time DESC
+
     </select>
 </mapper>

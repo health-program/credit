@@ -44,6 +44,7 @@
         <if test="query.itemTargetType != null">
             AND i.item_target_type = #{query.itemTargetType}
         </if>
+        ORDER BY i.create_time DESC
     </select>
     <select id="searchTemplatesByQuery"
             resultType="com.paladin.credit.service.template.vo.TemplateItemAgencyVO">

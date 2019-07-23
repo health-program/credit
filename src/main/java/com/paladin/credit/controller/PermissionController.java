@@ -1,10 +1,13 @@
 package com.paladin.credit.controller;
 
+import com.paladin.common.core.ConstantsContainer;
 import com.paladin.common.core.permission.PermissionContainer;
 import com.paladin.common.core.permission.Role;
+import com.paladin.credit.core.CreditAgencyContainer;
 import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.core.DataPermissionUtil;
 import com.paladin.credit.service.org.OrgPersonnelService;
+import com.paladin.credit.service.org.vo.OrgPersonnelSimpleVO;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.web.response.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ApiIgnore
 @Controller
@@ -97,7 +101,40 @@ public class PermissionController extends ControllerSupport {
 	@RequestMapping("/people/lower")
 	@ResponseBody
 	public Object findLowerPeople() {
-		return CommonResponse.getSuccessResponse(personnelService.searchName());
+		HashMap<String, Object> result = new HashMap<>(2);
+		List<CreditAgencyContainer.Agency> agencies = DataPermissionUtil.getManageAgency();
+		List<OrgPersonnelSimpleVO> newPersonnels = null;
+		if (agencies != null && agencies.size() > 0) {
+			List<String> codes = agencies.stream().map(CreditAgencyContainer.Agency::getUniqueCode).collect(Collectors.toList());
+			List<OrgPersonnelSimpleVO> personnels = personnelService.searchMangePeoples(codes);
+			newPersonnels = personnels.stream().collect(ArrayList::new, (lists, orgPersonnel) -> {
+				String newIdentificationNo = "无身份证号";
+				String identificationNo = orgPersonnel.getIdentificationNo();
+				if (identificationNo != null && identificationNo.length() > 14) {
+					newIdentificationNo = identificationNo.substring(0,14) + "****";
+				}
+				String newName = orgPersonnel.getName() + "(" + newIdentificationNo + ")";
+				orgPersonnel.setName(newName);
+				lists.add(orgPersonnel);
+			}, List::addAll);
+		}
+		result.put("people",newPersonnels);
+		result.put("agency",agencies);
+		return CommonResponse.getSuccessResponse(result);
+	}
+
+	@RequestMapping("/code/all")
+	@ResponseBody
+	public Object findAllCode() {
+		List<Map<String, Object>> result;
+		List<ConstantsContainer.KeyValue> keyValues = ConstantsContainer.getType("supervise-scope");
+		result = keyValues.stream().collect(ArrayList::new, (lists, keyValue) -> {
+			HashMap<String, Object> map = new HashMap<>(2);
+			map.put("id", keyValue.getKey());
+			map.put("name", keyValue.getValue());
+			lists.add(map);
+		}, List::addAll);
+		return CommonResponse.getSuccessResponse(result);
 	}
 
 }

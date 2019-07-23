@@ -109,14 +109,13 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
             record.setId(UUIDUtil.createUUID());
             i += save(record);
         }else if ( itemTargetType == TemplateItem.ITEM_TARGET_TYPE_PERSONNEL){
-            String[] personnelId = superviseRecordDTO.getPersonnelId();
-            if ( personnelId != null && personnelId.length > 0) {
-                for (String id : personnelId) {
-                    record.setPersonnelId(id);
-                    record.setId(UUIDUtil.createUUID());
-                    i += save(record);
-                }
+            String personnelId = superviseRecordDTO.getPersonnelId();
+            if (Strings.isNullOrEmpty(personnelId)) {
+                throw new BusinessException("医疗人员不能为空");
             }
+            record.setPersonnelId(personnelId);
+            record.setId(UUIDUtil.createUUID());
+            i += save(record);
         } else {
             List<SuperviseRecordPersonnelDTO> personnels = superviseRecordDTO.getPersonnels();
             if ( personnels != null && personnels.size() > 0) {
@@ -130,6 +129,22 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
                 }
             }
         }
+        return i;
+    }
+
+    public int getOrgSaveResult(SuperviseRecord record, SuperviseRecordDTO superviseRecordDTO, TemplateItemSelection templateItemSelection) {
+        int i = 0;
+        if (templateItemSelection != null) {
+            record.setResultGrade(templateItemSelection.getSelectionGrade());
+            record.setResultName(templateItemSelection.getSelectionName());
+        }
+        String agencyId = superviseRecordDTO.getAgencyId();
+        if (Strings.isNullOrEmpty(agencyId)) {
+            throw new BusinessException("机构不能为空");
+        }
+        record.setAgencyId(agencyId);
+        record.setId(UUIDUtil.createUUID());
+        i += save(record);
         return i;
     }
 
@@ -194,6 +209,18 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     public PageResult<SuperviseRecordSimpleVO> searchSuperviseRecordsPageByQuery(SuperviseRecordQuery query) {
         Page<SuperviseRecordSimpleVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
         superviseRecordMapper.searchSuperviseRecordsByQuery(query);
+        return  new PageResult<>(page);
+    }
+
+    /**
+     * 功能描述: <分页查询机构奖励事件监察记录>
+     * @param query
+     * @return  com.paladin.framework.common.PageResult<com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO>
+     * @date  2019/5/5
+     */
+    public PageResult<SuperviseRecordSimpleVO> searchSuperviseOrgRecordsPageByQuery(SuperviseRecordQuery query) {
+        Page<SuperviseRecordSimpleVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+        superviseRecordMapper.searchSuperviseOrgRecordsByQuery(query);
         return  new PageResult<>(page);
     }
 
@@ -262,6 +289,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
      * @return  int
      * @date  2019/5/13
      */
+    @Transactional
     public int saveWjsRecords(SuperviseRecordDTO superviseRecordDTO) {
         int i;
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
@@ -359,5 +387,59 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
             throw new BusinessException("机构id不能为空");
         }
         return superviseRecordMapper.findMapOrgInfoById(agencyId);
+    }
+
+    /**
+     * 功能描述: <机构奖励事件录入>
+     * @param superviseRecordDTO
+     * @return  int
+     * @date  2019/6/13
+     */
+    @Transactional
+    public int saveOrgRecords(SuperviseRecordDTO superviseRecordDTO) {
+        int i = 0;
+        CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+        int roleLevel = userSession.getRoleLevel();
+        if ( roleLevel != CreditUserSession.ROLE_LEVEL_AGENCY){
+            throw new BusinessException("您没有操作该功能权限");
+        }
+        String itemId = superviseRecordDTO.getItemId();
+        if (StringUtil.isEmpty(itemId)) {
+            throw new BusinessException("找不到对应模板项目");
+        }
+        TemplateItem templateItem = templateItemService.get(itemId);
+        if (templateItem == null) {
+            throw new BusinessException("找不到对应模板项目");
+        }
+        String[] selections = superviseRecordDTO.getSelections();
+        if (selections == null || selections.length == 0) {
+            throw new BusinessException("项目选项不能为空");
+        }
+        SuperviseRecord record = new SuperviseRecord();
+        record.setItem(templateItem.getItemName());
+        record.setCode(superviseRecordDTO.getCode());
+        record.setExplainText(superviseRecordDTO.getExplain());
+        record.setExplainAttachment(superviseRecordDTO.getExplainAttachment());
+        record.setTargetType(1);
+        record.setStatus(0);
+        Integer isMultiple = templateItem.getIsMultiple();
+        TemplateItemSelection templateItemSelection;
+        if (isMultiple == 1) {
+            for (String selection : selections) {
+                templateItemSelection = templateItemSelectionService.get(selection);
+                if (templateItemSelection == null) {
+                    throw new BusinessException("找不到对应项目选项");
+                }
+                i = getOrgSaveResult(record,superviseRecordDTO, templateItemSelection);
+            }
+
+        } else {
+            templateItemSelection = templateItemSelectionService.get(selections[0]);
+            if (templateItemSelection == null) {
+                throw new BusinessException("找不到对应项目选项");
+            }
+            i = getOrgSaveResult(record,superviseRecordDTO, templateItemSelection);
+        }
+        return i;
     }
 }

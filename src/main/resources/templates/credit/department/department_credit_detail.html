@@ -19,10 +19,12 @@
     	<a th:href="@{'/credit/department/credit/index/'+${type}}" class="btn btn-primary btn-block">返回</a>
     </div>
     <input type="hidden" id="id" th:value="${id}"/>
+    <input type="hidden" id="type" th:value="${type}"/>
     <div th:include="/credit/footer" />
     <script type="text/javascript">
-
+        var type;
     $(function() {
+        type = $("#type").val();
     	var options = {
 	        id: "model",
 	        name: "详情",
@@ -55,7 +57,11 @@
             $(".content").html(html);
             $.initComponment($(".content"));
 
-            var model = new tonto.Model("model", options.columns);
+            var model = new tonto.Model("model", options.columns,{
+                extraParam:{
+                    'type':type
+                }
+            });
             model.setData(data);
         });
     });
