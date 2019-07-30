@@ -75,8 +75,9 @@ var personnelOutSystemColumns = [
             headBorder: false,
             hearderBox: false,
             server: false,
+            formPaddingLeft: 50,
             layerOption: {
-                height: 400,
+                height: 380,
                 width: 700
             },
             columns: [

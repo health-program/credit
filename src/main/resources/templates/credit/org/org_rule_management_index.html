@@ -14,7 +14,7 @@
                 <form id="searchbar" class="form-horizontal form-search">
                     <input type="hidden" id="type" name="type" th:value="${type}">
                 	<div class="form-group">
-                        <div class="col-md-3" id="orgDiv">
+                        <div class="col-md-2" id="orgDiv">
                             <input name="name" class="form-control" placeholder="请输入准则名称" th:value="${query?.name}" />
                         </div>
                         <div class="col-md-2" id="personnelDiv">
@@ -71,7 +71,7 @@
                     {
                         title: "操作",
                         align: "center",
-                        width: "200px",
+                        width: "150px",
                         events: {
                             'click .detail': function(e, value, row, index) {
                                 detail(row);

@@ -108,8 +108,9 @@
                     headBorder: false,
                     hearderBox: false,
                     server: false,
+                    formPaddingLeft: 50,
                     layerOption: {
-                        height: 400,
+                        height: 380,
                         width: 700
                     },
                     columns: [
@@ -123,7 +124,7 @@
             { title: "扣除分值", name: "score", inputType: "NUMBER" },
             { title: "决定书编号",name:"scoreNo",inputType: "TEXT" },
             { title: "记分时间",name: "scoreTime", inputType: "DATE"},
-            { title: "记分决定书上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFiles", maxFileCount: 5 },
+            { title: "记分决定书上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFiles", maxFileCount: 5 , allowedFileExtensions: ["jpeg", "jpg", "png",  "pdf"]},
             { title: "处罚文件编号",name:"punishNo",inputType: "TEXT" },
             { title: "处罚时间",name: "punishTime", inputType: "DATE"},
             { title: "违法事实拍照上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFiles", maxFileCount: 5 }

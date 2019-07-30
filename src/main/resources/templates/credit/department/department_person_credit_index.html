@@ -23,21 +23,19 @@
                         <div class="col-md-2">
                             <input name="identificationNo" class="form-control" placeholder="请输入证件号码"  />
                         </div>
+                        <div class="col-md-2">
+                            <input name="bgTime" placeholder="请选择录入开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date"  >
+                        </div>
+                        <div class="col-md-2">
+                            <input name="endTime" placeholder="请选择录入结束时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date"  >
+                        </div>
+                        <div class="col-md-4">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <input name="bgTime" placeholder="请选择开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date"  >
-                        </div>
-                        <div class="col-md-3">
-                            <input name="endTime" placeholder="请选择结束时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date"  >
-                        </div>
-	                    <div class="col-md-6">
-		                    <div class="pull-right">
-		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
-		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
-		                    </div>
-		                </div>
-	                </div>
                     <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
                     <input type="text" style="display:none">
                 </form>
