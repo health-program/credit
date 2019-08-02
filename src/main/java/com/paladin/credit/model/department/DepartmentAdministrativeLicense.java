@@ -8,7 +8,6 @@ import java.util.Date;
 
 public class DepartmentAdministrativeLicense extends BaseModel {
 
-
 	@Id
 	@GeneratedValue(generator = "UUID")
 	private String id;
@@ -18,6 +17,8 @@ public class DepartmentAdministrativeLicense extends BaseModel {
 
 	// 许可相对人
 	private String name;
+
+	private Integer status = 0;
 
 	// 统一社会信用代码（三证必须选一填写）
 	private String socialCreditCode;
@@ -338,5 +339,13 @@ public class DepartmentAdministrativeLicense extends BaseModel {
 
 	public void setInformationUsageScope(Integer informationUsageScope) {
 		this.informationUsageScope = informationUsageScope;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

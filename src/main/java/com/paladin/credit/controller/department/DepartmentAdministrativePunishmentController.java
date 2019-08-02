@@ -9,6 +9,7 @@ import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishm
 import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentPeopleUploadDTO;
 import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentQuery;
 import com.paladin.credit.service.department.vo.DepartmentAdministrativePunishmentVO;
+import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.common.ExcelImportResult;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.exception.BusinessException;
@@ -88,6 +89,23 @@ public class DepartmentAdministrativePunishmentController extends ControllerSupp
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(departmentAdministrativePunishmentService.removeByPrimaryKey(id));
     }
+
+	@RequestMapping(value = "/report", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object report(@RequestParam String id, @RequestParam String type) {
+		if (Integer.valueOf(type) == BaseModel.TARGET_TYPE_ORG) {
+			return CommonResponse.getResponse(departmentAdministrativePunishmentService.reportOrgPunishment(departmentAdministrativePunishmentService.get(id)));
+		}else if (Integer.valueOf(type) == BaseModel.TARGET_TYPE_PEOPELE){
+			return CommonResponse.getResponse(departmentAdministrativePunishmentService.reportPeoplePunishment(departmentAdministrativePunishmentService.get(id)));
+		}
+		return CommonResponse.getFailResponse("上报行政处罚信息失败");
+	}
+
+	@RequestMapping(value = "/cancel", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object cancel(@RequestParam String id, @RequestParam String type) {
+		return CommonResponse.getResponse(departmentAdministrativePunishmentService.cancelPunishment(id,type));
+	}
     
     @PostMapping(value = "/export")
 	@ResponseBody

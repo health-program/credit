@@ -9,6 +9,7 @@ import com.paladin.credit.service.department.dto.DepartmentPersonCreditDTO;
 import com.paladin.credit.service.department.dto.DepartmentPersonCreditQuery;
 import com.paladin.credit.service.department.dto.DepartmentPersonRedUploadDTO;
 import com.paladin.credit.service.department.vo.DepartmentPersonCreditVO;
+import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.common.ExcelImportResult;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.exception.BusinessException;
@@ -87,6 +88,32 @@ public class DepartmentPersonCreditController extends ControllerSupport {
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(departmentPersonCreditService.removeByPrimaryKey(id));
     }
+
+	@RequestMapping(value = "/report", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object report(@RequestParam String id, @RequestParam String type) {
+		DepartmentPersonCredit departmentPersonCredit = departmentPersonCreditService.get(id);
+		if (departmentPersonCredit == null) {
+			throw new BusinessException("上报信息不存在");
+		}
+		if (Integer.valueOf(type) == BaseModel.CREDIT_TYPE_RED) {
+			return CommonResponse.getResponse(departmentPersonCreditService.reportPeopleRed(departmentPersonCredit));
+		}else if (Integer.valueOf(type) == BaseModel.CREDIT_TYPE_BLACK){
+			return CommonResponse.getResponse(departmentPersonCreditService.reportPeopleBlack(departmentPersonCredit));
+		}
+		return CommonResponse.getFailResponse();
+	}
+
+	@RequestMapping(value = "/cancel", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object cancel(@RequestParam String id, @RequestParam String type) {
+		if (Integer.valueOf(type) == BaseModel.CREDIT_TYPE_RED) {
+			return CommonResponse.getResponse(departmentPersonCreditService.cancelPeopleRed(id));
+		}else if (Integer.valueOf(type) == BaseModel.CREDIT_TYPE_BLACK){
+			return CommonResponse.getResponse(departmentPersonCreditService.cancelPeopleBlack(id));
+		}
+		return CommonResponse.getFailResponse();
+	}
     
     @PostMapping(value = "/export")
 	@ResponseBody

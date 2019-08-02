@@ -1,8 +1,7 @@
 package com.paladin.framework.common;
 
-import java.util.Date;
-
 import javax.persistence.OrderBy;
+import java.util.Date;
 
 public abstract class BaseModel {
 	
@@ -10,6 +9,23 @@ public abstract class BaseModel {
 	
 	public final static int BOOLEAN_YES = 1;
 	public final static int BOOLEAN_NO = 0;
+
+	/** 自然人 */
+	public final static int TARGET_TYPE_PEOPELE = 1;
+
+	/** 法人 */
+	public final static int TARGET_TYPE_ORG = 2;
+
+	/** 红榜 */
+	public final static int CREDIT_TYPE_RED = 1;
+
+	/** 黑榜 */
+	public final static int CREDIT_TYPE_BLACK = 2;
+
+	/** 行业评定 */
+	public final static int CREDIT_TYPE_HYPD = 3;
+
+	public final static String REPLY_TIME_RANGE = " AND  CREATE_TIME <= DATEADD(mi, -10, DATEDIFF(DAY, 0,GETDATE() + 1 )) AND  CREATE_TIME >=  DATEADD(hh, 8, DATEDIFF(DAY, 0,GETDATE()))  ";
 
 
 	@OrderBy("DESC")

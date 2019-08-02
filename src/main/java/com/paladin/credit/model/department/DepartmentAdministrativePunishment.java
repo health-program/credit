@@ -18,8 +18,9 @@ public class DepartmentAdministrativePunishment extends BaseModel {
 	// 行政相对人
 	private String name;
 
-	// 证件类型
 	private Integer identificationType;
+
+	private Integer status = 0;
 
 	// 证件号码
 	private String identificationNo;
@@ -394,4 +395,11 @@ public class DepartmentAdministrativePunishment extends BaseModel {
 		this.sourceSocialCreditCode = sourceSocialCreditCode;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 }

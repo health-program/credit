@@ -6,6 +6,7 @@ import com.paladin.credit.model.department.DepartmentCredit;
 import com.paladin.credit.service.department.DepartmentCreditService;
 import com.paladin.credit.service.department.dto.*;
 import com.paladin.credit.service.department.vo.DepartmentCreditVO;
+import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.common.ExcelImportResult;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.exception.BusinessException;
@@ -84,6 +85,36 @@ public class DepartmentCreditController extends ControllerSupport {
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(departmentCreditService.removeByPrimaryKey(id));
     }
+
+	@RequestMapping(value = "/report", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object report(@RequestParam String id, @RequestParam String type) {
+		DepartmentCredit departmentCredit = departmentCreditService.get(id);
+		if (departmentCredit == null) {
+			throw new BusinessException("上报信息不存在");
+		}
+		if (Integer.valueOf(type) == BaseModel.CREDIT_TYPE_RED) {
+			return CommonResponse.getResponse(departmentCreditService.reportOrgRed(departmentCredit));
+		}else if (Integer.valueOf(type) == BaseModel.CREDIT_TYPE_BLACK){
+			return CommonResponse.getResponse(departmentCreditService.reportOrgBlack(departmentCredit));
+		}else if (Integer.valueOf(type) == BaseModel.CREDIT_TYPE_HYPD){
+			return CommonResponse.getResponse(departmentCreditService.reportOrgHybd(departmentCredit));
+		}
+		return CommonResponse.getFailResponse();
+	}
+
+	@RequestMapping(value = "/cancel", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object cancel(@RequestParam String id, @RequestParam String type) {
+		if (Integer.valueOf(type) == BaseModel.CREDIT_TYPE_RED) {
+			return CommonResponse.getResponse(departmentCreditService.cancelOrgRed(id));
+		}else if (Integer.valueOf(type) == BaseModel.CREDIT_TYPE_BLACK){
+			return CommonResponse.getResponse(departmentCreditService.cancelOrgBlack(id));
+		}else if (Integer.valueOf(type) == BaseModel.CREDIT_TYPE_HYPD){
+			return CommonResponse.getResponse(departmentCreditService.cancelOrgHybd(id));
+		}
+		return CommonResponse.getFailResponse();
+	}
     
     @PostMapping(value = "/export")
 	@ResponseBody

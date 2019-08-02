@@ -19,6 +19,8 @@ public class DepartmentPersonCredit extends BaseModel {
 	// 类型
 	private Integer type;
 
+	private Integer status = 0;
+
 	// 身份号码
 	private String identificationNo;
 
@@ -173,5 +175,13 @@ public class DepartmentPersonCredit extends BaseModel {
 
 	public void setLosePromiseTruth(String losePromiseTruth) {
 		this.losePromiseTruth = losePromiseTruth;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

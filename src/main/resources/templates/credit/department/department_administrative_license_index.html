@@ -112,19 +112,26 @@
                     {
                         title: "操作",
                         align: "center",
-                        width: "150px",
+                        width: "15%",
                         events: {
                             'click .detail': function(e, value, row, index) {
                                 detail(row);
                             },
                             'click .remove': function(e, value, row, index) {
                                 remove(row);
+                            },
+                            'click .report': function(e, value, row, index) {
+                                report(row);
+                            },
+                            'click .reply': function(e, value, row, index) {
+                                reply(row);
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
-                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
-                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
-
+                            var html = '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>';
+                            html += row.status === 0 ? '<button class="report btn btn-xs btn-success" style="margin-right:10px"><i class="glyphicon glyphicon-arrow-up"></i>上报</button>' : (row.status === 1 ? '<button class="reply btn btn-xs bg bg-maroon-gradient" style="margin-right:10px"><i class="fa fa-mail-reply"></i>撤销</button>' : '');
+                            html += '<button class="remove btn btn-xs btn-danger" ><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                            return html;
                         }
                     }
                 ]
@@ -142,6 +149,31 @@
 
     function detail(row) {
         window.location = '/credit/department/administrative/license/detail' + (row ? ('?id=' + row.id+'&type='+row.type) : '');
+    }
+
+    function report(row) {
+        if (row) {
+            layer.confirm('确定上报该条数据吗?', function() {
+                $.getAjax('/credit/department/administrative/license/report?id=' + row.id +'&type='+type, function() {
+                    $.successMessage("上报成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+
+    function reply(row) {
+        if (row) {
+            layer.confirm('确定撤销该条数据吗?',{
+                title:"PS:可撤销时间范围为上报当天23:50之前!" ,
+                icon:3
+            }, function() {
+                $.getAjax('/credit/department/administrative/license/cancel?id=' + row.id +'&type='+type, function() {
+                    $.successMessage("撤销成功");
+                    table.refresh();
+                });
+            });
+        }
     }
 
     function remove(row) {

@@ -13,6 +13,8 @@ public class DepartmentPersonCreditVO {
 	// 类型
 	private Integer type;
 
+	private Integer status;
+
 	// 身份号码
 	private String identificationNo;
 
@@ -169,4 +171,11 @@ public class DepartmentPersonCreditVO {
 		this.punishText = punishText;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 }

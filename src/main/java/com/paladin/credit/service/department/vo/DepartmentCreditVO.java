@@ -13,6 +13,8 @@ public class DepartmentCreditVO {
 	// 类型
 	private Integer type;
 
+	private Integer status;
+
 	// 统一社会信用代码（三证必须选一填写）
 	private String socialCreditCode;
 
@@ -224,4 +226,11 @@ public class DepartmentCreditVO {
 		this.punishText = punishText;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 }

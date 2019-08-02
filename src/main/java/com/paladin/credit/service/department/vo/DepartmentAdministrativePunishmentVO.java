@@ -13,6 +13,8 @@ public class DepartmentAdministrativePunishmentVO {
 	// 行政相对人
 	private String name;
 
+	private Integer status;
+
 	// 证件类型
 	private Integer identificationType;
 
@@ -389,4 +391,11 @@ public class DepartmentAdministrativePunishmentVO {
 		this.sourceSocialCreditCode = sourceSocialCreditCode;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 }

@@ -9,6 +9,7 @@ import com.paladin.credit.service.department.dto.DepartmentAdministrativeLicense
 import com.paladin.credit.service.department.dto.DepartmentAdministrativeLicensePeopleUploadDTO;
 import com.paladin.credit.service.department.dto.DepartmentAdministrativeLicenseQuery;
 import com.paladin.credit.service.department.vo.DepartmentAdministrativeLicenseVO;
+import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.common.ExcelImportResult;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.exception.BusinessException;
@@ -79,6 +80,24 @@ public class DepartmentAdministrativeLicenseController extends ControllerSupport
 			return CommonResponse.getSuccessResponse(beanCopy(departmentAdministrativeLicenseService.get(id), new DepartmentAdministrativeLicenseVO()));
 		}
 		return CommonResponse.getFailResponse();
+	}
+
+	@RequestMapping(value = "/report", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object report(@RequestParam String id, @RequestParam String type) {
+		if (Integer.valueOf(type) == BaseModel.TARGET_TYPE_ORG) {
+			return CommonResponse.getResponse(departmentAdministrativeLicenseService.reportOrgPunishment(departmentAdministrativeLicenseService.get(id)));
+		}else if (Integer.valueOf(type) == BaseModel.TARGET_TYPE_PEOPELE){
+			return CommonResponse.getResponse(departmentAdministrativeLicenseService.reportPeoplePunishment(departmentAdministrativeLicenseService.get(id)));
+		}
+		return CommonResponse.getFailResponse("上报行政许可信息失败");
+	}
+
+
+	@RequestMapping(value = "/cancel", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object cancel(@RequestParam String id, @RequestParam String type) {
+		return CommonResponse.getResponse(departmentAdministrativeLicenseService.cancelLicense(id,type));
 	}
 
     @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
