@@ -111,6 +111,9 @@
                     { title: "认定日期", field: "affirmTime" ,formatter: "date" },
                     { title: "主要失信事实", field: "losePromiseTruth" },
                     { title: "确认严重失信时间", field: "losePromiseTime" ,formatter: "date" },
+                    { title: "状态", field: "status" ,formatter: function (value, row, index) {
+                            return value === 0 ? "<span  class='label label-warning'>未上报</span>" : ( value === 1 ? "<span  class='label label-success'>已上报</span>": '');
+                        }},
                     {
                         title: "操作",
                         align: "center",
@@ -132,7 +135,7 @@
                         formatter: function operateFormatter(value, row, index) {
                             var html = '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>';
                             html += row.status === 0 ? '<button class="report btn btn-xs btn-success" style="margin-right:10px"><i class="glyphicon glyphicon-arrow-up"></i>上报</button>' : (row.status === 1 ? '<button class="reply btn btn-xs bg bg-maroon-gradient" style="margin-right:10px"><i class="fa fa-mail-reply"></i>撤销</button>' : '');
-                            html += '<button class="remove btn btn-xs btn-danger" ><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                            html += row.status === 0 ? '<button class="remove btn btn-xs btn-danger" ><i class="glyphicon glyphicon-remove"></i>删除</button>' : '';
                             return html;
                         }
                     }

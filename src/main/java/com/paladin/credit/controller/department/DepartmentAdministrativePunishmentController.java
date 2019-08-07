@@ -9,6 +9,7 @@ import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishm
 import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentPeopleUploadDTO;
 import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentQuery;
 import com.paladin.credit.service.department.vo.DepartmentAdministrativePunishmentVO;
+import com.paladin.credit.service.xyb.request.XYBReqCondition;
 import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.common.ExcelImportResult;
 import com.paladin.framework.core.ControllerSupport;
@@ -105,6 +106,13 @@ public class DepartmentAdministrativePunishmentController extends ControllerSupp
 	@ResponseBody
 	public Object cancel(@RequestParam String id, @RequestParam String type) {
 		return CommonResponse.getResponse(departmentAdministrativePunishmentService.cancelPunishment(id,type));
+	}
+
+
+	@RequestMapping(value = "/xyb/info", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object xybInfo(XYBReqCondition condition, @RequestParam String type) {
+		return CommonResponse.getSuccessResponse(departmentAdministrativePunishmentService.getXybInfo(condition,type));
 	}
     
     @PostMapping(value = "/export")

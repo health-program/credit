@@ -6,6 +6,7 @@ import com.paladin.credit.model.department.DepartmentCredit;
 import com.paladin.credit.service.department.DepartmentCreditService;
 import com.paladin.credit.service.department.dto.*;
 import com.paladin.credit.service.department.vo.DepartmentCreditVO;
+import com.paladin.credit.service.xyb.request.XYBReqCondition;
 import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.common.ExcelImportResult;
 import com.paladin.framework.core.ControllerSupport;
@@ -115,7 +116,13 @@ public class DepartmentCreditController extends ControllerSupport {
 		}
 		return CommonResponse.getFailResponse();
 	}
-    
+
+	@RequestMapping(value = "/xyb/info", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object xybInfo(XYBReqCondition condition, @RequestParam String type) {
+		return CommonResponse.getSuccessResponse(departmentCreditService.getXybInfo(condition,type));
+	}
+
     @PostMapping(value = "/export")
 	@ResponseBody
 	public Object export(@RequestBody DepartmentCreditExportCondition condition) {

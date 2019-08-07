@@ -5,15 +5,20 @@ import com.paladin.credit.model.department.DepartmentCredit;
 import com.paladin.credit.service.department.dto.DepartmentCreditBlackUploadDTO;
 import com.paladin.credit.service.department.dto.DepartmentCreditRedUploadDTO;
 import com.paladin.credit.service.department.dto.DepartmentEnterpriseUploadDTO;
+import com.paladin.credit.service.xyb.request.XYBReqCondition;
 import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier;
 import com.paladin.framework.core.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
@@ -23,6 +28,17 @@ public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
 
     @Autowired
     private WJWDepartmentCreditUploadService WJWDepartmentCreditUploadService;
+
+    @Autowired
+    private com.paladin.credit.service.xyb.XYBDepartmentCreditSystemService XYBDepartmentCreditSystemService;
+
+    /**信用办请求账号*/
+    @Value("${xyb.req.acctount}")
+    private String acctount;
+
+    /**信用办请求密码*/
+    @Value("${xyb.req.pwd}")
+    private String pwd;
 
     @Transactional
     public String importRed(DepartmentCreditRedUploadDTO dto) {
@@ -171,5 +187,24 @@ public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
         return  departmentCreditMapper.updateHaveReportedStatusById(id);
     }
 
+    public List getXybInfo(XYBReqCondition condition, String type) {
+        condition.setAcctount(acctount);
+        condition.setPwd(pwd);
+        Map info = new HashMap(3);
+        int tType = Integer.parseInt(type);
+        if (tType == BaseModel.CREDIT_TYPE_RED) {
+            info = XYBDepartmentCreditSystemService.getRedInfo(condition);
+        }else if (tType == BaseModel.CREDIT_TYPE_BLACK){
+            info = XYBDepartmentCreditSystemService.getBlackInfo(condition);
 
+        }else if (tType == BaseModel.CREDIT_TYPE_HYPD){
+            info = XYBDepartmentCreditSystemService.getHypdInfo(condition);
+        }
+
+        int status = (int) info.get("status");
+        if (status == 0) {
+            throw new BusinessException((String) info.get("message"));
+        }
+        return  tType == BaseModel.CREDIT_TYPE_RED ? (List) info.get("redlist") : ( tType == BaseModel.CREDIT_TYPE_BLACK ? (List)info.get("blacklist") : (List)info.get("hypdlist"));
+    }
 }

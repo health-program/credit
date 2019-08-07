@@ -2,7 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/credit/header" />
+<style type="text/css">
+   tr {
+       text-align: center;
+   }
 
+   caption {
+       text-align: center;
+       font-size: 16px;
+   }
+
+</style>
 <body>
 <tt:constant enumcode="honor-level-type,assessment-result-type" />
     <section class="content-header">
@@ -66,6 +76,63 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div>
+        <div class="modal fade" id="xybModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">请填写要查询企业信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form  enctype="multipart/form-data" id="xybForm"  method="post" action="/credit/department/credit/xyb/info"  class="form-horizontal">
+                            <input type="hidden"  name="type" th:value="${type}">
+                            <div class="form-group">
+                                <label for="qymc" class="col-sm-5 control-label">企业名称（名称，三码，四个参数必须选一填写）：</label>
+                                <div class="col-sm-6">
+                                    <input name="qymc" placeholder="请输入企业名称" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="tyshxydm" class="col-sm-5 control-label">统一社会信用代码：</label>
+                                <div class="col-sm-6">
+                                    <input name="tyshxydm" placeholder="请输入统一社会信用代码" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="gszch" class="col-sm-5 control-label">工商注册号：</label>
+                                <div class="col-sm-6">
+                                    <input name="gszch" placeholder="请输入工商注册号" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="zzjgdm" class="col-sm-5 control-label">组织机构代码：</label>
+                                <div class="col-sm-6">
+                                    <input name="zzjgdm" placeholder="请输入组织机构代码" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="visitpt" class="col-sm-5 control-label">访问者的系统平台名称（选填）：</label>
+                                <div class="col-sm-6">
+                                    <input name="visitpt" placeholder="请输入访问者的系统平台名称" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="visitreason" class="col-sm-5 control-label">请求原因（选填）：</label>
+                                <div class="col-sm-6">
+                                    <input name="visitreason" placeholder="请输入请求原因" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-md-offset-4">
+                                <button type="submit"  id="xybSearchButton"  class="btn btn-primary btn-block">确定</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer" style="border-top-width: 0">
+                        <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
         <div class="box box-solid" style="margin-top:20px">
             <div id="result" class="box-body">
                 <table id="dataGrid"></table>
@@ -80,6 +147,11 @@
                             <i class="fa  fa-file-excel-o"></i>&nbsp;模板导入
                         </button>
                     </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn bg-purple" data-toggle="modal" data-target="#xybModal">
+                            <i class="fa  fa-eye"></i>&nbsp;查看信用办相关信息
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -92,6 +164,7 @@
         initDataGrid();
         hideColumn();
         initUploadForm();
+        $("#xybForm").createForm(showSeacrhResult);
     });
 
     function initDataGrid() {
@@ -108,8 +181,10 @@
                     { title: "荣誉名称", field: "honorName" },
                     { title: "认定(评定)日期", field: "affirmTime" ,formatter: "date" },
                     { title: "法定代表人", field: "chargePerson" },
-                    { title: "主要失信事实", field: "losePromiseTruth" },
                     { title: "确认严重失信时间", field: "losePromiseTime" ,formatter: "date" },
+                    { title: "状态", field: "status" ,formatter: function (value, row, index) {
+                            return value === 0 ? "<span  class='label label-warning'>未上报</span>" : ( value === 1 ? "<span  class='label label-success'>已上报</span>": '');
+                        }},
                     {
                         title: "操作",
                         align: "center",
@@ -131,7 +206,7 @@
                         formatter: function operateFormatter(value, row, index) {
                             var html = '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>';
                             html += row.status === 0 ? '<button class="report btn btn-xs btn-success" style="margin-right:10px"><i class="glyphicon glyphicon-arrow-up"></i>上报</button>' : (row.status === 1 ? '<button class="reply btn btn-xs bg bg-maroon-gradient" style="margin-right:10px"><i class="fa fa-mail-reply"></i>撤销</button>' : '');
-                            html += '<button class="remove btn btn-xs btn-danger" ><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                            html += row.status === 0 ? '<button class="remove btn btn-xs btn-danger" ><i class="glyphicon glyphicon-remove"></i>删除</button>' : '';
                             return html;
                         }
                     }
@@ -153,13 +228,11 @@
             table.hideColumn("chargePerson");
             table.hideColumn("losePromiseTime");
             table.hideColumn("assessmentResult");
-            table.hideColumn("losePromiseTruth");
             table.hideColumn("assessmentResultName");
         }
         if (type == 2) {
             table.hideColumn("assessmentResult");
             table.hideColumn("honorName");
-            table.hideColumn("name");
             table.hideColumn("affirmTime");
             table.hideColumn("assessmentResultName");
         }
@@ -167,7 +240,6 @@
             table.hideColumn("affirmWrit");
             table.hideColumn("chargePerson");
             table.hideColumn("losePromiseTime");
-            table.hideColumn("losePromiseTruth");
             table.hideColumn("honorName");
         }
     }
@@ -259,6 +331,73 @@
         }
     }
 
+    function showSeacrhResult(result) {
+        let html = "";
+        if (result &&  result.length > 0) {
+            result.forEach(function (content) {
+                html += type == 1 ? createRedHtml(content) : (type == 2 ? createBlackHtml(content) : createHybdHtml(content));
+            });
+            $("#xybModal").modal('hide');
+            $.openPageLayer(html,{
+                title : type == 1 ?  '信用办企业红榜信息' : ( type == 2 ? '信用办企业黑榜信息': '信用办企业行业评定信息'),
+                width : 1000,
+                height : type == 1 || type == 2 ?  350 * result.length  : 270 * result.length
+            });
+        } else {
+            $.errorMessage("暂无该企业相关信息")
+        }
+    }
+    
+    function createRedHtml(content) {
+        let html = "";
+        html += "<table class='table table-bordered'><caption>红榜信息</caption><tbody>";
+        html += "<tr><td>企业名称</td><td colspan='3'>" + content.JGQC + "</td></tr>";
+        html += "<tr><td>统一社会信用代码</td><td>" + (content.TYSHXYDM || '无') + "</td>";
+        html += "<td>工商注册号</td><td>" + (content.GSZCH || '无') + "</td></tr>";
+        html += "<tr><td>组织机构代码</td><td>" + (content.ZZJGDM || '无') + "</td>";
+        html += "<td>认定文号</td><td>" + (content.RDWH || '无') + "</td></tr>";
+        html += "<tr><td>认定日期</td><td>" + (content.RSRQ.substr(0,10) || '无') + "</td>";
+        html += "<td>认定部门名称</td><td>" + (content.RDBMQC || '无') + "</td></tr>";
+        html += "<tr><td>荣誉名称</td><td>" + (content.RYMC || '无') + "</td>";
+        html += "<td>荣誉等级</td><td>" + (content.RYDJ || '无') + "</td></tr>";
+        html += "<tr><td>荣誉内容</td><td colspan='3'>" + (content.RYNR || '无') + "</td></tr>";
+        html += "</tbody></table>";
+        return html;
+    }
+
+    function createBlackHtml(content) {
+        let html = "";
+        html += "<table class='table table-bordered'><caption>黑名单信息</caption><tbody>";
+        html += "<tr><td>企业名称</td><td colspan='3'>" + content.JGQC + "</td></tr>";
+        html += "<tr><td>统一社会信用代码</td><td>" + (content.TYSHXYDM || '无') + "</td>";
+        html += "<td>工商注册号</td><td>" + (content.GSZCH || '无') + "</td></tr>";
+        html += "<tr><td>组织机构代码</td><td>" + (content.ZZJGDM || '无') + "</td>";
+        html += "<td>认定文号</td><td>" + (content.RDWH || '无') + "</td></tr>";
+        html += "<tr><td>认定单位</td><td>" + (content.RDDW|| '无') + "</td>";
+        html += "<td>主要失信事实</td><td>" + (content.ZYSXSS || '无') + "</td></tr>";
+        html += "<tr><td>注册地址</td><td>" + (content.ZCDZ || '无') + "</td>";
+        html += "<td>确认严重失信时间</td><td>" + (content.QRYZSXSJ.substr(0,10) || '无') + "</td></tr>";
+        html += "<tr><td>行政处罚或法院判决内容</td><td colspan='3'>" + (content.XZCFHPJNR || '无') + "</td></tr>";
+        html += "</tbody></table>";
+        return html;
+    }
+
+    function createHybdHtml(content) {
+        let html = "";
+        html += "<table class='table table-bordered'><caption>行业评定信息</caption><tbody>";
+        html += "<tr><td>企业名称</td><td>" + (content.JGQC || '无') + "</td>";
+        html += "<td>统一社会信用代码</td><td>" + (content.TYSHXYDM || '无') + "</td></tr>";
+        html += "<tr><td>工商注册号</td><td>" + (content.GSZCH || '无') + "</td>";
+        html += "<td>组织机构代码</td><td>" + (content.ZZJGDM || '无') + "</td></tr>";
+        html += "<tr><td>评定结果</td><td>" + (content.PDJG || '无') + "</td>";
+        html += "<td>评定日期</td><td>" + (content.PDRQ.substr(0,10) || '无') + "</td></tr>";
+        html += "<tr><td>评定名称</td><td>" + (content.PDMC || '无') + "</td>";
+        html += "<td>评定机关名称</td><td>" + (content.PDJGMC || '无') + "</td></tr>";
+        html += "</tbody></table>";
+        return html;
+    }
+
+        
     </script>
 </body>
 

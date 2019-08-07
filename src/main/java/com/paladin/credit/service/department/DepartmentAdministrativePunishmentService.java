@@ -4,15 +4,20 @@ import com.paladin.credit.mapper.department.DepartmentAdministrativePunishmentMa
 import com.paladin.credit.model.department.DepartmentAdministrativePunishment;
 import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentOrgUploadDTO;
 import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentPeopleUploadDTO;
+import com.paladin.credit.service.xyb.request.XYBReqCondition;
 import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier;
 import com.paladin.framework.core.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class DepartmentAdministrativePunishmentService extends ServiceSupport<DepartmentAdministrativePunishment> {
@@ -21,6 +26,17 @@ public class DepartmentAdministrativePunishmentService extends ServiceSupport<De
 
     @Autowired
     private DepartmentAdministrativePunishmentMapper departmentAdministrativePunishmentMapper;
+
+    @Autowired
+    private com.paladin.credit.service.xyb.XYBDepartmentCreditSystemService XYBDepartmentCreditSystemService;
+
+    /**信用办请求账号*/
+    @Value("${xyb.req.acctount}")
+    private String acctount;
+
+    /**信用办请求密码*/
+    @Value("${xyb.req.pwd}")
+    private String pwd;
 
     @Transactional
     public String importPeople(DepartmentAdministrativePunishmentPeopleUploadDTO dto) {
@@ -108,6 +124,22 @@ public class DepartmentAdministrativePunishmentService extends ServiceSupport<De
 
     public int updateHaveReportedStatusById(String id) {
         return  departmentAdministrativePunishmentMapper.updateHaveReportedStatusById(id);
+    }
+
+
+    public List getXybInfo(XYBReqCondition condition, String type) {
+        condition.setAcctount(acctount);
+        condition.setPwd(pwd);
+        Map info = new HashMap(3);
+        int tType = Integer.parseInt(type);
+        if (tType == BaseModel.TARGET_TYPE_ORG) {
+            info = XYBDepartmentCreditSystemService.getXzcfInfo(condition);
+        }
+        int status = (int) info.get("status");
+        if (status == 0) {
+            throw new BusinessException((String) info.get("message"));
+        }
+        return  (List) info.get("xzcflist");
     }
 
 }
