@@ -40,7 +40,7 @@ public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
     @Value("${xyb.req.pwd}")
     private String pwd;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String importRed(DepartmentCreditRedUploadDTO dto) {
         DepartmentCredit departmentCredit = new DepartmentCredit();
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(dto,departmentCredit);
@@ -51,7 +51,7 @@ public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
         throw new BusinessException("上传失败");
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String importBlack(DepartmentCreditBlackUploadDTO dto) {
         DepartmentCredit departmentCredit = new DepartmentCredit();
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(dto,departmentCredit);
@@ -63,7 +63,7 @@ public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
     }
 
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String importBusiness(DepartmentEnterpriseUploadDTO dto) {
         DepartmentCredit departmentCredit = new DepartmentCredit();
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(dto,departmentCredit);
@@ -74,6 +74,7 @@ public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
         throw new BusinessException("上传失败");
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int reportOrgRed(DepartmentCredit departmentCredit) {
         int i = WJWDepartmentCreditUploadService.executeOrgRedInsert(departmentCredit);
         if (i > 0) {
@@ -82,6 +83,7 @@ public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int reportOrgBlack(DepartmentCredit departmentCredit) {
         int i = WJWDepartmentCreditUploadService.executeOrgBlackInsert(departmentCredit);
         if (i > 0) {
@@ -90,6 +92,7 @@ public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int reportOrgHybd(DepartmentCredit departmentCredit) {
         int i = WJWDepartmentCreditUploadService.executeHypdInsert(departmentCredit);
         if (i > 0) {
@@ -98,6 +101,7 @@ public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int cancelOrgRed(String id) {
         DepartmentCredit departmentCredit = get(id);
         if (departmentCredit == null) {
@@ -126,6 +130,7 @@ public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int cancelOrgBlack(String id) {
         DepartmentCredit departmentCredit = get(id);
         if (departmentCredit == null) {
@@ -154,6 +159,7 @@ public class DepartmentCreditService extends ServiceSupport<DepartmentCredit> {
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int cancelOrgHybd(String id) {
         DepartmentCredit departmentCredit = get(id);
         if (departmentCredit == null) {

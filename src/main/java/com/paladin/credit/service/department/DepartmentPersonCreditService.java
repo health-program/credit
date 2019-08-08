@@ -23,7 +23,7 @@ public class DepartmentPersonCreditService extends ServiceSupport<DepartmentPers
     @Autowired
     private DepartmentPersonCreditMapper departmentPersonCreditMapper;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String importRed(DepartmentPersonRedUploadDTO dto) {
         DepartmentPersonCredit departmentPersonCredit = new DepartmentPersonCredit();
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(dto,departmentPersonCredit);
@@ -34,7 +34,7 @@ public class DepartmentPersonCreditService extends ServiceSupport<DepartmentPers
         throw new BusinessException("上传失败");
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String importBlack(DepartmentPersonBlackUploadDTO dto) {
         DepartmentPersonCredit departmentPersonCredit = new DepartmentPersonCredit();
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(dto,departmentPersonCredit);
@@ -45,6 +45,7 @@ public class DepartmentPersonCreditService extends ServiceSupport<DepartmentPers
         throw new BusinessException("上传失败");
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int reportPeopleRed(DepartmentPersonCredit departmentPersonCredit) {
         int i = WJWDepartmentCreditUploadService.executePeopleRedInsert(departmentPersonCredit);
         if (i > 0) {
@@ -53,6 +54,7 @@ public class DepartmentPersonCreditService extends ServiceSupport<DepartmentPers
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int reportPeopleBlack(DepartmentPersonCredit departmentPersonCredit) {
         int i = WJWDepartmentCreditUploadService.executePeopleBlackInsert(departmentPersonCredit);
         if (i > 0) {
@@ -61,6 +63,7 @@ public class DepartmentPersonCreditService extends ServiceSupport<DepartmentPers
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int cancelPeopleRed(String id) {
         DepartmentPersonCredit departmentPersonCredit = get(id);
         if (departmentPersonCredit == null) {
@@ -89,6 +92,7 @@ public class DepartmentPersonCreditService extends ServiceSupport<DepartmentPers
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int cancelPeopleBlack(String id) {
         DepartmentPersonCredit departmentPersonCredit = get(id);
         if (departmentPersonCredit == null) {

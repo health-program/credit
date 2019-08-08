@@ -38,7 +38,7 @@ public class DepartmentAdministrativePunishmentService extends ServiceSupport<De
     @Value("${xyb.req.pwd}")
     private String pwd;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String importPeople(DepartmentAdministrativePunishmentPeopleUploadDTO dto) {
         DepartmentAdministrativePunishment departmentAdministrativePunishment = new DepartmentAdministrativePunishment();
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(dto,departmentAdministrativePunishment);
@@ -49,7 +49,7 @@ public class DepartmentAdministrativePunishmentService extends ServiceSupport<De
         throw new BusinessException("上传失败");
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String importOrg(DepartmentAdministrativePunishmentOrgUploadDTO dto) {
         DepartmentAdministrativePunishment departmentAdministrativePunishment = new DepartmentAdministrativePunishment();
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(dto,departmentAdministrativePunishment);
@@ -61,6 +61,7 @@ public class DepartmentAdministrativePunishmentService extends ServiceSupport<De
     }
 
 
+    @Transactional(rollbackFor = Exception.class)
     public int reportOrgPunishment(DepartmentAdministrativePunishment punishment) {
         if (punishment == null) {
             throw new BusinessException("上报法人行政处罚信息不存在");
@@ -72,6 +73,7 @@ public class DepartmentAdministrativePunishmentService extends ServiceSupport<De
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int reportPeoplePunishment(DepartmentAdministrativePunishment punishment) {
         if (punishment == null) {
             throw new BusinessException("上报自然人行政处罚信息不存在");
@@ -83,6 +85,7 @@ public class DepartmentAdministrativePunishmentService extends ServiceSupport<De
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int cancelPunishment(String id, String type) {
         DepartmentAdministrativePunishment departmentAdministrativePunishment = get(id);
         if (departmentAdministrativePunishment == null) {

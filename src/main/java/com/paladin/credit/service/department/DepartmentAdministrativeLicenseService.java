@@ -23,7 +23,7 @@ public class DepartmentAdministrativeLicenseService extends ServiceSupport<Depar
     @Autowired
     private DepartmentAdministrativeLicenseMapper departmentAdministrativeLicenseMapper;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String importPeople(DepartmentAdministrativeLicensePeopleUploadDTO dto) {
         DepartmentAdministrativeLicense departmentAdministrativeLicense = new DepartmentAdministrativeLicense();
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(dto,departmentAdministrativeLicense);
@@ -34,7 +34,7 @@ public class DepartmentAdministrativeLicenseService extends ServiceSupport<Depar
         throw new BusinessException("上传失败");
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String importOrg(DepartmentAdministrativeLicenseOrgUploadDTO dto) {
         DepartmentAdministrativeLicense departmentAdministrativeLicense = new DepartmentAdministrativeLicense();
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(dto,departmentAdministrativeLicense);
@@ -45,6 +45,7 @@ public class DepartmentAdministrativeLicenseService extends ServiceSupport<Depar
         throw new BusinessException("上传失败");
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int reportOrgPunishment(DepartmentAdministrativeLicense license) {
         if (license == null) {
             throw new BusinessException("上报法人行政许可信息不存在");
@@ -56,6 +57,7 @@ public class DepartmentAdministrativeLicenseService extends ServiceSupport<Depar
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int reportPeoplePunishment(DepartmentAdministrativeLicense license) {
         if (license == null) {
             throw new BusinessException("上报机构行政许可信息不存在");
@@ -67,6 +69,7 @@ public class DepartmentAdministrativeLicenseService extends ServiceSupport<Depar
         return 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int cancelLicense(String id, String type) {
         DepartmentAdministrativeLicense departmentAdministrativeLicense = get(id);
         if (departmentAdministrativeLicense == null) {

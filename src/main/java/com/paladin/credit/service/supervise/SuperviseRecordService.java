@@ -41,7 +41,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     @Autowired
     private SuperviseRecordMapper superviseRecordMapper;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int saveRecords(SuperviseRecordDTO superviseRecordDTO) {
     int i = 0;
     CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
@@ -244,6 +244,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
    * @return int
    * @date 2019/5/6
    */
+  @Transactional(rollbackFor = Exception.class)
     public int check(String id, String illustrate, boolean success) {
         int i;
         if (Strings.isNullOrEmpty(id)) {
@@ -289,7 +290,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
      * @return  int
      * @date  2019/5/13
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int saveWjsRecords(SuperviseRecordDTO superviseRecordDTO) {
         int i;
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
@@ -395,7 +396,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
      * @return  int
      * @date  2019/6/13
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int saveOrgRecords(SuperviseRecordDTO superviseRecordDTO) {
         int i = 0;
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
