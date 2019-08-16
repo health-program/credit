@@ -1,35 +1,26 @@
 package com.paladin.credit.controller.org;
 
+import com.paladin.common.core.export.ExportUtil;
 import com.paladin.credit.controller.org.dto.OrgPunishmentDiscretionExportCondition;
 import com.paladin.credit.model.org.OrgPunishmentDiscretion;
 import com.paladin.credit.service.org.OrgPunishmentDiscretionService;
-import com.paladin.credit.service.org.dto.OrgPunishmentDiscretionQuery;
 import com.paladin.credit.service.org.dto.OrgPunishmentDiscretionDTO;
-import com.paladin.credit.service.org.vo.OrgPunishmentDiscretionVO;
-
-import com.paladin.common.core.export.ExportUtil;
+import com.paladin.credit.service.org.dto.OrgPunishmentDiscretionQuery;
+import com.paladin.credit.service.org.vo.OrgPunishmentDiscretionSimpleVO;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
-import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.framework.utils.uuid.UUIDUtil;
-
+import com.paladin.framework.web.response.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/credit/org/punishment/discretion")
@@ -54,7 +45,7 @@ public class OrgPunishmentDiscretionController extends ControllerSupport {
     @GetMapping("/get")
     @ResponseBody
     public Object getDetail(@RequestParam String id, Model model) {   	
-        return CommonResponse.getSuccessResponse(beanCopy(orgPunishmentDiscretionService.get(id), new OrgPunishmentDiscretionVO()));
+        return CommonResponse.getSuccessResponse(beanCopy(orgPunishmentDiscretionService.get(id), new OrgPunishmentDiscretionSimpleVO()));
     }
     
     @GetMapping("/add")
@@ -78,7 +69,7 @@ public class OrgPunishmentDiscretionController extends ControllerSupport {
 		String id = UUIDUtil.createUUID();
 		model.setId(id);
 		if (orgPunishmentDiscretionService.save(model) > 0) {
-			return CommonResponse.getSuccessResponse(beanCopy(orgPunishmentDiscretionService.get(id), new OrgPunishmentDiscretionVO()));
+			return CommonResponse.getSuccessResponse(beanCopy(orgPunishmentDiscretionService.get(id), new OrgPunishmentDiscretionSimpleVO()));
 		}
 		return CommonResponse.getFailResponse();
 	}
@@ -92,7 +83,7 @@ public class OrgPunishmentDiscretionController extends ControllerSupport {
 		String id = orgPunishmentDiscretionDTO.getId();
 		OrgPunishmentDiscretion model = beanCopy(orgPunishmentDiscretionDTO, orgPunishmentDiscretionService.get(id));
 		if (orgPunishmentDiscretionService.update(model) > 0) {
-			return CommonResponse.getSuccessResponse(beanCopy(orgPunishmentDiscretionService.get(id), new OrgPunishmentDiscretionVO()));
+			return CommonResponse.getSuccessResponse(beanCopy(orgPunishmentDiscretionService.get(id), new OrgPunishmentDiscretionSimpleVO()));
 		}
 		return CommonResponse.getFailResponse();
 	}

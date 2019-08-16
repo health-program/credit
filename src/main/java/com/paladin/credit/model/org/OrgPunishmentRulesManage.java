@@ -8,6 +8,8 @@ public class OrgPunishmentRulesManage extends BaseModel {
 
 	public static final String COLUMN_FIELD_SERIAL_NUMBER = "serialNumber";
 
+	public static final String COLUMN_FIELD_SERIAL_ID = "id";
+
 	// 
 	@Id
 	private String id;

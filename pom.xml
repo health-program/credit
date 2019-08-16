@@ -240,4 +240,20 @@
 
 	</build>
 
+	<repositories>
+		<repository>
+			<id>nexus2</id>
+			<name>Nexus Repository</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<!--snapshots默认是关闭的,需要开启 -->
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+
 </project>

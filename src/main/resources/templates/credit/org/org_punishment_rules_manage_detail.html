@@ -76,7 +76,7 @@
 				]
 	    }
         itemId = $("#id").val();
-        $.getAjax("/credit/org/punishment/rules/manage/get?id="+$("#id").val(), function(data) {
+        $.getAjax("/credit/org/punishment/rules/manage/get?id="+itemId, function(data) {
             var html = generateHtml(options);
             $(".content").html(html);
             $.initComponment($(".content"));

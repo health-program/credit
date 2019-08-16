@@ -26,7 +26,8 @@ public class OrgPunishmentRulesManageService extends ServiceSupport<OrgPunishmen
     public boolean saveRule(OrgPunishmentRulesManageDTO orgPunishmentRulesManageDTO) {
         String ruleId = orgPunishmentRulesManageDTO.getId();
         Integer serialNumber = orgPunishmentRulesManageDTO.getSerialNumber();
-        if (countRulesByNo(serialNumber) > 0) {
+        int i = searchAllCount(new Condition(OrgPunishmentRulesManage.COLUMN_FIELD_SERIAL_NUMBER, QueryType.EQUAL, serialNumber));
+        if (i > 0) {
             throw new BusinessException("该序号已存在，请重新输入");
         }
         OrgPunishmentRulesManage rules = new OrgPunishmentRulesManage();
@@ -49,11 +50,6 @@ public class OrgPunishmentRulesManageService extends ServiceSupport<OrgPunishmen
             throw new BusinessException("保存裁量基准出错");
         }
 
-    }
-
-    public int countRulesByNo(Integer no) {
-        List<OrgPunishmentRulesManage> manages = searchAll(new Condition(OrgPunishmentRulesManage.COLUMN_FIELD_SERIAL_NUMBER, QueryType.EQUAL, no));
-        return  manages.size();
     }
 
     public OrgPunishmentRulesManageVO getRule(String id) {
@@ -80,9 +76,13 @@ public class OrgPunishmentRulesManageService extends ServiceSupport<OrgPunishmen
         if (rulesManage == null) {
             throw new BusinessException("处罚条例不存在");
         }
-        Integer serialNumber = orgPunishmentRulesManageDTO.getSerialNumber();
-        if (countRulesByNo(serialNumber) > 0) {
-            throw new BusinessException("该序号已存在，请重新输入");
+        Integer newSerialNumber = orgPunishmentRulesManageDTO.getSerialNumber();
+        Integer oldSerialNumber = rulesManage.getSerialNumber();
+        if (!newSerialNumber.equals(oldSerialNumber)) {
+            int i = searchAllCount(new Condition(OrgPunishmentRulesManage.COLUMN_FIELD_SERIAL_NUMBER, QueryType.EQUAL, newSerialNumber));
+            if (i > 0) {
+                throw new BusinessException("该序号已存在，请重新输入");
+            }
         }
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(orgPunishmentRulesManageDTO,rulesManage);
         List<OrgPunishmentDiscretion> selections = orgPunishmentRulesManageDTO.getSelections();

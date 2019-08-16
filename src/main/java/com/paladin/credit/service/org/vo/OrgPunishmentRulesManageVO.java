@@ -1,8 +1,6 @@
 package com.paladin.credit.service.org.vo;
 
 
-import com.paladin.credit.model.org.OrgPunishmentDiscretion;
-
 import java.util.List;
 
 public class OrgPunishmentRulesManageVO {
@@ -26,7 +24,7 @@ public class OrgPunishmentRulesManageVO {
 
 	private String remark;
 
-	private List<OrgPunishmentDiscretion> selections;
+	private List<OrgPunishmentDiscretionSimpleVO> selections;
 
 	public String getId() {
 		return id;
@@ -76,11 +74,11 @@ public class OrgPunishmentRulesManageVO {
 		this.serialNumber = serialNumber;
 	}
 
-	public List<OrgPunishmentDiscretion> getSelections() {
+	public List<OrgPunishmentDiscretionSimpleVO> getSelections() {
 		return selections;
 	}
 
-	public void setSelections(List<OrgPunishmentDiscretion> selections) {
+	public void setSelections(List<OrgPunishmentDiscretionSimpleVO> selections) {
 		this.selections = selections;
 	}
 
