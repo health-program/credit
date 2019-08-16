@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.credit.mapper.org.OrgPunishmentDiscretionMapper">
+
+    <select id="findDiscretionById" resultType="com.paladin.credit.model.org.OrgPunishmentDiscretion">
+        SELECT
+        d.situation,
+        d.plot,
+        d.result
+        FROM org_punishment_discretion AS d WHERE 1 = 1
+        <if test="id != null and id != ''">
+            AND d.rule_id = #{id}
+        </if>
+        ORDER BY situation ASC
+    </select>
+</mapper>

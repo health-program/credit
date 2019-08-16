@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/credit/header" />
+
+<body>
+<tt:constant enumcode="situation-type" />
+    <section class="content-header">
+        <h1>行政处罚自由裁量基准管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/credit/org/punishment/rules/manage/index"><i class="fa fa-list-alt"></i>处罚条例列表</a></li>
+            <li class="active">处罚条例详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/credit/org/punishment/rules/manage/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <div th:include="/credit/footer" />
+    <script type="text/javascript">
+    var  itemId,ruleModel;
+    $(function() {
+    	var options = {
+	        id: "model",
+	        name: "处罚条例详情",
+            server: false,
+            editFormClass: false,
+	        columns: [
+                { title: "序号", name: "serialNumber", required: "required", inputType: "NUMBER" ,attr:{'min':'0'}},
+                { title: "案由", name: "punishmentCase", required: "required", inputType: "TEXT", colspan:2 },
+                { title: "违反条款", name: "punishmentReason", inputType: "TEXT", colspan:2 },
+                { title: "处罚条款", name: "punishmentBasis", required: "required", inputType: "TEXT", colspan:2 },
+                { title: "处罚内容", name: "punishmentText", required: "required", inputType: "TEXTAREA" },
+                { title: "说明", name: "remark", inputType: "TEXTAREA" },
+                {
+                    title: "裁量基准",
+                    name: "selections",
+                    required: "required",
+                    inputType: "SUB-MODEL",
+                    subViewField: "personnelName",
+                    addSubModelBtnTitle: '添加基准',
+                    subTitleViewHtmml: function(data) {
+                        var a = $.getConstantEnumValue("situation-type", data.situation);
+                        var html = "<div class='product-info' style='margin-left: 0'>";
+                        if (data.situation == 1 || data.situation == 2 || data.situation == 3) {
+                            html += "<span class='label bg-yellow-gradient pull-left'>" + a +"</span><br>"
+                        } else if (data.situation == 4) {
+                            html += "<span class='label bg-orange-active pull-left'>" + a +"</span><br>"
+                        }else {
+                            html += "<span class='label label-danger pull-left'>" + a +"</span><br>"
+                        }
+                        html += " <p class='product-title' style='margin-bottom: 0'>" + data.plot +"</p>";
+                        html += " <span class='product-description' style='line-height:25px'>" + data.result+"</span></div>";
+                        return html;
+                    },
+                    subModelOptions: {
+                        headBorder: false,
+                        hearderBox: false,
+                        server: false,
+                        formPaddingLeft: 10,
+                        inputSize: 9,
+                        labelSize: 3,
+                        layerOption: {
+                            height: 495,
+                            width: 650
+                        },
+                        columns: [
+                            { title: "情形类别", name: "situation", enum: "situation-type", required: "required", inputType: "SELECT"},
+                            { title: "情节", name: "plot",inputType: "TEXTAREA" , required: "required"},
+                            { title: "裁量幅度", name: "result", inputType: "TEXTAREA" , required: "required"}
+                        ]
+                    }
+                },
+				]
+	    }
+        itemId = $("#id").val();
+        $.getAjax("/credit/org/punishment/rules/manage/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+
+            ruleModel = new tonto.Model("model", options.columns, {
+                server: false,
+                submitClick: function() {
+                    let data = ruleModel.getFormData();
+                    if (!data) {
+                        $.errorMessage("请输入并保存项目内容！");
+                        return;
+                    }
+                    var selections = data.selections;
+                    data['id'] = itemId;
+                    if (selections && selections.length > 0) {
+                        $.postJsonAjax("/credit/org/punishment/rules/manage/update", data, function(result) {
+                            $.successAlert("修改成功", function() {
+                                window.location = '/credit/org/punishment/rules/manage/index';
+                            });
+                        }, $("#model_form_submit_btn"));
+
+                    } else {
+                        $.errorMessage("必须创建一个基准！");
+                    }
+                }
+            });
+            ruleModel.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>
