@@ -4,7 +4,7 @@
 <head th:include="/credit/header" />
 
 <body>
-
+<tt:constant enumcode="administrative-status-type,administrative-target-type,information-usage-scope,identification-type,punishment-type,dishonesty-degree-type,wjs-info-entry-type" />
 <section class="content-header" >
     <h1 th:text="|${type == 1 ? '医疗机构' : (type == 2 ? '医疗人员' : '医疗活动相关人员')}-卫监所|"></h1>
     <ol class="breadcrumb">
@@ -20,72 +20,140 @@
                 <a class="btn tonto-model-tool-view-btn" id="model_edit_btn" href="javascript:void(0)"><i class="fa fa-edit"></i>编辑</a>
             </div>
         </div>
-        <div id="model_view" class="box-body">
-            <form class="form-horizontal" style="padding-left:100px">
-                <div class="form-group">
-                    <label for="personnelId" class="col-sm-2 control-label">医疗人员姓名：</label>
-                    <div class="col-sm-3">
-                        <p name="personnelId" class="form-control-static description"></p>
-                    </div>
-                    <label for="scoreTime" class="col-sm-2 control-label">记分时间：</label>
-                    <div class="col-sm-3">
-                        <p name="scoreTime" class="form-control-static description"></p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="ruleName" class="col-sm-2 control-label">违法事实选择：</label>
-                    <div class="col-sm-3">
-                        <p name="ruleName" class="form-control-static description"></p>
-                    </div>
-                    <label for="score" class="col-sm-2 control-label">扣除分值：</label>
-                    <div class="col-sm-3">
-                        <p name="score" class="form-control-static description"></p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="scoreAttachment" class="col-sm-2 control-label">扣分决定书照片上传：</label>
-                    <div name="scoreAttachment" class="col-sm-8"></div>
-                </div>
-                <div class="form-group">
-                    <label for="punishNo" class="col-sm-2 control-label">行政处罚决定书编号：</label>
-                    <div class="col-sm-3">
-                        <p name="punishNo" class="form-control-static description"></p>
-                    </div>
-                    <label for="punishTime" class="col-sm-2 control-label">处罚时间：</label>
-                    <div class="col-sm-3">
-                        <p name="punishTime" class="form-control-static description"></p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="punishAttachment" class="col-sm-2 control-label">违法事实照片上传：</label>
-                    <div name="punishAttachment" class="col-sm-8"></div>
-                </div>
-            </form>
-        </div>
-        <div id="model_edit" class="box-body" style="display: none">
+        <div id="model_edit" class="box-body" >
             <form id="model_form" action="/credit/supervise/record/wjs/save" method="post" class="form-horizontal null" style="padding-left:100px">
                 <div class="form-group">
-                    <label for="personnelId" class="col-sm-2 control-label">医疗人员姓名：</label>
+                    <label for="infoEntryType" class="col-sm-2 control-label">信息录入种类：</label>
                     <div class="col-sm-3">
-                        <div class="input-group"><input name="personnelId" class="form-control" placeholder="请输入医疗人员姓名" autocomplete="off" readonly="readonly" style="background: rgb(255, 255, 255);"/>
-                            <span class="input-group-addon" id="tonto-tree-select-remove-personnelId" style="cursor:pointer"><i class="glyphicon glyphicon-remove"></i></span></div>
-                    </div>
-                    <label for="scoreTime" class="col-sm-2 control-label">记分时间：</label>
-                    <div class="col-sm-3">
-                        <input name="scoreTime" placeholder="请输入记分时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date"></div>
-                </div>
-                <div class="form-group">
-                    <label for="ruleName" class="col-sm-2 control-label">违法事实选择：</label>
-                    <div class="col-sm-3">
-                        <select name="ruleName" class="form-control" id="scoreItem" onchange="changeScoreInput()">
+                        <select name="infoEntryType" class="form-control tonto-select-constant" enumcode="wjs-info-entry-type">
                             <option value="">请选择</option>
                         </select>
                     </div>
-                    <input type="hidden" id="item" name="item">
+                    <label for="personnelId" class="col-sm-2 control-label">行政相对人：</label>
+                    <div class="col-sm-3">
+                        <div class="input-group"><input name="personnelId" class="form-control" autocomplete="off" readonly="readonly" style="background: rgb(255, 255, 255);"/>
+                            <span class="input-group-addon" id="tonto-tree-select-remove-personnelId" style="cursor:pointer"><i class="glyphicon glyphicon-remove"></i></span></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="identificationType" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>证件类型：</label>
+                    <div class="col-sm-3">
+                        <select name="identificationType" class="form-control tonto-select-constant" required="required" enumcode="identification-type">
+                        </select>
+                    </div>
+                    <label for="identificationNo" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>证件号码：</label>
+                    <div class="col-sm-3">
+                        <input name="identificationNo" placeholder="请输入证件号码" type="text" class="form-control" required="required"></input></div>
+                </div>
+                <div class="form-group">
+                    <label for="punishmentName" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>处罚名称：</label>
+                    <div class="col-sm-8">
+                        <input name="punishmentName" placeholder="请输入处罚名称" type="text" class="form-control" required="required" onblur="changItem(this.value)"></input></div>
+                </div>
+                <div class="form-group">
+                    <label for="punishmentCase" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>处罚案由：</label>
+                    <div class="col-sm-8">
+                        <select name="punishmentCase" class="form-control" required="required" onchange="changeCaseInput()"  id="punishmentCase">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="punishmentReason" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>处罚理由：</label>
+                    <div class="col-sm-8">
+                        <input name="punishmentReason" placeholder="请输入处罚理由" type="text" class="form-control" required="required" id="punishmentReason"></input></div>
+                </div>
+                <div class="form-group">
+                    <label for="punishmentBasis" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>处罚依据：</label>
+                    <div class="col-sm-8">
+                        <textarea name="punishmentBasis" placeholder="请输入处罚依据" rows="5" type="text" class="form-control" required="required" id="punishmentBasis"></textarea></div>
+                </div>
+                <div class="form-group">
+                    <label for="punishmentResult" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>处罚结果：</label>
+                    <div class="col-sm-8">
+                        <textarea name="punishmentResult" placeholder="请输入处罚结果" rows="5" type="text" class="form-control" required="required"></textarea></div>
+                </div>
+                <div class="form-group">
+                    <label for="punishmentDocumentNumber" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>处罚文书号：</label>
+                    <div class="col-sm-3">
+                        <input name="punishmentDocumentNumber" placeholder="请输入处罚文书号" type="text" class="form-control" required="required"></input></div>
+                    <label for="punishmentDecisionTime" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>处罚决定日期：</label>
+                    <div class="col-sm-3">
+                        <input name="punishmentDecisionTime" placeholder="请输入处罚决定日期" autocomplete="off" type="text" class="form-control tonto-datepicker-date" required="required"></input></div>
+                </div>
+                <div class="form-group">
+                    <label for="punishmentOrganization" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>处罚机构：</label>
+                    <div class="col-sm-3">
+                        <input name="punishmentOrganization" placeholder="请输入处罚机构" type="text" class="form-control" required="required" id="punishmentOrganization" ></div>
+                    <label for="punishmentTypeOne" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>处罚类型1：</label>
+                    <div class="col-sm-3">
+                        <select name="punishmentTypeOne" class="form-control tonto-select-constant" required="required" enumcode="punishment-type">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="punishmentTypeTwo" class="col-sm-2 control-label">处罚类型2：</label>
+                    <div class="col-sm-3">
+                        <select name="punishmentTypeTwo" class="form-control tonto-select-constant" enumcode="punishment-type">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="informationUsageScope" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>信息使用范围：</label>
+                    <div class="col-sm-3">
+                        <select name="informationUsageScope" class="form-control tonto-select-constant" required="required" enumcode="information-usage-scope">
+                        </select>
+                    </div>
+                    <label for="dishonestyDegree" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>失信严重程度：</label>
+                    <div class="col-sm-3">
+                        <select name="dishonestyDegree" class="form-control tonto-select-constant" required="required" enumcode="dishonesty-degree-type">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="punishmentStatus" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>状态：</label>
+                    <div class="col-sm-3">
+                        <select name="punishmentStatus" class="form-control tonto-select-constant" required="required" enumcode="administrative-status-type">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="punishAttachment" class="col-sm-2 control-label">处罚决定书上传：</label>
+                    <div name="punishAttachment" class="col-sm-8" >
+                        <input type="file" name="punishAttachmentFiles" multiple>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="scoreNotificationNumber" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>记分通知书编号：</label>
+                    <div class="col-sm-3">
+                        <input name="scoreNotificationNumber" placeholder="请输入记分通知书编号" type="text" class="form-control" required="required"></input></div>
+                    <label for="scoreTime" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>记分日期：</label>
+                    <div class="col-sm-3">
+                        <input name="scoreTime" placeholder="请输入记分日期" autocomplete="off" type="text" class="form-control tonto-datepicker-date" required="required"></input></div>
+                </div>
+                <div class="form-group">
+                    <label for="scoreCase" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>记分案由：</label>
+                    <div class="col-sm-8">
+                        <input name="scoreCase" placeholder="请输入记分案由" type="text" class="form-control" required="required"  onblur="changItem(this.value)"></div>
+                </div>
+                <div class="form-group">
+                    <label for="scoreBasisSelect" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>记分依据：</label>
+                    <div class="col-sm-8">
+                        <select name="scoreBasisSelect" class="form-control" required="required" onchange="changeScoreInput()" id="scoreItem">
+                        </select>
+                    </div>
+                </div>
+                <input  type="hidden" id="scoreBasis" name="scoreBasis">
+                <div class="form-group">
                     <label for="score" class="col-sm-2 control-label">扣除分值：</label>
                     <div class="col-sm-3">
-                        <input name="score" class="form-control"  type="number" id="score" placeholder="请输入扣除分值">
+                        <input name="score" class="form-control"  type="number" placeholder="请输入扣除分值" id="score"></input>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="scoreResult" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>记分结果：</label>
+                    <div class="col-sm-8">
+                        <textarea name="scoreResult" placeholder="请输入记分结果" rows="5" type="text" class="form-control" required="required"></textarea></div>
                 </div>
                 <div class="form-group">
                     <label for="scoreAttachment" class="col-sm-2 control-label">扣分决定书照片上传：</label>
@@ -93,20 +161,7 @@
                         <input type="file" name="scoreAttachmentFiles" multiple>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="punishNo" class="col-sm-2 control-label">行政处罚决定书编号：</label>
-                    <div class="col-sm-3">
-                        <input name="punishNo" placeholder="请输入行政处罚决定书编号" type="text" class="form-control"></div>
-                    <label for="punishTime" class="col-sm-2 control-label">处罚时间：</label>
-                    <div class="col-sm-3">
-                        <input name="punishTime" placeholder="请输入处罚时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date"></div>
-                </div>
-                <div class="form-group">
-                    <label for="punishAttachment" class="col-sm-2 control-label">违法事实照片上传：</label>
-                    <div name="punishAttachment" class="col-sm-8" >
-                        <input type="file" name="punishAttachmentFiles" multiple>
-                    </div>
-                </div>
+                <input type="hidden" id="item" name="item">
                 <div class="form-group form-button-bar">
                     <div class="col-sm-2 col-sm-offset-3">
                         <button type="submit" id="model_form_submit_btn" class="btn btn-primary btn-block">保存</button>
@@ -129,8 +184,9 @@
         name: "添加监察记录",
         url:"/credit/supervise/record/wjs/save",
         columns: [
+            { title: "信息录入种类", name: "infoEntryType", inputType: "SELECT" ,enum:"wjs-info-entry-type"},
             {
-                title: "医疗人员姓名",
+                title: "行政相对人",
                 name: "personnelId",
                 inputType: "SELECT-TREE-SERVER",
                 idField:'id',
@@ -159,20 +215,37 @@
                     return (data && data.data.isAgency === true)?false:true;
                 }
             },
-            { title: "记分时间",name: "scoreTime", inputType: "DATE"},
-            { title: "违法事实选择", name: "ruleName", multiple: false, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/2"},
-            { title: "扣除分值", name: "score", inputType: "NUMBER" },
-            { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFiles", maxFileCount: 5 },
-            { title: "行政处罚决定书编号",name:"punishNo",inputType: "TEXT" },
-            { title: "处罚时间",name: "punishTime", inputType: "DATE"},
-            { title: "违法事实照片上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFiles", maxFileCount: 5 }
+            { title: "证件类型", name: "identificationType", required: "required", inputType: "SELECT" ,enum:"identification-type"},
+            { title: "证件号码", name: "identificationNo", required: "required", inputType: "TEXT"},
+            { title: "处罚名称", name: "punishmentName", required: "required", inputType: "TEXT" ,colspan:2 ,dependency:["infoEntryType","1"]},
+            { title: "处罚案由", name: "punishmentCase", required: "required", multiple: false, colspan:2 ,inputType: "SELECT-SERVER", url: "/credit/org/punishment/rules/manage/lower", dependency:["infoEntryType","1"]},
+            { title: "处罚理由", name: "punishmentReason", required: "required",colspan:2, inputType: "TEXT" ,dependency:["infoEntryType","1"]},
+            { title: "处罚依据", name: "punishmentBasis", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","1"]},
+            { title: "处罚结果", name: "punishmentResult", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","1"]},
+            { title: "处罚文书号", name: "punishmentDocumentNumber", required: "required", inputType: "TEXT" ,dependency:["infoEntryType","1"]},
+            { title: "处罚决定日期", name: "punishmentDecisionTime", required: "required", inputType: "DATE" ,dependency:["infoEntryType","1"]},
+            { title: "处罚机构", name: "punishmentOrganization", required: "required", inputType: "TEXT" ,dependency:["infoEntryType","1"]},
+            { title: "处罚类型1", name: "punishmentTypeOne", required: "required", inputType: "SELECT",enum:"punishment-type" ,dependency:["infoEntryType","1"]},
+            { title: "处罚类型2", name: "punishmentTypeTwo", inputType: "SELECT",enum:"punishment-type" ,dependency:["infoEntryType","1"]},
+            { title: "信息使用范围", name: "informationUsageScope", required: "required", inputType: "SELECT" ,enum:"information-usage-scope",dependency:["infoEntryType","1"]},
+            { title: "失信严重程度", name: "dishonestyDegree", required: "required", inputType: "SELECT",enum:"dishonesty-degree-type" ,dependency:["infoEntryType","1"] },
+            { title: "状态", name: "punishmentStatus", required: "required", inputType: "SELECT",enum:"administrative-status-type" ,dependency:["infoEntryType","1"] },
+            { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFiles", maxFileCount: 5 , allowedFileExtensions: ["jpeg", "jpg", "png",  "pdf"],dependency:["infoEntryType","1"]},
+            { title: "记分通知书编号", name: "scoreNotificationNumber", required: "required", inputType: "TEXT" ,dependency:["infoEntryType","2"]},
+            { title: "记分日期", name: "scoreTime", required: "required", inputType: "DATE" ,dependency:["infoEntryType","2"]},
+            { title: "记分案由", name: "scoreCase", required: "required", inputType: "TEXT" ,colspan:2 ,dependency:["infoEntryType","2"]},
+            { title: "记分依据", name: "scoreBasisSelect", required: "required" , colspan:2 ,inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/1",dependency:["infoEntryType","2"]},
+            { title: "扣除分值", name: "score", inputType: "NUMBER" ,dependency:["infoEntryType","2"]},
+            { title: "记分结果", name: "scoreResult", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","2"]},
+            { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFiles", maxFileCount: 5 , allowedFileExtensions: ["jpeg", "jpg", "png",  "pdf"],dependency:["infoEntryType","2"]}
         ]
     };
 
     $(function() {
         type = $("#type").val();
-   /*     var html = generateHtml(options);
-        $(".content").html(html);*/
+ /*       var html = generateEditHtml(options);
+        $(".content").html(html);
+        console.log(html);*/
         $("#reply_btn").click(function () {
             window.location = "/credit/daily/operation/wjs/"+type;
         });
@@ -193,11 +266,33 @@
     });
 
     function changeScoreInput() {
-        let $scoreItem = $("select[name = 'ruleName'] option:selected");
-        let item = $scoreItem.text();
-        let score = $scoreItem.val();
+        let $scoreItem = $("#scoreItem option:selected");
+        let score = 0;
+        let text = "";
+        $scoreItem.each(function () {
+            score += parseInt($(this).val());
+            text += $(this).text() + ';';
+        });
         $("#score").val(score);
-        $("#item").val(item);
+        $("#scoreBasis").val(text);
+    }
+
+    function changItem(text) {
+        if (text) {
+            $("#item").val(text)
+        }
+    }
+
+    function changeCaseInput() {
+        let $caseItem = $("#punishmentCase option:selected");
+        let id = $caseItem.val();
+        $.getAjax("/credit/org/punishment/rules/manage/get/one?id="+id,function (data) {
+            if (data) {
+                $("#punishmentReason").val(data.punishmentReason ? data.punishmentReason : '无');
+                $("#punishmentBasis").val(data.punishmentBasis);
+                $("#punishmentOrganization").val("昆山市卫生健康委员会");
+            }
+        })
     }
 </script>
 </body>

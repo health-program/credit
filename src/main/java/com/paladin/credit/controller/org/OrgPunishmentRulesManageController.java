@@ -46,6 +46,12 @@ public class OrgPunishmentRulesManageController extends ControllerSupport {
     public Object getDetail(@RequestParam String id) {
         return CommonResponse.getSuccessResponse(orgPunishmentRulesManageService.getRule(id));
     }
+
+    @GetMapping("/get/one")
+    @ResponseBody
+    public Object getSimpleOne(@RequestParam String id) {
+        return CommonResponse.getSuccessResponse(orgPunishmentRulesManageService.get(id));
+    }
     
     @GetMapping("/add")
     public String addInput() {
@@ -82,6 +88,12 @@ public class OrgPunishmentRulesManageController extends ControllerSupport {
     @ResponseBody
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(orgPunishmentRulesManageService.removeRuleById(id));
+    }
+
+    @RequestMapping("/lower")
+    @ResponseBody
+    public Object findLowerRules() {
+        return CommonResponse.getSuccessResponse(orgPunishmentRulesManageService.findLowerRules());
     }
     
     @PostMapping(value = "/export")

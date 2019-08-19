@@ -4,7 +4,7 @@
 <head th:include="/credit/header" />
 
 <body>
-<tt:constant enumcode="selection-grade-type,item-target-type,supervise-check-status,boolean-type" />
+<tt:constant enumcode="selection-grade-type,item-target-type,supervise-check-status,boolean-type,wjs-info-entry-type" />
 <section class="content-header">
     <h1 th:text="|${type == '1' ? '医疗机构' : (type == '2' ? '医疗人员' : '医疗活动相关人员')}-卫监所|"></h1>
 </section>
@@ -39,6 +39,11 @@
                             <option value="">请选择审核状态</option>
                         </select>
                     </div>
+                    <div class="col-md-2">
+                        <select name="infoEntryType" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.infoEntryType}" enumcode="wjs-info-entry-type">
+                            <option value="">信息录入种类</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
@@ -65,7 +70,7 @@
         <div id="result" class="box-body">
             <table id="dataGrid"></table>
             <div id="toolbar" th:if="${roleLevel == 4}">
-                <a onclick="add()" class="btn btn-default"><i class="fa fa-pencil"></i>分值录入</a>
+                <a onclick="add()" class="btn btn-default"><i class="fa fa-pencil"></i>信息录入</a>
             </div>
         </div>
     </div>

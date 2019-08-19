@@ -173,6 +173,9 @@
         <if test="query.code != null">
             AND r.code = #{query.code}
         </if>
+        <if test="query.infoEntryType != null">
+         AND r.info_entry_type = #{query.infoEntryType}
+        </if>
         ORDER BY r.create_time DESC
     </select>
     <update id="updateRecordById">

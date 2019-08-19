@@ -4,7 +4,7 @@
 <head th:include="/credit/header" />
 
 <body>
-<tt:constant enumcode="selection-grade-type,item-target-type,sex-type,supervise-check-status,boolean-type"/>
+<tt:constant enumcode="selection-grade-type,item-target-type,sex-type,supervise-check-status,boolean-type,administrative-status-type,administrative-target-type,information-usage-scope,identification-type,punishment-type,dishonesty-degree-type,wjs-info-entry-type"/>
 <input type="hidden" id="targetType" name="targetType" th:value="${targetType}">
 <section class="content-header">
     <h1 th:text="|${targetType == '1' ? '医疗机构' : (targetType == '2' ? '医疗人员' : '医疗活动相关人员')}-卫监所|"></h1>
@@ -29,24 +29,74 @@
             name: "监察详情",
             columns: [
                 { title: "监察项目", name: "item", required: "required",colspan:2, inputType: "TEXT"},
+                { title: "信息录入种类", name: "infoEntryType", inputType: "SELECT" ,enum:"wjs-info-entry-type"},
+                /*{ title: "是否为卫监所", name: "isWjs", inputType: "SELECT",enum: "boolean-type" },*/
                 { title: "目标类型", name: "targetType", enum: "item-target-type", required: "required", inputType: "SELECT" },
-                { title: "是否为卫监所", name: "isWjs", inputType: "SELECT",enum: "boolean-type" },
-                { title: "机构", name: "agencyId", required: "required",inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower", dependency:["targetType","1"] },
-                { title: "人员", name: "personnelId", required: "required",inputType: "SELECT-SERVER", url: "/credit/permission/people/lower" ,dependency:["targetType","2"]},
+                { title: "行政相对人", name: "agencyId", required: "required",inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower", dependency:["targetType","1"] },
+                {
+                    title: "行政相对人",
+                    name: "personnelId",
+                    inputType: "SELECT-TREE-SERVER",
+                    idField:'id',
+                    url: "/credit/permission/people/lower",
+                    selectDataFilter:function (column, data) {
+                        let peoples = data.people;
+                        let agencies = data.agency;
+                        if(agencies) {
+                            agencies.filter(function (item) {
+                                item.isAgency = true;
+                            });
+                        }
+                        let newData;
+                        newData = agencies.filter(function (father) {
+                            let children = peoples.filter(function (child) {
+                                return father.uniqueCode === child.uniqueCode
+                            });
+                            if (children.length > 0) {
+                                father.children = children;
+                            }
+                            return father.uniqueCode != null;
+                        });
+                        return newData;
+                    },
+                    selectedHandler:function(column, data) {
+                        return (data && data.data.isAgency === true) ? false : true;
+                    }, dependency:["targetType","2"]
+                },
                 { title: "人员姓名", name: "personnelName", required: "required", inputType: "TEXT",dependency:["targetType","3"] },
                 { title: "人员性别", name: "personnelSex", required: "required", inputType: "RADIO", enum: "sex-type",dependency:["targetType","3"] },
                 { title: "人员身份证", name: "personnelIdentification", required: "required", inputType: "TEXT",dependency:["targetType","3"] },
                 { title: "人员地址", name: "personnelAddress", inputType: "TEXT",dependency:["targetType","3"] },
-                { title: "监察结果名称", name: "resultName", required: "required", inputType: "TEXT" , dependency:["isWjs","0"]},
+                /*  { title: "监察结果名称", name: "resultName", required: "required", inputType: "TEXT" , dependency:["isWjs","0"]},*/
                 { title: "监察结果等级", name: "resultGrade", enum: "selection-grade-type", required: "required", inputType: "SELECT" },
-                { title: "说明", name: "explainText", required: "required", inputType: "TEXTAREA" , dependency:["isWjs","0"]},
-                { title: "附件", name: "explainAttachment", fileName: "explainAttachmentFile", maxFileCount: 5, required: "required", inputType: "ATTACHMENT" , dependency:["isWjs","0"]},
-                { title: "扣除分值", name: "score", inputType: "NUMBER" , dependency:["isWjs","1"]},
-                { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 , dependency:["isWjs","1"]},
-                { title: "行政处罚决定书编号",name:"punishNo",inputType: "TEXT", dependency:["isWjs","1"] },
-                { title: "处罚时间",name: "punishTime", inputType: "DATE", dependency:["isWjs","1"]},
-                { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5, dependency:["isWjs","1"] },
-                { title: "审核意见", name: "illustrate", colspan:2, inputType: "TEXT" },
+                /*                { title: "说明", name: "explainText", required: "required", inputType: "TEXTAREA" , dependency:["isWjs","0"]},
+                                { title: "附件", name: "explainAttachment", fileName: "explainAttachmentFile", maxFileCount: 5, required: "required", inputType: "ATTACHMENT" , dependency:["isWjs","0"]},*/
+                { title: "统一社会信用代码", name: "socialCreditCode",  inputType: "TEXT" , required: "required", dependency:["targetType","1"] },
+                { title: "法定代表人", name: "chargePerson",  inputType: "TEXT" , required: "required", dependency:["targetType","1",] },
+                { title: "证件类型", name: "identificationType", required: "required", inputType: "SELECT" ,enum:"identification-type",dependency:["targetType","1","2"]},
+                { title: "证件号码", name: "identificationNo", required: "required", inputType: "TEXT",dependency:["targetType","1","2"]},
+                { title: "处罚名称", name: "punishmentName", required: "required", inputType: "TEXT" ,colspan:2 ,dependency:["infoEntryType","1"]},
+                { title: "处罚案由", name: "punishmentCase", required: "required", multiple: false, colspan:2 ,inputType: "SELECT-SERVER", url: "/credit/org/punishment/rules/manage/lower", dependency:["infoEntryType","1"]},
+                { title: "处罚理由", name: "punishmentReason", required: "required",colspan:2, inputType: "TEXT" ,dependency:["infoEntryType","1"]},
+                { title: "处罚依据", name: "punishmentBasis", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","1"]},
+                { title: "处罚结果", name: "punishmentResult", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","1"]},
+                { title: "处罚文书号", name: "punishmentDocumentNumber", required: "required", inputType: "TEXT" ,dependency:["infoEntryType","1"]},
+                { title: "处罚决定日期", name: "punishmentDecisionTime", required: "required", inputType: "DATE" ,dependency:["infoEntryType","1"]},
+                { title: "处罚机构", name: "punishmentOrganization", required: "required", inputType: "TEXT" ,dependency:["infoEntryType","1"]},
+                { title: "处罚类型1", name: "punishmentTypeOne", required: "required", inputType: "SELECT",enum:"punishment-type" ,dependency:["infoEntryType","1"]},
+                { title: "处罚类型2", name: "punishmentTypeTwo", inputType: "SELECT",enum:"punishment-type" ,dependency:["infoEntryType","1"]},
+                { title: "信息使用范围", name: "informationUsageScope", required: "required", inputType: "SELECT" ,enum:"information-usage-scope",dependency:["infoEntryType","1"]},
+                { title: "失信严重程度", name: "dishonestyDegree", required: "required", inputType: "SELECT",enum:"dishonesty-degree-type" ,dependency:["infoEntryType","1"] },
+                { title: "状态", name: "punishmentStatus", required: "required", inputType: "SELECT",enum:"administrative-status-type" ,dependency:["infoEntryType","1"] },
+                { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5 , allowedFileExtensions: ["jpeg", "jpg", "png",  "pdf"],dependency:["infoEntryType","1"]},
+                { title: "记分通知书编号", name: "scoreNotificationNumber", required: "required", inputType: "TEXT" ,dependency:["infoEntryType","2"]},
+                { title: "记分日期", name: "scoreTime", required: "required", inputType: "DATE" ,dependency:["infoEntryType","2"]},
+                { title: "记分案由", name: "scoreCase", required: "required", inputType: "TEXT" ,colspan:2 ,dependency:["infoEntryType","2"]},
+                { title: "记分依据", name: "scoreBasis",inputType: "TEXTAREA" ,dependency:["infoEntryType","2"]},
+                { title: "扣除分值", name: "score", inputType: "NUMBER" ,dependency:["infoEntryType","2"]},
+                { title: "记分结果", name: "scoreResult", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","2"]},
+                { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 , allowedFileExtensions: ["jpeg", "jpg", "png",  "pdf"],dependency:["infoEntryType","2"]},
+                /*{ title: "审核意见", name: "illustrate", colspan:2, inputType: "TEXT" },*/
                 { title: "审核状态", name: "status",colspan:2, inputType: "SELECT", enum: "supervise-check-status" }
             ]
         };

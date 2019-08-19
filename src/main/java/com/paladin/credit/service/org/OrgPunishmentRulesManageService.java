@@ -14,7 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.text.DecimalFormat;
+import java.util.*;
 
 @Service
 public class OrgPunishmentRulesManageService extends ServiceSupport<OrgPunishmentRulesManage> {
@@ -113,5 +114,27 @@ public class OrgPunishmentRulesManageService extends ServiceSupport<OrgPunishmen
             throw new BusinessException("删除裁量基准出错");
         }
         return removeByPrimaryKey(id);
+    }
+
+    public List<Map<String, Object>> findLowerRules() {
+        List<Map<String, Object>> result;
+        List<OrgPunishmentRulesManage> rules = findAll();
+        result = rules.stream().sorted(Comparator.comparing(OrgPunishmentRulesManage::getSerialNumber)).collect(ArrayList::new,(lists, rule) -> {
+            HashMap<String, Object> map = new HashMap<>(2);
+            Integer number = rule.getSerialNumber();
+            String numberStr;
+            if (number.compareTo(10) < 0) {
+                DecimalFormat mFormat = new DecimalFormat("00");//确定格式，把1转换为001
+                numberStr = mFormat.format(number);
+            }else {
+                numberStr = number.toString();
+            }
+            String punishmentCase = rule.getPunishmentCase();
+            String caseStr = numberStr + "、" + punishmentCase;
+            map.put("id",rule.getId());
+            map.put("name",caseStr);
+            lists.add(map);
+        },List::addAll );
+        return  result;
     }
 }

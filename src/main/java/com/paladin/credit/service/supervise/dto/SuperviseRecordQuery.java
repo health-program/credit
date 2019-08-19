@@ -12,6 +12,8 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     private Integer targetType;
 
+    private Integer infoEntryType;
+
     private Integer isWjs;
 
     private String agencyId;
@@ -130,5 +132,13 @@ public class SuperviseRecordQuery extends OffsetPage {
 
     public void setCode(Integer code) {
         this.code = code;
+    }
+
+    public Integer getInfoEntryType() {
+        return infoEntryType;
+    }
+
+    public void setInfoEntryType(Integer infoEntryType) {
+        this.infoEntryType = infoEntryType;
     }
 }
