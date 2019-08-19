@@ -127,6 +127,7 @@
         r.item,
         r.code,
         r.status,
+        r.info_entry_type AS infoEntryType,
         r.is_wjs AS isWjs,
         r.result_name AS item,
         r.result_grade AS resultGrade,

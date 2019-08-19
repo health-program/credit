@@ -18,6 +18,8 @@ public class SuperviseRecordSimpleVO {
 
     private String relatedPersonnelName;
 
+    private Integer infoEntryType;
+
     private String resultName;
 
     private String resultGrade;
@@ -116,5 +118,13 @@ public class SuperviseRecordSimpleVO {
 
     public void setCode(Integer code) {
         this.code = code;
+    }
+
+    public Integer getInfoEntryType() {
+        return infoEntryType;
+    }
+
+    public void setInfoEntryType(Integer infoEntryType) {
+        this.infoEntryType = infoEntryType;
     }
 }

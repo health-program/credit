@@ -41,7 +41,6 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     @Autowired
     private SuperviseRecordMapper superviseRecordMapper;
 
-    @Transactional(rollbackFor = Exception.class)
     public int saveRecords(SuperviseRecordDTO superviseRecordDTO) {
     int i = 0;
     CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
@@ -94,6 +93,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
     return i;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int getSaveResult(SuperviseRecord record, Integer itemTargetType, SuperviseRecordDTO superviseRecordDTO, TemplateItemSelection templateItemSelection) {
         int i = 0;
         if (templateItemSelection != null) {
@@ -333,6 +333,7 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
      * @return  int
      * @date  2019/5/17
      */
+    @Transactional(rollbackFor = Exception.class)
     public int repealSuperviseRecordById(String id) {
         CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
         int roleLevel = userSession.getRoleLevel();
