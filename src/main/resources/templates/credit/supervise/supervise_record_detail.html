@@ -97,7 +97,7 @@
                 { title: "记分日期", name: "scoreTime", required: "required", inputType: "DATE" ,dependency:["infoEntryType","2"]},
                 { title: "记分案由", name: "scoreCase", required: "required", inputType: "TEXT" ,colspan:2 ,dependency:["infoEntryType","2"]},
                 { title: "记分依据", name: "scoreBasis",inputType: "TEXTAREA" ,dependency:["infoEntryType","2"]},
-                { title: "扣除分值", name: "score", inputType: "NUMBER" ,dependency:["infoEntryType","2"]},
+                { title: "扣除分值", name: "score", inputType: "NUMBER" ,dependency:["infoEntryType","2"], unit:"分"},
                 { title: "记分结果", name: "scoreResult", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","2"]},
                 { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFile", maxFileCount: 5 , allowedFileExtensions: ["jpeg", "jpg", "png",  "pdf"],dependency:["infoEntryType","2"]},
                 { title: "审核意见", name: "illustrate", colspan:2, inputType: "TEXT" },
