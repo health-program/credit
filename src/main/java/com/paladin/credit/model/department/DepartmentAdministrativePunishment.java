@@ -12,10 +12,8 @@ public class DepartmentAdministrativePunishment extends BaseModel {
 	@GeneratedValue(generator = "UUID")
 	private String id;
 
-	// 处罚对象类型
 	private Integer type;
 
-	// 行政相对人
 	private String name;
 
 	private Integer identificationType;

@@ -16,6 +16,9 @@ import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
 
 /**
  * @author Huangguochen
@@ -29,6 +32,12 @@ public class XYBCreditSysServlet{
     @Value("${proxy.enabled}")
     private boolean proxyEnabled;
 
+    @Value("${proxy.proxyHost}")
+    private String proxyHost;
+
+    @Value("${proxy.proxyPort}")
+    private Integer proxyPort;
+
     private RestTemplate restTemplate;
 
     @PostConstruct
@@ -38,11 +47,11 @@ public class XYBCreditSysServlet{
         factory.setReadTimeout(15000);
         factory.setConnectTimeout(15000);
 
-  /*      if (proxyEnabled) {
+        if (proxyEnabled) {
             SocketAddress address = new InetSocketAddress(proxyHost, proxyPort);
             Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
             factory.setProxy(proxy);
-        }*/
+        }
 
         restTemplate = new RestTemplate(factory);
         LOGGER.info("<------------初始化restTemplate结束-------------------->");

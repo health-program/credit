@@ -1,9 +1,13 @@
 package com.paladin.credit.service.department;
 
+import com.paladin.credit.core.CreditAgencyContainer;
 import com.paladin.credit.mapper.department.DepartmentAdministrativePunishmentMapper;
 import com.paladin.credit.model.department.DepartmentAdministrativePunishment;
+import com.paladin.credit.model.org.OrgPunishmentRulesManage;
 import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentOrgUploadDTO;
 import com.paladin.credit.service.department.dto.DepartmentAdministrativePunishmentPeopleUploadDTO;
+import com.paladin.credit.service.org.OrgPunishmentRulesManageService;
+import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
 import com.paladin.credit.service.xyb.request.XYBReqCondition;
 import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.core.ServiceSupport;
@@ -29,6 +33,10 @@ public class DepartmentAdministrativePunishmentService extends ServiceSupport<De
 
     @Autowired
     private com.paladin.credit.service.xyb.XYBDepartmentCreditSystemService XYBDepartmentCreditSystemService;
+
+    @Autowired
+    private OrgPunishmentRulesManageService orgPunishmentRulesManageService;
+
 
     /**信用办请求账号*/
     @Value("${xyb.req.acctount}")
@@ -58,6 +66,18 @@ public class DepartmentAdministrativePunishmentService extends ServiceSupport<De
             return  null;
         }
         throw new BusinessException("上传失败");
+    }
+
+
+    public int saveOrgFromWjsDepartment(SuperviseRecordDTO superviseRecordDTO) {
+        DepartmentAdministrativePunishment punishment = new DepartmentAdministrativePunishment();
+        SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(superviseRecordDTO,punishment);
+        punishment.setType(2);
+        String punishmentCase = superviseRecordDTO.getPunishmentCase();
+        OrgPunishmentRulesManage rules = orgPunishmentRulesManageService.get(punishmentCase);
+        punishment.setPunishmentCause(rules.getPunishmentCase());
+        punishment.setName(CreditAgencyContainer.getAgencyName(superviseRecordDTO.getAgencyId()));
+        return  save(punishment);
     }
 
 

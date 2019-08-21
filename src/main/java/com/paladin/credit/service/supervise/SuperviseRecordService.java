@@ -8,6 +8,7 @@ import com.paladin.credit.mapper.supervise.SuperviseRecordMapper;
 import com.paladin.credit.model.supervise.SuperviseRecord;
 import com.paladin.credit.model.template.TemplateItem;
 import com.paladin.credit.model.template.TemplateItemSelection;
+import com.paladin.credit.service.department.DepartmentAdministrativePunishmentService;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordPersonnelDTO;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
@@ -40,6 +41,10 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
 
     @Autowired
     private SuperviseRecordMapper superviseRecordMapper;
+
+    @Autowired
+    private DepartmentAdministrativePunishmentService departmentAdministrativePunishmentService;
+
 
     public int saveRecords(SuperviseRecordDTO superviseRecordDTO) {
     int i = 0;
@@ -305,7 +310,17 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         record.setResultGrade(0);
         record.setIsWjs(1);
         i = getSaveResult(record,superviseRecordDTO.getTargetType(),superviseRecordDTO,null);
-        return i;
+        Integer infoEntryType = superviseRecordDTO.getInfoEntryType();
+        Integer targetType = superviseRecordDTO.getTargetType();
+        if ( targetType.equals(1) && infoEntryType.equals(1)) {
+            if (i > 0) {
+               return  departmentAdministrativePunishmentService.saveOrgFromWjsDepartment(superviseRecordDTO);
+            } else {
+                throw new BusinessException("保存卫监所监察项目出错");
+            }
+        }else {
+            return i;
+        }
       }
 
     /**

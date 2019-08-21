@@ -2,6 +2,7 @@ package com.paladin.credit.controller.org;
 
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.credit.controller.org.dto.OrgRuleManagementExportCondition;
+import com.paladin.credit.core.CreditUserSession;
 import com.paladin.credit.model.org.OrgRuleManagement;
 import com.paladin.credit.service.org.OrgRuleManagementService;
 import com.paladin.credit.service.org.dto.OrgRuleManagementDTO;
@@ -32,7 +33,10 @@ public class OrgRuleManagementController extends ControllerSupport {
     @GetMapping("/index/{type}")
     @QueryInputMethod(queryClass = OrgRuleManagementQuery.class)
     public String index( @PathVariable String type , Model model) {
-        model.addAttribute("type",type);
+		CreditUserSession session = CreditUserSession.getCurrentUserSession();
+		int roleLevel= session.getRoleLevel();
+		model.addAttribute("type",type);
+		model.addAttribute("roleLevel",roleLevel);
     return "/credit/org/org_rule_management_index";
     }
 
