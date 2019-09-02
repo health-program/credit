@@ -76,8 +76,8 @@
                 { title: "证件类型", name: "identificationType", required: "required", inputType: "SELECT" ,enum:"identification-type",dependency:["targetType","1","2"]},
                 { title: "证件号码", name: "identificationNo", required: "required", inputType: "TEXT",dependency:["targetType","1","2"]},
                 { title: "处罚名称", name: "punishmentName", required: "required", inputType: "TEXT" ,colspan:2 ,dependency:["infoEntryType","1"]},
-                { title: "处罚案由", name: "punishmentCase", required: "required", multiple: false, colspan:2 ,inputType: "SELECT-SERVER", url: "/credit/org/punishment/rules/manage/lower", dependency:["infoEntryType","1"]},
-                { title: "处罚理由", name: "punishmentReason", required: "required",colspan:2, inputType: "TEXT" ,dependency:["infoEntryType","1"]},
+                { title: "处罚案由", name: "punishmentCause",inputType: "TEXTAREA", dependency:["infoEntryType","1"]},
+              /*  { title: "处罚理由", name: "punishmentReason", required: "required",colspan:2, inputType: "TEXT" ,dependency:["infoEntryType","1"]},*/
                 { title: "处罚依据", name: "punishmentBasis", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","1"]},
                 { title: "处罚结果", name: "punishmentResult", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","1"]},
                 { title: "处罚文书号", name: "punishmentDocumentNumber", required: "required", inputType: "TEXT" ,dependency:["infoEntryType","1"]},
@@ -91,7 +91,7 @@
                 { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFile", maxFileCount: 5 , allowedFileExtensions: ["jpeg", "jpg", "png",  "pdf"],dependency:["infoEntryType","1"]},
                 { title: "记分通知书编号", name: "scoreNotificationNumber", required: "required", inputType: "TEXT" ,dependency:["infoEntryType","2"]},
                 { title: "记分日期", name: "scoreTime", required: "required", inputType: "DATE" ,dependency:["infoEntryType","2"]},
-                { title: "记分案由", name: "scoreCase", required: "required", inputType: "TEXT" ,colspan:2 ,dependency:["infoEntryType","2"]},
+                /*{ title: "记分案由", name: "scoreCase", required: "required", inputType: "TEXT" ,colspan:2 ,dependency:["infoEntryType","2"]},*/
                 { title: "记分依据", name: "scoreBasis",inputType: "TEXTAREA" ,dependency:["infoEntryType","2"]},
                 { title: "扣除分值", name: "score", inputType: "NUMBER" ,dependency:["infoEntryType","2"], unit:"分"},
                 { title: "记分结果", name: "scoreResult", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","2"]},

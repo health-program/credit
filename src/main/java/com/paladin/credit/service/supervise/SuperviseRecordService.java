@@ -288,40 +288,41 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         return i;
     }
 
-
-    /**
-     * 功能描述: <卫监所监察项目保存>
-     * @param superviseRecordDTO
-     * @return  int
-     * @date  2019/5/13
-     */
+  /**
+   * 功能描述: <卫监所监察项目保存>
+   *
+   * @param superviseRecordDTO
+   * @return int
+   * @date 2019/5/13
+   */
     @Transactional(rollbackFor = Exception.class)
     public int saveWjsRecords(SuperviseRecordDTO superviseRecordDTO) {
-        int i;
-        CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
-        superviseRecordDTO.setCode(Integer.valueOf(userSession.getCurrentSuperviseScope()));
-        int roleLevel = userSession.getRoleLevel();
-        if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE) {
-          throw new BusinessException("您没有操作该功能权限");
+    int i;
+    CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
+    superviseRecordDTO.setCode(Integer.valueOf(userSession.getCurrentSuperviseScope()));
+    int roleLevel = userSession.getRoleLevel();
+    if (roleLevel < CreditUserSession.ROLE_LEVEL_SUPERVISE) {
+      throw new BusinessException("您没有操作该功能权限");
+    }
+    SuperviseRecord record = new SuperviseRecord();
+    SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(superviseRecordDTO, record);
+    record.setStatus(0);
+    record.setResultGrade(0);
+    record.setIsWjs(1);
+    i = getSaveResult(record, superviseRecordDTO.getTargetType(), superviseRecordDTO, null);
+    Integer infoEntryType = superviseRecordDTO.getInfoEntryType();
+    Integer targetType = superviseRecordDTO.getTargetType();
+        if (targetType.equals(1) && infoEntryType.equals(1)) {
+          if (i > 0) {
+            return departmentAdministrativePunishmentService.saveOrgFromWjsDepartment(
+                superviseRecordDTO);
+          } else {
+            throw new BusinessException("保存卫监所监察项目出错");
+          }
+        } else {
+          return i;
         }
-        SuperviseRecord record = new SuperviseRecord();
-        SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(superviseRecordDTO,record);
-        record.setStatus(0);
-        record.setResultGrade(0);
-        record.setIsWjs(1);
-        i = getSaveResult(record,superviseRecordDTO.getTargetType(),superviseRecordDTO,null);
-        Integer infoEntryType = superviseRecordDTO.getInfoEntryType();
-        Integer targetType = superviseRecordDTO.getTargetType();
-        if ( targetType.equals(1) && infoEntryType.equals(1)) {
-            if (i > 0) {
-               return  departmentAdministrativePunishmentService.saveOrgFromWjsDepartment(superviseRecordDTO);
-            } else {
-                throw new BusinessException("保存卫监所监察项目出错");
-            }
-        }else {
-            return i;
-        }
-      }
+    }
 
     /**
      * 功能描述: <卫监所保存记录评级>

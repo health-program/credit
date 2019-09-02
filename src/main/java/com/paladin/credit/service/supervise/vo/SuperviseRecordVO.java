@@ -94,7 +94,7 @@ public class SuperviseRecordVO {
 	private Integer punishmentTypeTwo;
 
 	// 处罚事由
-	private String punishmentCase;
+	private String punishmentCause;
 
 	private String punishmentReason;
 
@@ -415,12 +415,12 @@ public class SuperviseRecordVO {
 		this.punishmentTypeTwo = punishmentTypeTwo;
 	}
 
-	public String getPunishmentCase() {
-		return punishmentCase;
+	public String getPunishmentCause() {
+		return punishmentCause;
 	}
 
-	public void setPunishmentCase(String punishmentCase) {
-		this.punishmentCase = punishmentCase;
+	public void setPunishmentCause(String punishmentCause) {
+		this.punishmentCause = punishmentCause;
 	}
 
 	public String getPunishmentReason() {

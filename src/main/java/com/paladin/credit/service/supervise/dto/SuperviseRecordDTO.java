@@ -67,10 +67,9 @@ public class SuperviseRecordDTO {
 	// 处罚类型2
 	private Integer punishmentTypeTwo;
 
-	// 处罚事由
-	private String punishmentCase;
+	private String punishmentCause;
 
-	private String punishmentReason;
+	/*private String punishmentReason;*/
 
 	// 处罚依据
 	private String punishmentBasis;
@@ -301,22 +300,6 @@ public class SuperviseRecordDTO {
 		this.punishmentTypeTwo = punishmentTypeTwo;
 	}
 
-	public String getPunishmentCase() {
-		return punishmentCase;
-	}
-
-	public void setPunishmentCase(String punishmentCase) {
-		this.punishmentCase = punishmentCase;
-	}
-
-	public String getPunishmentReason() {
-		return punishmentReason;
-	}
-
-	public void setPunishmentReason(String punishmentReason) {
-		this.punishmentReason = punishmentReason;
-	}
-
 	public String getPunishmentBasis() {
 		return punishmentBasis;
 	}
@@ -357,14 +340,6 @@ public class SuperviseRecordDTO {
 		this.punishmentStatus = punishmentStatus;
 	}
 
-	public String getScoreCase() {
-		return scoreCase;
-	}
-
-	public void setScoreCase(String scoreCase) {
-		this.scoreCase = scoreCase;
-	}
-
 	public String getScoreNotificationNumber() {
 		return scoreNotificationNumber;
 	}
@@ -388,4 +363,21 @@ public class SuperviseRecordDTO {
 	public void setScoreResult(String scoreResult) {
 		this.scoreResult = scoreResult;
 	}
+
+	public String getPunishmentCause() {
+		return punishmentCause;
+	}
+
+	public void setPunishmentCause(String punishmentCause) {
+		this.punishmentCause = punishmentCause;
+	}
+
+	public String getScoreCase() {
+		return scoreCase;
+	}
+
+	public void setScoreCase(String scoreCase) {
+		this.scoreCase = scoreCase;
+	}
+
 }

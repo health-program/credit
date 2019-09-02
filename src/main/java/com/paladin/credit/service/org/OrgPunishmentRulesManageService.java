@@ -131,7 +131,7 @@ public class OrgPunishmentRulesManageService extends ServiceSupport<OrgPunishmen
             }
             String punishmentCase = rule.getPunishmentCase();
             String caseStr = numberStr + "、" + punishmentCase;
-            map.put("id",rule.getId());
+            map.put("data",rule.getPunishmentBasis());
             map.put("name",caseStr);
             lists.add(map);
         },List::addAll );

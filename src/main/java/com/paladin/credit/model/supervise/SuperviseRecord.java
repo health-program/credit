@@ -93,9 +93,7 @@ public class SuperviseRecord extends BaseModel {
 	private Integer punishmentTypeTwo;
 
 	// 处罚事由
-	private String punishmentCase;
-
-	private String punishmentReason;
+	private String punishmentCause;
 
 	// 处罚依据
 	private String punishmentBasis;
@@ -365,20 +363,12 @@ public class SuperviseRecord extends BaseModel {
 		this.punishmentTypeTwo = punishmentTypeTwo;
 	}
 
-	public String getPunishmentCase() {
-		return punishmentCase;
+	public String getPunishmentCause() {
+		return punishmentCause;
 	}
 
-	public void setPunishmentCase(String punishmentCase) {
-		this.punishmentCase = punishmentCase;
-	}
-
-	public String getPunishmentReason() {
-		return punishmentReason;
-	}
-
-	public void setPunishmentReason(String punishmentReason) {
-		this.punishmentReason = punishmentReason;
+	public void setPunishmentCause(String punishmentCause) {
+		this.punishmentCause = punishmentCause;
 	}
 
 	public String getPunishmentBasis() {
@@ -468,4 +458,5 @@ public class SuperviseRecord extends BaseModel {
 	public void setScoreResult(String scoreResult) {
 		this.scoreResult = scoreResult;
 	}
+
 }

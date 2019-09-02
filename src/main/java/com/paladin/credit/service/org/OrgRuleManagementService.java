@@ -25,7 +25,7 @@ public class OrgRuleManagementService extends ServiceSupport<OrgRuleManagement> 
                   (lists, orgRuleManagement) -> {
                     HashMap<String, Object> map = new HashMap<>(2);
                     map.put("id", orgRuleManagement.getScore());
-                    map.put("name", orgRuleManagement.getName());
+                    map.put("name", orgRuleManagement.getName()+"("+orgRuleManagement.getScore()+"分)");
                     lists.add(map);
                   },
                   List::addAll);

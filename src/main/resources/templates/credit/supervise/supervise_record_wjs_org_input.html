@@ -13,7 +13,7 @@
     </ol>
 </section>
 <section class="content">
-    <div id="model_container" class="box box-widget" >
+    <!--<div id="model_container" class="box box-widget" >
         <div class="box-header no-border" >
             <h3 class="box-title">添加监察记录</h3>
             <div class="box-tools pull-right">
@@ -62,7 +62,6 @@
                     <label for="punishmentCase" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>处罚案由：</label>
                     <div class="col-sm-8">
                         <select name="punishmentCase" class="form-control" required="required" onchange="changeCaseInput()"  id="punishmentCase">
-                            <option value=""></option>
                         </select>
                     </div>
                 </div>
@@ -143,12 +142,13 @@
                 <div class="form-group">
                     <label for="scoreCase" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>记分案由：</label>
                     <div class="col-sm-8">
-                        <input name="scoreCase" placeholder="请输入记分案由" type="text" class="form-control" required="required"  onblur="changItem(this.value)"></div>
+                        <input name="scoreCase" placeholder="请输入记分案由" type="text" class="form-control" required="required"  onblur="changItem(this.value)">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="scoreBasisSelect" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>记分依据：</label>
                     <div class="col-sm-8">
-                        <select name="scoreBasisSelect" class="form-control" required="required" onchange="changeScoreInput()" id="scoreItem">
+                        <select name="scoreBasisSelect" class="form-control" required="required" onchange="changeScoreInput()" id="scoreBasisSelect">
                         </select>
                     </div>
                 </div>
@@ -156,7 +156,7 @@
                 <div class="form-group">
                     <label for="score" class="col-sm-2 control-label"><i class="required-label fa fa-asterisk"></i>扣除分值：</label>
                     <div class="col-sm-3">
-                        <input name="score" class="form-control"  type="number" placeholder="请输入扣除分值" id="score"></input>
+                        <input name="score" class="form-control"  type="number" placeholder="请输入扣除分值" id="score">
                     </div>
                 </div>
                 <div class="form-group">
@@ -181,12 +181,12 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div>-->
 </section>
 <input type="hidden" id="type" name="type" th:value="${type}">
 <div th:include="/credit/footer" />
 <script type="text/javascript">
-    var type;
+    var type,scoreBasis,item,punishmentCause;
     var options = {
         id: "model",
         cancelBtn: false,
@@ -200,15 +200,15 @@
             order: 2
         }],
         columns: [
-            { title: "信息录入种类", name: "infoEntryType", inputType: "SELECT" ,enum:"wjs-info-entry-type"},
+            { title: "信息录入种类", name: "infoEntryType", inputType: "SELECT" ,enum:"wjs-info-entry-type", required: "required"},
             { title: "行政相对人", name: "agencyId",  multiple: false, inputType: "SELECT-SERVER", url: "/credit/permission/agency/lower", required: "required"},
             { title: "统一社会信用代码", name: "socialCreditCode",  inputType: "TEXT" , required: "required",dependency:["infoEntryType","1"]},
             { title: "法定代表人", name: "chargePerson",  inputType: "TEXT" , required: "required",dependency:["infoEntryType","1"]},
             { title: "证件类型", name: "identificationType", required: "required", inputType: "SELECT" ,enum:"identification-type",dependency:["infoEntryType","1"]},
             { title: "证件号码", name: "identificationNo", required: "required", inputType: "TEXT",dependency:["infoEntryType","1"]},
             { title: "处罚名称", name: "punishmentName", required: "required", inputType: "TEXT" ,colspan:2 ,dependency:["infoEntryType","1"]},
-            { title: "处罚案由", name: "punishmentCase", required: "required", multiple: false, colspan:2 ,inputType: "SELECT-SERVER", url: "/credit/org/punishment/rules/manage/lower", dependency:["infoEntryType","1"]},
-            { title: "处罚理由", name: "punishmentReason", required: "required",colspan:2, inputType: "TEXT" ,dependency:["infoEntryType","1"]},
+            { title: "处罚案由", name: "punishmentCase", required: "required", colspan:2 ,multiple: true, inputType: "SELECT-SERVER", idField : "data", url: "/credit/org/punishment/rules/manage/lower", dependency:["infoEntryType","1"]},
+          /*  { title: "处罚理由", name: "punishmentReason", required: "required",colspan:2, inputType: "TEXT" ,dependency:["infoEntryType","1"]},*/
             { title: "处罚依据", name: "punishmentBasis", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","1"]},
             { title: "处罚结果", name: "punishmentResult", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","1"]},
             { title: "处罚文书号", name: "punishmentDocumentNumber", required: "required", inputType: "TEXT" ,dependency:["infoEntryType","1"]},
@@ -217,32 +217,37 @@
             { title: "处罚类型1", name: "punishmentTypeOne", required: "required", inputType: "SELECT",enum:"punishment-type" ,dependency:["infoEntryType","1"]},
             { title: "处罚类型2", name: "punishmentTypeTwo", inputType: "SELECT",enum:"punishment-type" ,dependency:["infoEntryType","1"]},
             { title: "信息使用范围", name: "informationUsageScope", required: "required", inputType: "SELECT" ,enum:"information-usage-scope",dependency:["infoEntryType","1"]},
-            { title: "失信严重程度", name: "dishonestyDegree", required: "required", inputType: "SELECT",enum:"dishonesty-degree-type" ,dependency:["infoEntryType","1"] },
+            { title: "失信严重程度", name: "dishonestyDegree", inputType: "SELECT",enum:"dishonesty-degree-type" ,dependency:["infoEntryType","1"] },
             { title: "状态", name: "punishmentStatus", required: "required", inputType: "SELECT",enum:"administrative-status-type" ,dependency:["infoEntryType","1"] },
             { title: "处罚决定书上传",name: "punishAttachment", inputType: "ATTACHMENT", fileName: "punishAttachmentFiles", maxFileCount: 5 , allowedFileExtensions: ["jpeg", "jpg", "png",  "pdf"],dependency:["infoEntryType","1"]},
             { title: "记分通知书编号", name: "scoreNotificationNumber", required: "required", inputType: "TEXT" ,dependency:["infoEntryType","2"]},
             { title: "记分日期", name: "scoreTime", required: "required", inputType: "DATE" ,dependency:["infoEntryType","2"]},
-            { title: "记分案由", name: "scoreCase", required: "required", inputType: "TEXT" ,colspan:2 ,dependency:["infoEntryType","2"]},
-            { title: "记分依据", name: "scoreBasisSelect", required: "required" , colspan:2 ,inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/1",dependency:["infoEntryType","2"]},
+            /*{ title: "记分案由", name: "scoreCase", required: "required", inputType: "TEXT" ,colspan:2 ,dependency:["infoEntryType","2"]},*/
+            { title: "记分依据", name: "scoreBasisSelect",required: "required", colspan:2 ,multiple: true, inputType: "SELECT-SERVER", url: "/credit/org/rule/management/lower/1",dependency:["infoEntryType","2"]},
             { title: "扣除分值", name: "score", inputType: "NUMBER", required: "required",dependency:["infoEntryType","2"], attr:{'min':'0'}},
-            { title: "记分结果", name: "scoreResult", required: "required", inputType: "TEXTAREA" ,dependency:["infoEntryType","2"]},
+            { title: "记分结果", name: "scoreResult", inputType: "TEXTAREA" ,dependency:["infoEntryType","2"]},
             { title: "扣分决定书照片上传",name: "scoreAttachment", inputType: "ATTACHMENT", fileName: "scoreAttachmentFiles", maxFileCount: 5 , allowedFileExtensions: ["jpeg", "jpg", "png",  "pdf"],dependency:["infoEntryType","2"]}
         ]
     };
 
     $(function() {
         type = $("#type").val();
-/*        var html = generateEditHtml(options);
+        var html = generateEditHtml(options);
         $(".content").html(html);
-        console.log(html)*/
         $("#reply_btn").click(function () {
             window.location = "/credit/daily/operation/wjs/"+type;
         });
-        //$.initComponment($(".content"));
+        $.initComponment($(".content"));
         var model = new tonto.Model("model", options.columns, {
             pattern:"edit",
-            extraParam:{
-                'targetType':type
+            extraParam: function (param) {
+                return {
+                    'scoreBasis': scoreBasis,
+                    'item': item,
+                    'targetType': type,
+                    'punishmentCause' : punishmentCause
+                };
+
             },
             successCallback:function(){
                 $.successAlert("保存成功",function(){
@@ -251,37 +256,51 @@
             }
         });
         model.setData(null);
-    });
 
-    function changeScoreInput() {
-        let $scoreItem = $("#scoreItem option:selected");
-        let score = 0;
-        let text = "";
-        $scoreItem.each(function () {
-            score += parseInt($(this).val());
-            text += $(this).text() + ';';
+        $("[name = 'scoreBasisSelect']").on("change",function(e){
+            let $scoreItem = $("[name = 'scoreBasisSelect'] option:selected");
+            let score = 0;
+            let text = "";
+            $scoreItem.each(function () {
+                score += parseInt($(this).val() ? $(this).val() : 0);
+                text += $(this).text() + ';\n';
+            });
+            $("[name='score']").val(score);
+            scoreBasis = text;
+            item = $("[name = 'agencyId'] option:selected").text() + '不良执业行为记分';
         });
-        $("#score").val(score);
-        $("#scoreBasis").val(text);
-    }
 
-    function changItem(text) {
-        if (text) {
-            $("#item").val(text)
-        }
-    }
+        $("[name = 'punishmentCase']").on("change",function(e){
+            let $caseItem = $("[name = 'punishmentCase'] option:selected");
+            let text = "";
+            let punishment = "";
+            $caseItem.each(function () {
+                text += $(this).val()+"\n";
+                punishment += spliceStr($(this).text()) +";\n"
+            });
+            punishmentCause = punishment;
+            $("[name = 'punishmentBasis']").val(text);
+            $("input[name = 'punishmentOrganization']").val("昆山市卫生健康委员会");
+        });
 
-    function changeCaseInput() {
-        let $caseItem = $("#punishmentCase option:selected");
-        let id = $caseItem.val();
-        $.getAjax("/credit/org/punishment/rules/manage/get/one?id="+id,function (data) {
-            if (data) {
-                $("#punishmentReason").val(data.punishmentReason ? data.punishmentReason : '无');
-                $("#punishmentBasis").val(data.punishmentBasis);
-                $("#punishmentOrganization").val("昆山市卫生健康委员会");
+        $("input[name='punishmentName']").blur(function (e) {
+            item = $("input[name='punishmentName']").val()
+        });
+
+        $("select[name='infoEntryType']").change(function (e) {
+            let type = $(this).val();
+            if (type == 2) {
+                $("select[name = 'identificationType'] option:selected").attr('value','');
             }
         })
+
+    });
+    
+    function spliceStr(str) {
+        let index = str.indexOf("、");
+        return   str.substr(index+1)
     }
+
 </script>
 </body>
 
