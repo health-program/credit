@@ -17,7 +17,7 @@ public class DepartmentAdministrativePunishmentPeopleUploadDTO {
     private String name;
 
     // 证件类型
-    @ReadProperty(cellIndex = 1,nullable = false,enumType = "identification-type")
+    @ReadProperty(cellIndex = 1,enumType = "identification-type",nullable = false)
     private Integer identificationType;
 
     // 证件号码
@@ -69,7 +69,7 @@ public class DepartmentAdministrativePunishmentPeopleUploadDTO {
     private String punishmentBasis;
 
     // 处罚结果
-    @ReadProperty(cellIndex = 14,nullable = false)
+    @ReadProperty(cellIndex = 14)
     private String punishmentResult;
 
     // 备注

@@ -36,7 +36,7 @@ public class DepartmentAdministrativePunishmentOrgUploadDTO {
     private String chargePerson;
 
     // 证件类型
-    @ReadProperty(cellIndex = 6,nullable = false,enumType = "identification-type")
+    @ReadProperty(cellIndex = 6,enumType = "identification-type",nullable = false)
     private Integer identificationType;
 
     // 证件号码
@@ -96,15 +96,15 @@ public class DepartmentAdministrativePunishmentOrgUploadDTO {
     private String remark;
 
     // 信息使用范围：0.公示；1.仅政府部门内部共享；2.仅可授权查询；
-    @ReadProperty(cellIndex = 21,nullable = false,enumType = "information-usage-scope")
+    @ReadProperty(cellIndex = 21,enumType = "information-usage-scope")
     private Integer informationUsageScope;
 
     // 失信严重程度：0.未定；1.一般；2.较重；3.严重
-    @ReadProperty(cellIndex = 22,nullable = false,enumType = "dishonesty-degree-type")
+    @ReadProperty(cellIndex = 22,enumType = "dishonesty-degree-type")
     private Integer dishonestyDegree;
 
     // 状态：0=正常；1=撤销；2=异议；3=其他（备注说明）
-    @ReadProperty(cellIndex = 23,nullable = false,enumType = "administrative-status-type")
+    @ReadProperty(cellIndex = 23,enumType = "administrative-status-type")
     private Integer punishmentStatus;
 
     // 事业单位证书号

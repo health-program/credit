@@ -175,10 +175,10 @@
             columns: [
                 [
                     { title: "行政相对人", field: "name" },
-                    { title: "统一社会信用代码", field: "socialCreditCode" },
+                    /*{ title: "统一社会信用代码", field: "socialCreditCode"},*/
                     { title: "法定代表人或负责人", field: "chargePerson" },
                     { title: "证件号码", field: "identificationNo" },
-                    { title: "处罚名称", field: "punishmentName"},
+                    { title: "处罚名称", field: "punishmentName", width: "20%"},
                     { title: "处罚文书号", field: "punishmentDocumentNumber" },
                     { title: "处罚类型", field: "punishmentTypeOne" ,enumcode:"punishment-type"},
                     { title: "处罚机构", field: "punishmentOrganization" },
@@ -267,9 +267,7 @@
 
         function hideColumn() {
             if (type == 1) {
-                table.hideColumn("socialCreditCode");
                 table.hideColumn("chargePerson");
-                table.hideColumn("socialCreditCode");
                 $("#socialCreditCodeDiv").hide();
             } else {
                 $("#identificationNoDiv").hide();
@@ -312,7 +310,10 @@
                     });
 
                     $("#myModal").modal('hide');
-                    layer.alert(html, { icon: 5, area: ['600px', '200px'] });
+                    layer.alert(html, { icon: 5, area: ['600px', '400px'] },function (index) {
+                        table.refresh();
+                        layer.close(index);
+                    });
                 }
             } else {
                 $("#myModal").modal('hide');

@@ -323,7 +323,10 @@
                 });
 
                 $("#myModal").modal('hide');
-                layer.alert(html, { icon: 5, area: ['600px', '200px'] });
+                layer.alert(html, { icon: 5, area: ['600px', '400px'] },function (index) {
+                    table.refresh();
+                    layer.close(index);
+                });
             }
         } else {
             $("#myModal").modal('hide');
