@@ -32,7 +32,7 @@ public class TemplateItemAgencyController extends ControllerSupport {
 	public String index(Model model) {
 		CreditUserSession userSession = CreditUserSession.getCurrentUserSession();
 		int roleLevel = userSession.getRoleLevel();
-		if (roleLevel >= CreditUserSession.ROLE_LEVEL_SUPERVISE) {
+		if (roleLevel == CreditUserSession.ROLE_LEVEL_SUPERVISE ||roleLevel == CreditUserSession.ROLE_LEVEL_SUPERVISE_ADMIN  ) {
 			model.addAttribute("code",userSession.getCurrentSuperviseScope());
 		}
 		return "/credit/template/template_agencies";

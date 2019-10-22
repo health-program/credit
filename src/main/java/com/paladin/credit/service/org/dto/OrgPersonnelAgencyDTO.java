@@ -1,6 +1,7 @@
 package com.paladin.credit.service.org.dto;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class OrgPersonnelAgencyDTO {
 
@@ -8,15 +9,15 @@ public class OrgPersonnelAgencyDTO {
 	private String id;
 
 
-	@NotEmpty(message = "名称不能为空")
+	@NotBlank(message = "名称不能为空")
 	private String name;
 
 	private String agencyId;
 
-	@NotEmpty(message = "账号不能为空")
+	@Size(min = 5,max = 30,message = "账号长度为5~30位")
 	private String account;
 
-	@NotEmpty(message = "角色不能为空")
+	@NotBlank(message = "角色不能为空")
 	private String role;
 
 	public String getId() {
