@@ -233,7 +233,7 @@
                     <a style="float:right" href="/credit/publicity/message/more/index" th:if="${notices != null && notices.size() > 0}">更多>></a>
                 </div>
                 <div class="box-body">
-                    <h3  th:if="${notices == null || notices.size() == 0 }" style="font-weight: bold;text-align: center">暂无公告!</h3>
+                    <h3  th:if="${notices == null || notices.size() == 0 }" style="font-weight: bold;text-align: center">暂无公告</h3>
                     <ul class="notice-list ul-dashed" th:each="notice,iter: ${notices}" th:if="${notices != null && notices.size() > 0}">
                         <li class="notice-li" >
                             <strong><a class="name" th:href="${'/credit/home/page/notice/view?id='+ notice.id+'&isHomePage=true'}"
@@ -332,6 +332,13 @@
                     chartValue[4] = value
                 }
             });
+            let total = chartValue.reduce(function(prev, curr) {
+                return prev + curr;
+            }, 0);
+            if (total === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
             var labelOption = {
                 normal: {
                     show: true,
