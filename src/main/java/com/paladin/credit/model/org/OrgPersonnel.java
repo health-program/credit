@@ -8,8 +8,9 @@ import java.util.Date;
 public class OrgPersonnel extends UnDeleteBaseModel {
 
 	public final static String COLUMN_FIELD_AGENCY_ID= "agencyId";
+	public static final String COLUMN_FIELD_IDENTIFICATION_ID = "identificationNo";
 
-	// 
+    //
 	@Id
 	private String id;
 

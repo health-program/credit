@@ -1,19 +1,16 @@
 package com.paladin.framework.core.configuration.shiro.filter;
 
-import java.io.IOException;
+import com.paladin.framework.core.configuration.PaladinConstants;
+import com.paladin.framework.core.configuration.shiro.ShiroCasProperties;
+import io.buji.pac4j.filter.LogoutFilter;
+import org.pac4j.core.config.Config;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-
-import org.pac4j.core.config.Config;
-
-import com.paladin.framework.core.configuration.PaladinConstants;
-import com.paladin.framework.core.configuration.shiro.ShiroCasProperties;
-
-import io.buji.pac4j.filter.LogoutFilter;
+import java.io.IOException;
 
 public class PaladinCasLogoutFilter extends PaladinLogoutFilter {
 

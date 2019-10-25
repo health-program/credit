@@ -1,12 +1,7 @@
 package com.paladin.framework.core.configuration.shiro.filter;
 
-import java.util.Locale;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.paladin.framework.utils.WebUtil;
+import com.paladin.framework.web.response.CommonResponse;
 import org.apache.shiro.session.SessionException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
@@ -14,8 +9,11 @@ import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.paladin.framework.utils.WebUtil;
-import com.paladin.framework.web.response.CommonResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 
 public class PaladinLogoutFilter extends LogoutFilter {
 

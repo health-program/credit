@@ -1,14 +1,9 @@
 package com.paladin.framework.core.configuration.shiro.filter;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-
+import com.paladin.framework.core.configuration.PaladinConstants;
+import com.paladin.framework.core.configuration.shiro.ShiroCasProperties;
+import io.buji.pac4j.engine.ShiroSecurityLogic;
+import io.buji.pac4j.filter.SecurityFilter;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.pac4j.core.client.Client;
@@ -16,11 +11,13 @@ import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.Pac4jConstants;
 
-import com.paladin.framework.core.configuration.PaladinConstants;
-import com.paladin.framework.core.configuration.shiro.ShiroCasProperties;
-
-import io.buji.pac4j.engine.ShiroSecurityLogic;
-import io.buji.pac4j.filter.SecurityFilter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.List;
 
 public class PaladinCasAuthenticationFilter extends PaladinFormAuthenticationFilter {
 

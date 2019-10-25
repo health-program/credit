@@ -6,7 +6,7 @@ import org.apache.shiro.session.mgt.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ClusterSessionFactory implements SessionFactory{
+public class ClusterSessionFactory implements SessionFactory {
 
 	private static Logger logger = LoggerFactory.getLogger(ClusterSessionFactory.class);
 

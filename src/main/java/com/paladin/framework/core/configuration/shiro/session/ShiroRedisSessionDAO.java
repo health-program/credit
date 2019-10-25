@@ -1,5 +1,6 @@
 package com.paladin.framework.core.configuration.shiro.session;
 
+import com.paladin.framework.core.configuration.shiro.ShiroProperties;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.SimpleSession;
@@ -10,8 +11,6 @@ import org.apache.shiro.session.mgt.eis.SessionIdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-
-import com.paladin.framework.core.configuration.shiro.ShiroProperties;
 
 import java.io.Serializable;
 import java.util.Collection;

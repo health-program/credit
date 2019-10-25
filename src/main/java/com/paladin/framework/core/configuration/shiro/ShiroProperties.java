@@ -1,8 +1,7 @@
 package com.paladin.framework.core.configuration.shiro;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import com.paladin.framework.core.GlobalProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "paladin.shiro")
 public class ShiroProperties {

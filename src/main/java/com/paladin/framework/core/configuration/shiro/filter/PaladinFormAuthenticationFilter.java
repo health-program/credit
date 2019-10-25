@@ -1,10 +1,8 @@
 package com.paladin.framework.core.configuration.shiro.filter;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.paladin.framework.core.session.UserSession;
+import com.paladin.framework.utils.WebUtil;
+import com.paladin.framework.web.response.CommonResponse;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
@@ -12,9 +10,10 @@ import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.paladin.framework.core.session.UserSession;
-import com.paladin.framework.utils.WebUtil;
-import com.paladin.framework.web.response.CommonResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
 
@@ -70,6 +69,5 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
 		}
 
 	}
-
 
 }

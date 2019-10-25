@@ -1,11 +1,6 @@
 package com.paladin.framework.core.configuration.shiro.session;
 
-import java.io.Serializable;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-
+import com.paladin.framework.core.configuration.shiro.ShiroProperties;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.SessionKey;
@@ -16,7 +11,10 @@ import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.paladin.framework.core.configuration.shiro.ShiroProperties;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 
 public class PaladinWebSessionManager extends DefaultWebSessionManager {
 

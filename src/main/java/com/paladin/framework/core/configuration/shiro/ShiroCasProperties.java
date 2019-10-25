@@ -1,8 +1,7 @@
 package com.paladin.framework.core.configuration.shiro;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import com.paladin.framework.core.GlobalProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "paladin.shiro")
 public class ShiroCasProperties extends ShiroProperties{
@@ -32,6 +31,21 @@ public class ShiroCasProperties extends ShiroProperties{
 	 */
 	private String casFilterUrlPattern = "/" + GlobalProperties.project + "/cas";
 
+	/**
+	 * CAS 协议
+	 */
+	private String casProtocol = "CAS30";
+	
+	/**
+	 * 
+	 */
+	private String casErrorUrl = "/static/html/error_cas_500.html";
+	
+	/**
+	 * 
+	 */
+	private String casIdCardField;
+	
 
 	public String getCasServerUrl() {
 		return casServerUrl;
@@ -72,6 +86,31 @@ public class ShiroCasProperties extends ShiroProperties{
 	public void setCasFilterUrlPattern(String casFilterUrlPattern) {
 		this.casFilterUrlPattern = casFilterUrlPattern;
 	}
+
+	public String getCasProtocol() {
+		return casProtocol;
+	}
+
+	public void setCasProtocol(String casProtocol) {
+		this.casProtocol = casProtocol;
+	}
+
+	public String getCasErrorUrl() {
+		return casErrorUrl;
+	}
+
+	public void setCasErrorUrl(String casErrorUrl) {
+		this.casErrorUrl = casErrorUrl;
+	}
+
+	public String getCasIdCardField() {
+		return casIdCardField;
+	}
+
+	public void setCasIdCardField(String casIdCardField) {
+		this.casIdCardField = casIdCardField;
+	}
+
 
 	
 
