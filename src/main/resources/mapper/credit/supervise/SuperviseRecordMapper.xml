@@ -163,7 +163,7 @@
             AND r.create_time >= #{query.bgTime}
         </if>
         <if test="query.endTime != null">
-            AND r.create_time <![CDATA[<=]]> #{query.endTime}
+            AND r.create_time <![CDATA[<]]> #{query.endTime}
         </if>
         <if test="query.status != null">
             AND r.status = #{query.status}
@@ -220,7 +220,7 @@
             AND date_format(a.create_time,'%Y-%m-%d') >= #{bgTime}
         </if>
         <if test="endTime != null">
-            AND date_format(a.create_time,'%Y-%m-%d') <![CDATA[<=]]>#{endTime}
+            AND date_format(a.create_time,'%Y-%m-%d') <![CDATA[<]]>#{endTime}
         </if>
     </select>
     <select id="countRecordOrgCreditByDate"
@@ -258,7 +258,7 @@
             AND date_format(a.create_time,'%Y-%m-%d') >= #{bgTime}
         </if>
         <if test="endTime != null">
-            AND date_format(a.create_time,'%Y-%m-%d') <![CDATA[<=]]>#{endTime}
+            AND date_format(a.create_time,'%Y-%m-%d') <![CDATA[<]]>#{endTime}
         </if>
         GROUP BY
         a.agency_id
@@ -349,7 +349,7 @@
             AND r.target_type = #{query.targetType}
         </if>
         <if test="param1.resultGrade != null">
-            AND r.result_grade <![CDATA[<=]]> #{query.resultGrade}
+            AND r.result_grade <![CDATA[<]]> #{query.resultGrade}
         </if>
         <if test="query.agencyName != null and query.agencyName != ''">
             AND a.name LIKE CONCAT('%',#{query.agencyName},'%')
@@ -361,7 +361,7 @@
             AND r.create_time >= #{query.bgTime}
         </if>
         <if test="query.endTime != null">
-            AND r.create_time <![CDATA[<=]]> #{query.endTime}
+            AND r.create_time <![CDATA[<]]> #{query.endTime}
         </if>
         <if test="query.status != null">
             AND r.status = #{query.status}
@@ -371,5 +371,21 @@
         </if>
         ORDER BY r.create_time DESC
 
+    </select>
+    <select id="searchIllegalPracticeRecordsByQuery"
+            resultType="com.paladin.credit.service.supervise.vo.SuperviseRecordVO">
+        SELECT r.id,
+        r.item,
+        r.info_entry_type AS infoEntryType,
+        r.result_grade AS resultGrade,
+        a.`name` AS agencyName
+        FROM supervise_record AS r
+        LEFT JOIN org_agency AS a
+        ON r.agency_id = a.id
+        WHERE r.target_type = 1 AND r.is_wjs = 1  AND r.code = 6  AND status = 1
+        <if test="query.agencyName != null and query.agencyName != ''">
+            AND a.name LIKE CONCAT('%',#{query.agencyName},'%')
+        </if>
+        ORDER BY r.create_time DESC
     </select>
 </mapper>

@@ -34,4 +34,6 @@ public interface SuperviseRecordMapper extends CustomMapper<SuperviseRecord> {
     List<SuperviseRecordOrgMapVO> findMapOrgInfoById(@Param("agencyId") String agencyId);
 
     List<SuperviseRecordSimpleVO> searchSuperviseOrgRecordsByQuery(@Param("query") SuperviseRecordQuery query);
+
+    List<SuperviseRecordVO> searchIllegalPracticeRecordsByQuery(@Param("query") SuperviseRecordQuery query);
 }

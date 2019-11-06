@@ -231,6 +231,19 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
 
 
     /**
+     * 功能描述: <现在执法非法行医>
+     * @param query
+     * @return  com.paladin.framework.common.PageResult<com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO>
+     * @date  2019/11/6
+     */
+    public PageResult<SuperviseRecordSimpleVO> searchRecords(SuperviseRecordQuery query) {
+        Page<SuperviseRecordSimpleVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+        superviseRecordMapper.searchIllegalPracticeRecordsByQuery(query);
+        return  new PageResult<>(page);
+    }
+
+
+    /**
      * 功能描述: <查询所有监察记录>
      * @param query
      * @return  java.util.List<com.paladin.credit.service.supervise.vo.SuperviseRecordSimpleVO>
@@ -460,4 +473,5 @@ public class SuperviseRecordService extends ServiceSupport<SuperviseRecord> {
         }
         return i;
     }
+
 }
