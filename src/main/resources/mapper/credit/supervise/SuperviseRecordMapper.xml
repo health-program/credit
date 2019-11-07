@@ -56,7 +56,8 @@
         FROM
         supervise_record AS s
         LEFT JOIN org_agency AS a ON s.agency_id = a.id
-        WHERE a.is_delete = 0
+        WHERE a.is_delete = 0  AND  s.status = 1
+        AND s.create_time  <![CDATA[<]]> current_date() AND s.create_time >= DATE_SUB( current_date(), INTERVAL 1 YEAR )
         <if test="agencyId != null">
             AND a.id = #{agencyId}
         </if>

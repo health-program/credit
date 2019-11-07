@@ -65,7 +65,7 @@ public class DepartmentPersonCreditQuery extends OffsetPage {
         this.bgTime = bgTime;
     }
 
-    @QueryCondition(name = DepartmentPersonCredit.COLUMN_FIELD_CREATE_TIME,type = QueryType.LESS_EQUAL)
+    @QueryCondition(name = DepartmentPersonCredit.COLUMN_FIELD_CREATE_TIME,type = QueryType.LESS_THAN)
     public Date getEndTime() {
         return endTime;
     }

@@ -44,7 +44,7 @@ public class PublicityMessageQuery extends OffsetPage {
         this.startTime = startTime;
     }
 
-    @QueryCondition(name = PublicityMessage.COLUMN_FIELD_PUBLISH_TIME,type = QueryType.LESS_EQUAL)
+    @QueryCondition(name = PublicityMessage.COLUMN_FIELD_PUBLISH_TIME,type = QueryType.LESS_THAN)
     public Date getEndTime() {
         return endTime;
     }

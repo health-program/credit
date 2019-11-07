@@ -53,7 +53,7 @@ public class OrgRuleManagementQuery extends OffsetPage {
         this.bgTime = bgTime;
     }
 
-    @QueryCondition( name = "createTime",type = QueryType.LESS_EQUAL)
+    @QueryCondition( name = "createTime",type = QueryType.LESS_THAN)
     public Date getEndTime() {
         return endTime;
     }
