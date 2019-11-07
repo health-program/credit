@@ -1,5 +1,6 @@
 package com.paladin.credit.controller.xczf;
 
+import com.paladin.common.core.ConstantsContainer;
 import com.paladin.credit.service.supervise.SuperviseRecordService;
 import com.paladin.credit.service.supervise.dto.SuperviseRecordQuery;
 import com.paladin.credit.service.supervise.vo.SuperviseRecordVO;
@@ -34,7 +35,47 @@ public class IllegalPracticeController extends ControllerSupport {
         return CommonResponse.getSuccessResponse(beanCopy(superviseRecordService.get(id), new SuperviseRecordVO()));
     }
 
+    @GetMapping("/constant/info")
+    @ResponseBody
+    public Object getInfo() {
+        return CommonResponse.getSuccessResponse(ConstantsContainer.getType("wjs-info-entry-type"));
+    }
+
+    @GetMapping("/constant/grade")
+    @ResponseBody
+    public Object getGrade() {
+        return CommonResponse.getSuccessResponse(ConstantsContainer.getType("selection-grade-type"));
+    }
+
+    @GetMapping("/constant/identification")
+    @ResponseBody
+    public Object getidentification() {
+        return CommonResponse.getSuccessResponse(ConstantsContainer.getType("identification-type"));
+    }
+
+    @GetMapping("/constant/punishment")
+    @ResponseBody
+    public Object getPunishment() {
+        return CommonResponse.getSuccessResponse(ConstantsContainer.getType("punishment-type"));
+    }
+
+    @GetMapping("/constant/information")
+    @ResponseBody
+    public Object getInformation() {
+        return CommonResponse.getSuccessResponse(ConstantsContainer.getType("information-usage-scope"));
+    }
+
+    @GetMapping("/constant/dishonesty")
+    @ResponseBody
+    public Object getdishonesty() {
+        return CommonResponse.getSuccessResponse(ConstantsContainer.getType("dishonesty-degree-type"));
+    }
 
 
+    @GetMapping("/constant/status")
+    @ResponseBody
+    public Object getsSatus() {
+        return CommonResponse.getSuccessResponse(ConstantsContainer.getType("administrative-status-type"));
+    }
 
 }
