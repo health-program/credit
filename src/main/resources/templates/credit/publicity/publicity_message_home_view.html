@@ -80,7 +80,7 @@
                         <div class="form-group" style="border-top: 1px solid #eee;padding-top: 10px" th:if="${!#lists.isEmpty(object.attachmentFiles)}">
                             <label class="col-sm-2 control-label" style="width: 100px">附件:</label>
                             <div th:each="attachment,iterStat: ${object.attachmentFiles}" style="text-align: left" class="col-sm-2 control-label attachment">
-                                <a target="_blank" th:href="${'/file/'+attachment.pelativePath}">
+                                <a target="_blank" th:href="${'/file/'+attachment.pelativePath}"   download="">
                                     <span th:text="${attachment.name + attachment.suffix}"></span>
                                     <i class="fa fa-download"></i></a>
                             </div>
