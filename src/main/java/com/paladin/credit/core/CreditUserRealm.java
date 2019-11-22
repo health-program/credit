@@ -1,12 +1,9 @@
 package com.paladin.credit.core;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import com.paladin.common.model.syst.SysUser;
+import com.paladin.common.service.syst.SysUserService;
+import com.paladin.framework.core.session.UserSession;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -14,27 +11,32 @@ import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.paladin.common.model.syst.SysUser;
-import com.paladin.common.service.syst.SysUserService;
-import com.paladin.framework.core.session.UserSession;
-
 public class CreditUserRealm extends AuthorizingRealm {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	private static final String privateKey = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAN1VXxqq0uF2aTcgtaKMhba5Yq2l5lvaUzU3s1aIC/axtt05E+PWN+Nx1n2KiwFqgPflT8qV7C6IX7LeYAsNNgi2+aAoMPE0rgZhPYl5rUy3PuwgJU/CLdWE07RiQ2+k0fpkrkQYtBH0XXxWPTFzYP/P1DWUMM/UQsu80Zwd0PEjAgMBAAECgYBERUwTlrN7diHYLk+4du3bwe0tMOoQVRSraqX3v/kovAJy1GNNOMt+baPCj5R2+FoVnPbyvzHd3JTgQHWRkx6iGGffxcdmnLYU+F5l99xGMnup1TNqDxpdz/uBCL9020YXKbNnzcEDUl5yR87TIXLmoZlyx1Oy0NN0nDI7n5iPOQJBAPz4BBuo4FE1RovOFUJogG8VrQRVucy7+Vv7WT1TpBpa47gWOorZnuYKcFhmko1bOrnpJvkpDnHeYNAz5/HAKR8CQQDf/FBWCwSdqOBF2Qp+o6MNKXUynYjvC0vjbjUS0jehX/I3swFFGgvg7Wk+ugbG1/0uIWfTSjAvvvvuD8t5zoN9AkAHGi+DV0p0/Tnt0utl4ek5NTKWXJHK3bwyiOwIfMCuvL6H/JfILjP34XMmCDs1HMqZTaJ6fFybddLiBZMNhoehAkAGqF1K8XDlrstbyCPDt+F01rKhGoWjdVaAIBp7wLvelBeDCFMVVrzbprLmJmllJ65i3KNVaHMeODMM1HNb34ORAkEAgzhrZEZaDLjIideFTu691wsE+/rThwoUVK9GTZ0G235t2lT75Tc5RTjSdkOQ5Jy7+jyK6P7ZXKoz0wQVjIaIxA==df723820";
+
+	//private static final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDdVV8aqtLhdmk3ILWijIW2uWKtpeZb2lM1N7NWiAv2sbbdORPj1jfjcdZ9iosBaoD35U/KlewuiF+y3mALDTYItvmgKDDxNK4GYT2Jea1Mtz7sICVPwi3VhNO0YkNvpNH6ZK5EGLQR9F18Vj0xc2D/z9Q1lDDP1ELLvNGcHdDxIwIDAQAB";
+
 	private SysUserService sysUserService;
 	private CreditUserSessionFactory userSessionFactory;
 
+	private LimitFailCredentialsMatcher hashedCredentialsMatcher;
+
 	public CreditUserRealm(SysUserService sysUserService, CreditUserSessionFactory userSessionFactory) {
-		
 		this.sysUserService = sysUserService;
 		this.userSessionFactory = userSessionFactory;
-		
-		HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+
+		hashedCredentialsMatcher = new LimitFailCredentialsMatcher();
 		hashedCredentialsMatcher.setHashAlgorithmName("md5");// 散列算法:这里使用MD5算法;
 		hashedCredentialsMatcher.setHashIterations(1);// 散列的次数，当于 m比如散列两次，相d5("");
 
 		setCredentialsMatcher(hashedCredentialsMatcher);
+	}
+
+	public void unlock(){
+		hashedCredentialsMatcher.unlock();
 	}
 
 	/**
@@ -45,7 +47,16 @@ public class CreditUserRealm extends AuthorizingRealm {
 	 * @throws AuthenticationException
 	 */
 	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken auToken) throws AuthenticationException {
+
+		UsernamePasswordToken token = (UsernamePasswordToken) auToken;
+
+		try {
+			String password = RSAEncrypt.decrypt(new String(token.getPassword()), privateKey);
+			token.setPassword(password.toCharArray());
+		} catch (Exception e) {
+			throw new UnknownAccountException();
+		}
 
 		logger.debug("后台登录：SysUserRealm.doGetAuthenticationInfo()");
 

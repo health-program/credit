@@ -1,5 +1,6 @@
 package com.paladin.common.controller;
 
+import com.paladin.credit.core.CreditUserRealm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,10 @@ public class CommonController {
 
 	@Autowired
 	private SysAttachmentService attachmentService;
+
+
+	@Autowired
+	private CreditUserRealm  creditUserRealm;
 
 	@ApiOperation(value = "通过code获取常量", response = KeyValue.class, responseContainer = "List")
 	@ApiImplicitParam(name = "code", value = "CODE", required = true, dataType = "String", allowMultiple = true)
@@ -167,6 +172,17 @@ public class CommonController {
 	@ResponseBody
 	public Object postException() {
 		throw new BusinessException("异常测试，返回json");
+	}
+
+
+	@ApiOperation(value = "异常测试")
+	@GetMapping("/login/unlock")
+	@ResponseBody
+	public Object unlock() {
+		if (UserSession.getCurrentUserSession().isSystemAdmin()) {
+			creditUserRealm.unlock();
+		}
+		return CommonResponse.getNoPermissionResponse("无权限");
 	}
 
 }
