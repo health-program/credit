@@ -4,6 +4,7 @@ import com.paladin.common.model.syst.SysUser;
 import com.paladin.common.service.syst.SysUserService;
 import com.paladin.framework.core.session.UserSession;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -22,22 +23,22 @@ public class CreditUserRealm extends AuthorizingRealm {
 	private SysUserService sysUserService;
 	private CreditUserSessionFactory userSessionFactory;
 
-	private LimitFailCredentialsMatcher hashedCredentialsMatcher;
+	//private LimitFailCredentialsMatcher hashedCredentialsMatcher;
 
 	public CreditUserRealm(SysUserService sysUserService, CreditUserSessionFactory userSessionFactory) {
 		this.sysUserService = sysUserService;
 		this.userSessionFactory = userSessionFactory;
 
-		hashedCredentialsMatcher = new LimitFailCredentialsMatcher();
+		HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
 		hashedCredentialsMatcher.setHashAlgorithmName("md5");// 散列算法:这里使用MD5算法;
 		hashedCredentialsMatcher.setHashIterations(1);// 散列的次数，当于 m比如散列两次，相d5("");
 
 		setCredentialsMatcher(hashedCredentialsMatcher);
 	}
 
-	public void unlock(){
-		hashedCredentialsMatcher.unlock();
-	}
+//	public void unlock(){
+//		hashedCredentialsMatcher.unlock();
+//	}
 
 	/**
 	 * 认证信息.(身份验证) : Authentication 是用来验证用户身份

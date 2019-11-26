@@ -174,15 +174,15 @@ public class CommonController {
 		throw new BusinessException("异常测试，返回json");
 	}
 
-
-	@ApiOperation(value = "异常测试")
-	@GetMapping("/login/unlock")
-	@ResponseBody
-	public Object unlock() {
-		if (UserSession.getCurrentUserSession().isSystemAdmin()) {
-			creditUserRealm.unlock();
-		}
-		return CommonResponse.getNoPermissionResponse("无权限");
-	}
+//
+//	@ApiOperation(value = "异常测试")
+//	@GetMapping("/login/unlock")
+//	@ResponseBody
+//	public Object unlock() {
+//		if (UserSession.getCurrentUserSession().isSystemAdmin()) {
+//			creditUserRealm.unlock();
+//		}
+//		return CommonResponse.getNoPermissionResponse("无权限");
+//	}
 
 }
